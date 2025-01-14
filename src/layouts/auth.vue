@@ -11,7 +11,11 @@
     </header>
     <main class="flex-auto py-4">
       <layout-container>
-        <slot />
+        <div class="flex items-center justify-center p-4">
+          <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+            <slot />
+          </div>
+        </div>
       </layout-container>
     </main>
     <page-footer></page-footer>
