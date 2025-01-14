@@ -19,9 +19,11 @@
       </layout-container>
     </main>
     <page-footer></page-footer>
+    <toast-wrapper></toast-wrapper>
   </div>
 </template>
 <script lang="ts" setup>
 import PageFooter from '@/components/page/footer.vue';
 import LayoutContainer from "@/components/layout/container.vue"
+import ToastWrapper from '@/components/toast/wrapper.vue';
 </script>
