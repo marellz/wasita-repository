@@ -41,6 +41,20 @@
             <form-input label="Document name" v-model="form.name" :error="errors.name" required />
             <form-text rows="5" label="Document details" v-model="form.details" :error="errors.details" required />
             <form-checkbox label="Save as draft" v-model="form.is_draft"></form-checkbox>
+            <form-checkbox label="Public document" v-model="form.is_public"></form-checkbox>
+            <form-select label="Category" v-model="form.category">
+              <option v-for="item in categories" :value="item.value" :key="item.value">
+                {{ item.label }}
+              </option>
+            </form-select>
+            <div>
+              <form-label>Tags</form-label>
+              <div class="flex gap-4">
+                <div v-for="(item, index) in tags" :key="index">
+                  <form-checkbox :value="item.value" :label="item.label" v-model="form.tags" />
+                </div>
+              </div>
+            </div>
             <base-button class="w-full" :loading>
               <span>Submit document</span>
             </base-button>
@@ -54,12 +68,14 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
-import { useDocumentStore } from '@/stores/docs';
+import { useDocumentStore, type Category, type DocumentForm } from '@/stores/docs';
 import { computed, ref, watch } from 'vue';
 import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
 import FormInput from '@/components/form/input.vue';
+import FormLabel from '@/components/form/label.vue';
 import FormText from '@/components/form/text.vue';
+import FormSelect from '@/components/form/select.vue';
 import FormCheckbox from '@/components/form/checkbox.vue';
 import DocumentInput from '@/components/form/document.vue';
 import { useRouter } from 'vue-router';
@@ -73,11 +89,28 @@ const loading = computed(() => store.loading)
 const errors = computed(() => store.errors)
 const router = useRouter()
 
-const newForm = {
+const tags = ref([
+  { label: "Finance", value: "finance" },
+  { label: "Meeting", value: "meeting" },
+  { label: "2025", value: "2025" },
+])
+
+
+const categories = ref<{ label: string, value: Category }[]>([
+  { label: "General", value: "general" },
+  { label: "Financial", value: "financial" },
+  { label: "Minutes", value: "minutes" },
+  { label: "Contracts", value: "contracts" },
+])
+
+const newForm: DocumentForm = {
   name: "",
   details: "",
   is_draft: false,
   url: '',
+  is_public: true,
+  category: 'general',
+  tags: []
 }
 
 const form = ref(newForm)

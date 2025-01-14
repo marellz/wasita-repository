@@ -5,7 +5,7 @@
       <span v-if="required">&ast;</span>
     </form-label>
     <div>
-      <select class="form-input" v-model="model" :id :disabled :required ref="input">
+      <select class="form-input bg-white" v-model="model" :id :disabled :required ref="input">
         <option :value="null" :disabled="required">{{ placeholder }}</option>
         <slot></slot>
       </select>

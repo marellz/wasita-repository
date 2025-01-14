@@ -103,10 +103,11 @@
                 {{ moreInfoDocument.name }}
               </h1>
               <div class="flex space-x-2">
-                <base-button>
+                <base-button @click="openDocument(moreInfoDocument.url, moreInfoDocument.id)">
                   <span>View document</span>
                 </base-button>
-                <base-button variant="danger" @click="deleteDocument(moreInfoDocument.id)">
+                <base-button v-if="auth.user.id === moreInfoDocument.user_id" variant="danger"
+                  @click="deleteDocument(moreInfoDocument.id)">
                   <span>Delete document</span>
                 </base-button>
               </div>
