@@ -12,6 +12,8 @@
 </template>
 <script setup lang="ts">
 import useCustomId from '@/composables/useCustomId';
+import FormLabel from '@/components/form/label.vue';
+import FormError from '@/components/form/error.vue';
 import { onMounted, ref } from 'vue';
 
 withDefaults(defineProps<{
@@ -27,7 +29,7 @@ withDefaults(defineProps<{
 
 const id = ref();
 
-const model = defineModel<string | null | undefined>({ required: true });
+const model = defineModel<string | null | undefined>();
 
 const input = ref<HTMLInputElement | null>(null);
 

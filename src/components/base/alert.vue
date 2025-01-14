@@ -6,7 +6,7 @@
         <component :size="32" :stroke-width="1.5" :is="icons[variant]" />
       </span>
     </div>
-    <div>
+    <div class="flex-auto pt-3">
       <h1 class="text-lg font-bold mb-1" :class="themes[variant].color">
         {{ title }}
       </h1>

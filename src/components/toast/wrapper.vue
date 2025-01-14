@@ -1,6 +1,6 @@
 <template>
   <transition-group tag="ul" name="toasts"
-    class="fixed z-20 h-1 bottom-0 left-0 w-full flex flex-col-reverse items-center space-y-4 border">
+    class="fixed z-20 h-1 bottom-0 left-0 w-full flex flex-col-reverse items-center space-y-4">
     <toast-item :toast :key="toast.id" v-for="toast in toasts" @close="toastStore.remove(toast.id)" />
   </transition-group>
 </template>

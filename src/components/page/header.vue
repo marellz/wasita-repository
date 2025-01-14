@@ -5,7 +5,7 @@
         <img src="@/assets/images/logo.svg" class="h-10" alt="">
       </router-link>
       <nav class="ml-10 flex flex-auto justify-between">
-        <ul class="flex space-x-4">
+        <ul class="flex items-center space-x-4">
           <li v-for="link in links" :key="link.path">
             <router-link :to="link.path" class="inline-flex items-center space-x-1">
               <span>
@@ -15,13 +15,21 @@
             </router-link>
           </li>
         </ul>
-        <ul class="flex space-x-4 ml-auto">
-          <li v-for="link in otherLinks" :key="link.path">
+        <ul v-if="!auth.isAuthenticated" class="flex space-x-4 ml-auto">
+          <li v-for="link in guestLinks" :key="link.path">
             <router-link :to="link.path">
               {{ link.label }}
             </router-link>
           </li>
         </ul>
+        <div v-else>
+          <p class="font-medium">
+            {{ auth.user?.user_metadata.email }}
+          </p>
+          <a class="text-sm" href="#logout" @click.prevent="logout">
+            Logout
+          </a>
+        </div>
       </nav>
     </layout-container>
   </header>
@@ -30,29 +38,28 @@
 import LayoutContainer from '@/components/layout/container.vue';
 import { useAuthStore } from '@/stores/auth';
 import { Plus } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { type Component } from 'vue';
 const auth = useAuthStore()
-
-const logout = async () => {
-  auth.logout()
+interface Link {
+  path: string;
+  label: string;
+  action?: () => Promise<void>,
+  icon?: Component
 }
 
-const links = [
+const logout = async () => {
+  await auth.logout()
+}
+
+const links: Link[] = [
   { path: "/about", label: "About" },
   { path: "/submit", label: "Create a new document", icon: Plus },
 ]
 
-const authLinks = [
-  { path: "/logout", label: "Logout", action: logout },
-]
-
-const guestLinks = [
+const guestLinks: Link[] = [
   { path: "/login", label: 'Login' },
   { path: "/register", label: 'Register' },
 ]
 
-const otherLinks = computed(() => {
-  return auth.isAuthenticated ? authLinks : guestLinks;
-})
 
 </script>

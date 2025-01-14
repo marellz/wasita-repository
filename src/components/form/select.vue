@@ -14,6 +14,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import FormLabel from '@/components/form/label.vue';
+import FormError from '@/components/form/error.vue';
 import useCustomId from '@/composables/useCustomId';
 import { onMounted, ref } from 'vue';
 
