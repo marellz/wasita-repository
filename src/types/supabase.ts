@@ -5,33 +5,83 @@ export type Database = {
     Tables: {
       documents: {
         Row: {
+          category: string | null
           created_at: string
           details: string | null
           id: number
           is_draft: boolean
+          is_public: boolean
+          last_accessed_at: string | null
           name: string
+          tags: string[]
+          updated_at: string
           url: string
           user_id: string
         }
         Insert: {
+          category?: string | null
           created_at?: string
           details?: string | null
           id?: number
           is_draft?: boolean
+          is_public?: boolean
+          last_accessed_at?: string | null
           name: string
+          tags?: string[]
+          updated_at?: string
           url: string
           user_id?: string
         }
         Update: {
+          category?: string | null
           created_at?: string
           details?: string | null
           id?: number
           is_draft?: boolean
+          is_public?: boolean
+          last_accessed_at?: string | null
           name?: string
+          tags?: string[]
+          updated_at?: string
           url?: string
           user_id?: string
         }
         Relationships: []
+      }
+      remarks: {
+        Row: {
+          content: string
+          created_at: string
+          document_id: number
+          id: number
+          is_flagged: boolean
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          document_id: number
+          id?: number
+          is_flagged?: boolean
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          document_id?: number
+          id?: number
+          is_flagged?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'remarks_document_id_fkey'
+            columns: ['document_id']
+            isOneToOne: false
+            referencedRelation: 'documents'
+            referencedColumns: ['id']
+          },
+        ]
       }
     }
     Views: {

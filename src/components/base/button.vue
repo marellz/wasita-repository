@@ -9,7 +9,7 @@
 </template>
 <script lang="ts" setup>
 import BaseLoader from '@/components/base/loader.vue'
-type BtnVariants = "primary" | "secondary" | "primary-outline" | "secondary-outline"
+type BtnVariants = "primary" | "secondary" | "primary-outline" | "secondary-outline" | "danger"
 type VariantThemes = {
   [key in BtnVariants]: string;
 }
@@ -30,6 +30,7 @@ const themes: VariantThemes = {
   "primary-outline": "border-indigo-600 text-indigo-600 hover:bg-indigo-100",
   "secondary": "text-white border-gray-600 bg-gray-600 hover:bg-gray-700 hover:border-gray-700",
   "secondary-outline": "border-gray-600 text-gray-600 hover:bg-gray-200",
+  "danger": "border-red-100 text-red-500 hover:text-white hover:bg-red-500"
 }
 
 </script>

@@ -37,7 +37,6 @@
 <script lang="ts" setup>
 import LayoutContainer from '@/components/layout/container.vue';
 import { useAuthStore } from '@/stores/auth';
-import { Plus } from 'lucide-vue-next';
 import { type Component } from 'vue';
 const auth = useAuthStore()
 interface Link {
@@ -53,7 +52,6 @@ const logout = async () => {
 
 const links: Link[] = [
   { path: "/about", label: "About" },
-  { path: "/submit", label: "Create a new document", icon: Plus },
 ]
 
 const guestLinks: Link[] = [

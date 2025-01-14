@@ -3,13 +3,13 @@
     <h1 class="text-4xl font-medium">Make a submission</h1>
     <template v-if="!auth.isAuthenticated">
       <div class="flex flex-col xl:flex-row xl:justify-center items-center mt-20">
-        <img class="max-w-md" src="@/assets/images/undraw_safe_0mei.svg" alt="">
+        <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
         <div class="mt-10 xl:ml-20">
           <h1 class="text-3xl font-bold">You need to be logged in.</h1>
           <p class="mt-2 max-w-xl">To make a document submission, you need to log in first. Logging in ensures your
             submissions
             are tied to your account for easy access.</p>
-          <div class="mt-6 flex items-center space-x-3">
+          <div class="mt-6 flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
             <RouterLink to="/login">
               <base-button>
                 <span>Login</span>
@@ -33,7 +33,7 @@
     </template>
     <template v-else>
       <form @submit.prevent="submit">
-        <div class="grid grid-cols-2 gap-10">
+        <div class="grid lg:grid-cols-2 gap-10">
           <div>
             <document-input v-model="file" :error="errors.document"></document-input>
           </div>

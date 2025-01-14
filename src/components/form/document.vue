@@ -2,7 +2,7 @@
   <label class="block" :for="id">
     <input class="h-0 w-0" @change="handleChange" type="file" :id :disabled :required ref="input">
 
-    <div class="border-2 p-4 rounded-xl border-dashed min-h-64 flex items-center justify-center space-x-10"
+    <div class="border-2 p-4 rounded-xl border-dashed min-h-64 flex flex-wrap items-center justify-center space-x-10"
       :class="{ 'border-red-200': error }">
       <div>
         <img class="max-w-40" src="@/assets/images/undraw_add-files_d04y.svg" alt="">
