@@ -16,6 +16,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.47.13",
     "@vueuse/core": "^12.4.0",
+    "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "lucide-vue-next": "^0.471.0",
     "pinia": "^2.3.0",
