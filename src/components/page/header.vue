@@ -7,8 +7,11 @@
       <nav class="ml-10 flex flex-auto justify-between">
         <ul class="flex space-x-4">
           <li v-for="link in links" :key="link.path">
-            <router-link :to="link.path">
-              {{ link.label }}
+            <router-link :to="link.path" class="inline-flex items-center space-x-1">
+              <span>
+                {{ link.label }}
+              </span>
+              <component v-if="link.icon" :is="link.icon" :size="16" />
             </router-link>
           </li>
         </ul>
@@ -26,6 +29,7 @@
 <script lang="ts" setup>
 import LayoutContainer from '@/components/layout/container.vue';
 import { useAuthStore } from '@/stores/auth';
+import { Plus } from 'lucide-vue-next';
 import { computed } from 'vue';
 const auth = useAuthStore()
 
@@ -34,8 +38,8 @@ const logout = async () => {
 }
 
 const links = [
-  { path: "/submit", label: "Submit" },
   { path: "/about", label: "About" },
+  { path: "/submit", label: "Create a new document", icon: Plus },
 ]
 
 const authLinks = [
