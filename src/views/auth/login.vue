@@ -31,8 +31,8 @@ import { useAuthStore } from '@/stores/auth';
 const auth = useAuthStore()
 
 const user = ref({
-  email: "",
-  password: "",
+  email: "dave@test.com",
+  password: "dave123@dave",
 })
 
 const rememberMe = ref(false)
