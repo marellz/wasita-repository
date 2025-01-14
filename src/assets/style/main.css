@@ -7,3 +7,10 @@
     @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all;
   }
 }
+
+.documents-table {
+  @apply border-separate border-spacing-y-2;
+}
+.documents-table td {
+  @apply border-y first:border-l last:border-r last:rounded-r-lg first:rounded-l-lg p-4;
+}
