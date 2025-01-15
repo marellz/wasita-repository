@@ -5,25 +5,38 @@ import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
 
-export type Category = "financial" | "minutes" | "contracts" | "general"
+// export type Category = "financial" | "minutes" | "contracts" | "general"
 
 export interface DocumentForm {
+  id?: number
   name: string
-  details: string
+  details: string | null
   url: string
   is_draft: boolean
   is_public: boolean
   tags: string[]
-  category: Category
-}
-
-export interface FileDetails {
-  file_size: number
-  file_type: string
+  category: string | null
 }
 
 export interface DocumentFormErrors {
   [key: string]: string
+}
+
+export interface FileDetails {
+  file_size?: number
+  file_type?: string
+  original_name?: string
+  url?: string
+}
+
+export interface DocumentUpdateForm {
+  id?: number
+  name?: string
+  details?: string | null
+  is_draft: boolean
+  is_public: boolean
+  tags?: string[]
+  category?: string | null
 }
 
 export interface Document {
@@ -65,6 +78,7 @@ export const useDocumentStore = defineStore(
       const query = supabase.from("documents").select(`*, remarks(count)`)
 
       switch (criteria) {
+        // belong to me, period
         case "mine":
           if (!auth.user) {
             return null
@@ -72,16 +86,26 @@ export const useDocumentStore = defineStore(
           query.eq("user_id", auth.user.id)
 
           break
+
+        // belong to me but are in draft
         case "drafts":
-          if (auth.user) {
-            query.eq("user_id", auth.user.id).eq("is_draft", true)
+          if (!auth.user) {
+            return null
           }
+
+          query.eq("user_id", auth.user.id).eq("is_draft", true)
           break
+
+        // for which i am a collaborator
         case "sent":
-          if (auth.user) {
-            query.eq("is_public", false)
+          if (!auth.user) {
+            return null
           }
+
+          query.eq("is_public", false)
           break
+
+        // not sure what these are, yet
         case "public":
           query.eq("is_draft", false)
           break
@@ -90,10 +114,8 @@ export const useDocumentStore = defineStore(
           break
       }
 
-      console.log(query)
-
       try {
-        const { data, error } = await query
+        const { data, error } = await query.order("id", { ascending: false })
         if (error) {
           handleDocumentError(error)
         }
@@ -146,10 +168,7 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const createDocument = async (
-      file: File | undefined,
-      form: DocumentForm,
-    ) => {
+    const createDocument = async (file: File | null, form: DocumentForm) => {
       loadingSingle.value = true
       try {
         // verify file
@@ -185,6 +204,10 @@ export const useDocumentStore = defineStore(
         }
 
         if (data) {
+          toasts.addSuccess(
+            "Document created!",
+            "Your document has been successfully uploaded and will be displayed on the docs list if it is public",
+          )
           return data
         }
       } catch (error) {
@@ -213,6 +236,62 @@ export const useDocumentStore = defineStore(
         }
 
         return null
+      } catch (error) {
+        handleDocumentError(error)
+      } finally {
+        loadingSingle.value = false
+      }
+    }
+
+    const updateDocument = async (
+      id: number,
+      data: DocumentForm,
+      file: File | null = null,
+    ) => {
+      loadingSingle.value = true
+      error.value = null
+      try {
+        // get document
+        const doc = await getDocument(id)
+
+        if (!doc) {
+          return false
+        }
+
+        const fileDetails: FileDetails = {}
+
+        if (file) {
+          const url = await updateFile(doc.url, file)
+          fileDetails.file_size = file.size
+          fileDetails.file_type = file.type
+          fileDetails.original_name = file.name
+
+          if (url) {
+            fileDetails.url = url
+          }
+        } else {
+          console.log("no file")
+        }
+
+        const payload = {
+          ...data,
+          ...fileDetails,
+          updated_at: new Date().toISOString(),
+        }
+
+        const { status } = await supabase
+          .from("documents")
+          .update(payload)
+          .eq("id", doc.id)
+
+        if (status !== 204) {
+          handleDocumentError("Document not succcessfully updated")
+          return false
+        }
+
+        toasts.addSuccess("Update successful", "Document updated successfully")
+
+        return { ...doc, ...payload }
       } catch (error) {
         handleDocumentError(error)
       } finally {
@@ -257,6 +336,30 @@ export const useDocumentStore = defineStore(
       }
     }
 
+    const updateFile = async (url: string, file: File) => {
+      try {
+        const { data, error } = await supabase.storage
+          .from("documents")
+          .update(url, file, {
+            cacheControl: "3600",
+            upsert: true,
+          })
+
+        if (error) {
+          handleDocumentError(error)
+          return null
+        }
+
+        if (data) {
+          return data.path
+        }
+
+        return null
+      } catch (error) {
+        handleDocumentError(error)
+      }
+    }
+
     const deleteFile = async (path: string) => {
       // delete file, return boolean
       try {
@@ -297,6 +400,8 @@ export const useDocumentStore = defineStore(
       getDocuments,
       deleteDocument,
       createDocument,
+      updateDocument,
+      updateFile,
       uploadFile,
       deleteFile,
       loadingAll,
