@@ -269,8 +269,6 @@ export const useDocumentStore = defineStore(
           if (url) {
             fileDetails.url = url
           }
-        } else {
-          console.log("no file")
         }
 
         const payload = {
@@ -363,7 +361,6 @@ export const useDocumentStore = defineStore(
     const deleteFile = async (path: string) => {
       // delete file, return boolean
       try {
-        console.log(path)
         const { data, error } = await supabase.storage
           .from("documents")
           .remove([path])
