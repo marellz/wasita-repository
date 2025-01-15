@@ -32,7 +32,7 @@
             </span>
             <div>
               <p class="font-medium text-sm">
-                {{ auth.user?.user_metadata.email }}
+                {{ auth.user?.name || auth.user?.email }}
               </p>
               <a class="text-xs" href="#logout" @click.prevent="logout">
                 Logout

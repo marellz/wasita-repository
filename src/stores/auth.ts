@@ -1,10 +1,15 @@
-import type { AuthResponse, User, UserAttributes } from "@supabase/supabase-js"
+import type {
+  AuthResponse,
+  User as AuthUser,
+  UserAttributes,
+} from "@supabase/supabase-js"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { ref, computed, watch } from "vue"
 import { useRouter } from "vue-router"
 import supabase from "@/services/supabase"
 import { useToastsStore } from "@/stores/toasts"
 import api from "@/plugins/api"
+import { useUserStore, type User } from "@/stores/users"
 
 interface LoginForm {
   email: string
@@ -21,11 +26,13 @@ interface NewUser {
 export const useAuthStore = defineStore(
   "auth",
   () => {
+    const authUser = ref<AuthUser | null>(null)
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
     const isAuthenticated = computed(() => user.value !== null)
     const loading = ref(false)
     const router = useRouter()
+    const userStore = useUserStore()
 
     const errors = ref<{
       email?: string | undefined
@@ -73,11 +80,13 @@ export const useAuthStore = defineStore(
 
         if (session) {
           handleSessionCreation(session.access_token, _user)
-          updateUser({
-            data: {
+          if (_user) {
+            userStore.create({
+              id: _user.id,
               name: user.name,
-            },
-          })
+              email: user.email,
+            })
+          }
           return true
         }
 
@@ -89,13 +98,20 @@ export const useAuthStore = defineStore(
       }
     }
 
-    const updateUser = async (payload: UserAttributes) => {
+    const updateAuthUser = async (payload: UserAttributes) => {
       await supabase.auth.updateUser(payload)
     }
 
     const getUser = async () => {
       const { data } = await supabase.auth.getUser()
-      user.value = data.user
+      if (!data.user) {
+        return
+      }
+      authUser.value = data.user
+      const _u = await userStore.getUser(data.user.id)
+      if (_u) {
+        user.value = _u
+      }
     }
 
     const logout = async () => {
@@ -125,15 +141,27 @@ export const useAuthStore = defineStore(
 
     const handleSessionCreation = async (
       _token: string,
-      _user: User | null,
+      _user: AuthUser | null,
     ) => {
       token.value = _token
 
-      if (_user) {
-        user.value = _user
-
-        router.push("/")
+      if (!_user) {
+        return
       }
+
+      authUser.value = _user
+      const _u = await userStore.getUser(_user.id)
+
+      if (_u) {
+        user.value = _u
+      } else {
+        user.value = {
+          email: _user.email!,
+          id: _user.id,
+        }
+      }
+
+      router.push("/")
     }
 
     watch(token, async (v) => {
@@ -141,6 +169,7 @@ export const useAuthStore = defineStore(
     })
 
     return {
+      authUser,
       user,
       getUser,
       isAuthenticated,
@@ -151,6 +180,9 @@ export const useAuthStore = defineStore(
       register,
       logout,
       resetPassword,
+
+      //
+      updateAuthUser,
     }
   },
   {
