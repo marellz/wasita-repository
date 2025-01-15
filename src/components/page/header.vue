@@ -20,7 +20,7 @@
         </ul>
         <ul v-if="!auth.isAuthenticated" class="flex space-x-4 ml-auto">
           <li v-for="link in guestLinks" :key="link.path">
-            <router-link :to="link.path">
+            <router-link :to="link.path" class="font-funnel font-medium" :class="{ 'text-indigo-600': link.primary }">
               {{ link.label }}
             </router-link>
           </li>
@@ -72,6 +72,7 @@ interface Link {
   action?: () => Promise<void>,
   icon?: Component;
   requiresAuth?: boolean;
+  primary?: boolean
 }
 
 const logout = async () => {
@@ -88,7 +89,7 @@ const links: Link[] = [
 const _links = computed(() => links.filter(l => l.requiresAuth ? auth.isAuthenticated : true))
 
 const guestLinks: Link[] = [
-  { path: "/login", label: 'Login' },
+  { path: "/login", label: 'Login', primary: true },
   { path: "/register", label: 'Register' },
 ]
 
