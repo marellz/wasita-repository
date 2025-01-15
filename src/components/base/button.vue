@@ -27,10 +27,10 @@ withDefaults(
 );
 
 const themes: VariantThemes = {
-  "primary": "text-white border-indigo-600 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-700",
-  "primary-outline": "border-indigo-600 text-indigo-600 hover:bg-indigo-100",
-  "secondary": "text-white border-gray-600 bg-gray-600 hover:bg-gray-700 hover:border-gray-700",
-  "secondary-outline": "border-gray-600 text-gray-600 hover:bg-gray-200",
+  "primary": "text-white border-indigo-600 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-700 disabled:border-gray-700",
+  "primary-outline": "border-current text-indigo-600 hover:bg-indigo-100 disabled:text-gray-700 disabled:bg-gray-100",
+  "secondary": "text-white border-gray-800 bg-gray-800 hover:bg-gray-700 hover:border-gray-700",
+  "secondary-outline": "border-current text-slate-800 hover:bg-slate-300 disabled:hover:bg-transparent disabled:text-gray-400",
   "danger": "border-red-100 text-red-500 hover:text-white hover:bg-red-500"
 }
 
