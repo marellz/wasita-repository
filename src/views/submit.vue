@@ -85,7 +85,7 @@ const auth = useAuthStore()
 
 const store = useDocumentStore()
 const file = ref<File>()
-const loading = computed(() => store.loading)
+const loading = computed(() => store.loadingSingle)
 const errors = computed(() => store.errors)
 const router = useRouter()
 
