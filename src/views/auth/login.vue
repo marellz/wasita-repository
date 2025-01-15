@@ -9,7 +9,7 @@
           <form-checkbox v-model="rememberMe" label="Remember me" />
           <router-link class="text-indigo-600 font-medium" to="/forgot-password">Forgot password? </router-link>
         </div>
-        <base-button class="w-full">
+        <base-button class="w-full" :loading="auth.loading">
           <span>Login</span>
         </base-button>
         <div class="space-y-2">

@@ -1,10 +1,10 @@
-import type { AuthResponse, User, UserAttributes } from '@supabase/supabase-js'
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { ref, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import supabase from '@/services/supabase'
-import { useToastsStore } from '@/stores/toasts'
-import api from '@/plugins/api'
+import type { AuthResponse, User, UserAttributes } from "@supabase/supabase-js"
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { ref, computed, watch } from "vue"
+import { useRouter } from "vue-router"
+import supabase from "@/services/supabase"
+import { useToastsStore } from "@/stores/toasts"
+import api from "@/plugins/api"
 
 interface LoginForm {
   email: string
@@ -19,7 +19,7 @@ interface NewUser {
 }
 
 export const useAuthStore = defineStore(
-  'auth',
+  "auth",
   () => {
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
@@ -35,8 +35,11 @@ export const useAuthStore = defineStore(
     const toasts = useToastsStore()
 
     const login = async (form: LoginForm) => {
+      loading.value = true
+      errors.value = {}
       try {
-        const { data, error }: AuthResponse = await supabase.auth.signInWithPassword(form)
+        const { data, error }: AuthResponse =
+          await supabase.auth.signInWithPassword(form)
 
         if (error) {
           handleAuthError(error)
@@ -47,11 +50,14 @@ export const useAuthStore = defineStore(
         }
       } catch (error) {
         handleAuthError(error)
+      } finally {
+        loading.value = false
       }
     }
 
     const register = async (user: NewUser) => {
       loading.value = true
+      errors.value = {}
       try {
         const {
           data: { session, user: _user },
@@ -102,7 +108,7 @@ export const useAuthStore = defineStore(
       token.value = null
       user.value = null
 
-      router.push('/')
+      router.push("/")
     }
 
     const resetPassword = async (email: string) => {
@@ -110,25 +116,28 @@ export const useAuthStore = defineStore(
     }
 
     const handleAuthError = (error: any) => {
-      if (typeof error === 'object' && error.message) {
+      if (typeof error === "object" && error.message) {
         errors.value.email = error.message
-        toasts.addError('Registration error', error.message)
+        toasts.addError("Registration error", error.message)
       }
       console.log(error)
     }
 
-    const handleSessionCreation = async (_token: string, _user: User | null) => {
+    const handleSessionCreation = async (
+      _token: string,
+      _user: User | null,
+    ) => {
       token.value = _token
 
       if (_user) {
         user.value = _user
 
-        router.push('/')
+        router.push("/")
       }
     }
 
     watch(token, async (v) => {
-      api.defaults.headers.common['Authorization'] = v ? `Bearer ${v}` : ''
+      api.defaults.headers.common["Authorization"] = v ? `Bearer ${v}` : ""
     })
 
     return {
