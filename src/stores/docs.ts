@@ -48,12 +48,13 @@ export const useDocumentStore = defineStore(
   () => {
     const errors = ref<DocumentFormErrors>({})
     const error = ref<any>()
-    const loading = ref(false)
+    const loadingAll = ref(false)
+    const loadingSingle = ref(false)
     const toasts = useToastsStore()
     const documents = ref<Document[]>([])
 
     const getDocuments = async () => {
-      loading.value = true
+      loadingAll.value = true
       error.value = null
       try {
         const { data, error } = await supabase
@@ -69,7 +70,7 @@ export const useDocumentStore = defineStore(
       } catch (error) {
         handleDocumentError(error)
       } finally {
-        loading.value = false
+        loadingAll.value = false
       }
     }
 
@@ -115,7 +116,7 @@ export const useDocumentStore = defineStore(
       file: File | undefined,
       form: DocumentForm,
     ) => {
-      loading.value = true
+      loadingSingle.value = true
       try {
         // verify file
         if (!file) {
@@ -155,12 +156,12 @@ export const useDocumentStore = defineStore(
       } catch (error) {
         handleDocumentError(error)
       } finally {
-        loading.value = false
+        loadingSingle.value = false
       }
     }
 
     const getDocument = async (id: number) => {
-      loading.value = true
+      loadingSingle.value = true
       error.value = null
 
       try {
@@ -181,12 +182,12 @@ export const useDocumentStore = defineStore(
       } catch (error) {
         handleDocumentError(error)
       } finally {
-        loading.value = false
+        loadingSingle.value = false
       }
     }
 
     const deleteDocument = async (id: number) => {
-      loading.value = true
+      loadingSingle.value = true
       error.value = null
       try {
         // get document
@@ -218,7 +219,7 @@ export const useDocumentStore = defineStore(
       } catch (error) {
         handleDocumentError(error)
       } finally {
-        loading.value = false
+        loadingSingle.value = false
       }
     }
 
@@ -264,7 +265,8 @@ export const useDocumentStore = defineStore(
       createDocument,
       uploadFile,
       deleteFile,
-      loading,
+      loadingAll,
+      loadingSingle,
       error,
       errors,
       resetErrors,
