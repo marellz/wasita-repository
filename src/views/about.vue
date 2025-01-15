@@ -3,9 +3,13 @@
     <div class="">
       <div class="max-w-4xl mx-auto">
         <img src="@/assets/images/about.jpg" alt="" class="rounded-[100px]">
-        <h1 class="text-[60px] mb-10 mt-10">About.</h1>
-        <div class="space-y-6 text-xl leading-relaxed">
-          <p>This repository is the brainchild of our family’s collaborative spirit, created and managed with care and
+        <h1 class="text-[60px] mb-10 mt-10 font-funnel">About.</h1>
+        <div class="space-y-6 text-xl leading-relaxed font-light">
+          <p class="text-2xl leading-10">This repository is the brainchild of our family’s collaborative spirit,
+            created and
+            managed
+            with
+            care and
             precision.
             While I oversee its development and maintenance, the idea was sparked by my uncle Stephen and strongly
             supported
