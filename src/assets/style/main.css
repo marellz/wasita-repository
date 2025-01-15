@@ -8,9 +8,29 @@
   }
 }
 
-.documents-table {
-  @apply border-separate border-spacing-y-2;
-}
+.documents-table,
+.documents-table tbody,
+.documents-table tr,
 .documents-table td {
-  @apply border-y first:border-l last:border-r last:rounded-r-lg first:rounded-l-lg p-4;
+  @apply flex flex-col items-start w-full md:w-auto md:table;
+}
+
+.documents-table {
+  @apply border-collapse md:border-separate border-spacing-y-3 md:table md:w-full;
+}
+
+.documents-table tbody {
+  @apply md:table-row-group;
+}
+
+.documents-table tr {
+  @apply border rounded-xl mb-6 bg-white md:table-row md:bg-transparent md:rounded-none md:mb-0;
+}
+
+.documents-table td {
+  @apply block md:table-cell md:first:w-24 md:border-y md:first:border-l md:last:border-r md:last:rounded-r-lg md:first:rounded-l-lg p-4 md:bg-white;
+}
+
+main {
+  @apply bg-slate-200;
 }

@@ -1,5 +1,5 @@
 <template>
-  <span class="inline-block font-medium text-xs py-0.5 px-2 rounded-full border" :class="themes[status]">
+  <span class="inline-block font-medium text-xs py-0.5 px-2 rounded-full border text-center" :class="themes[status]">
     <slot />
   </span>
 </template>

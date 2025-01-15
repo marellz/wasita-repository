@@ -1,10 +1,10 @@
 <template>
   <Container>
-    <h1 class="text-4xl font-medium">Make a submission</h1>
-    <template v-if="!auth.isAuthenticated">
-      <div class="flex flex-col xl:flex-row xl:justify-center items-center mt-20">
+    <h1 class="text-4xl font-medium mb-10 font-funnel">Make a submission</h1>
+    <div class="bg-white p-8 rounded-xl shadow-md">
+      <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
-        <div class="mt-10 xl:ml-20">
+        <div class="mt-20">
           <h1 class="text-3xl font-bold">You need to be logged in.</h1>
           <p class="mt-2 max-w-xl">To make a document submission, you need to log in first. Logging in ensures your
             submissions
@@ -30,13 +30,8 @@
           </ul>
         </div>
       </div>
-    </template>
-    <template v-else>
-      <form @submit.prevent="submit">
-        <div class="grid lg:grid-cols-2 gap-10">
-          <div>
-            <document-input v-model="file" :error="errors.document"></document-input>
-          </div>
+      <template v-else>
+        <form @submit.prevent="submit">
           <div class="space-y-4">
             <form-input label="Document name" v-model="form.name" :error="errors.name" required />
             <form-text rows="5" label="Document details" v-model="form.details" :error="errors.details" required />
@@ -47,6 +42,9 @@
                 {{ item.label }}
               </option>
             </form-select>
+            <div class="!my-10">
+              <document-input v-model="file" :error="errors.document"></document-input>
+            </div>
             <div>
               <form-label>Tags</form-label>
               <div class="flex gap-4">
@@ -55,14 +53,15 @@
                 </div>
               </div>
             </div>
-            <base-button class="w-full" :loading>
-              <span>Submit document</span>
-            </base-button>
+            <div class="!mt-10">
+              <base-button class="w-full" :loading>
+                <span>Submit document</span>
+              </base-button>
+            </div>
           </div>
-        </div>
-      </form>
-
-    </template>
+        </form>
+      </template>
+    </div>
   </Container>
 </template>
 

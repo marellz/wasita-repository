@@ -16,17 +16,19 @@
     </div>
 
     <!--documents-->
-    <table class="table w-full documents-table">
+    <table class="table w-full documents-table mt-6 md:mt-10">
       <tbody>
         <tr v-for="(row, index) in documents" :key="index">
-          <td width="100px">
-            <span class="h-16 w-16 border rounded-full flex items-center justify-center">
-              <FileText :size="32" :stroke-width="1" />
-            </span>
+          <td class="md:w-24">
+            <div class="flex justify-center w-full">
+              <span class="h-16 w-16 border rounded-full flex items-center justify-center">
+                <FileText :size="32" :stroke-width="1" />
+              </span>
+            </div>
           </td>
           <td>
-            <div class="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3 lg:items-center mb-3 lg:mb-0">
-              <h1 class="font-medium text-2xl font-funnel">{{ row.name }}</h1>
+            <div class="flex items-center justify-between">
+              <h1 class="font-medium text-lg md:text-2xl font-funnel">{{ row.name }}</h1>
               <document-status-tag v-if="row.is_draft">draft</document-status-tag>
               <document-status-tag status="success" v-else>published</document-status-tag>
             </div>

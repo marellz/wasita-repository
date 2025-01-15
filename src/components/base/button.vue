@@ -1,8 +1,9 @@
 <template>
   <!--<button class="inline-flex space-x-2 text-sm font-medium px-2 py-1 rounded" :type
     :disabled="loading || disabled"> -->
-  <button class="px-4 font-medium py-2 rounded-lg transition-colors border inline-flex justify-center relative" :type
-    :class="themes[variant]" :disabled="loading || disabled">
+  <button
+    class="px-2 py-1.5 md:px-4 text-sm md:text-base font-medium md:py-2 rounded-lg transition-colors border inline-flex items-center space-x-2 justify-center relative"
+    :type :class="themes[variant]" :disabled="loading || disabled">
     <slot />
     <base-loader class="absolute right-2" v-if="loading" />
   </button>
