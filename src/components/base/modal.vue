@@ -22,6 +22,7 @@
 import { onClickOutside } from "@vueuse/core";
 import { X } from "lucide-vue-next";
 import { ref, watch } from "vue"
+const emit = defineEmits(['close'])
 withDefaults(
   defineProps<{
     title?: string;
@@ -35,8 +36,11 @@ withDefaults(
 const show = defineModel("show", { default: false });
 const close = () => {
   show.value = false;
+  emit('close')
 };
+
 const modal = ref();
+
 onClickOutside(modal, close);
 
 watch(show, (v) => {
