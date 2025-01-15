@@ -31,35 +31,7 @@
         </div>
       </div>
       <template v-else>
-        <form @submit.prevent="submit">
-          <div class="space-y-4">
-            <form-input label="Document name" v-model="form.name" :error="errors.name" required />
-            <form-text rows="5" label="Document details" v-model="form.details" :error="errors.details" required />
-            <form-checkbox label="Save as draft" v-model="form.is_draft" @change="handleDraftStatus"></form-checkbox>
-            <form-checkbox label="Public document" v-model="form.is_public" :disabled="form.is_draft"></form-checkbox>
-            <form-select label="Category" v-model="form.category">
-              <option v-for="item in categories" :value="item.value" :key="item.value">
-                {{ item.label }}
-              </option>
-            </form-select>
-            <div class="!my-10">
-              <document-input v-model="file" :error="errors.document"></document-input>
-            </div>
-            <div>
-              <form-label>Tags</form-label>
-              <div class="flex gap-4">
-                <div v-for="(item, index) in tags" :key="index">
-                  <form-checkbox :value="item.value" :label="item.label" v-model="form.tags" />
-                </div>
-              </div>
-            </div>
-            <div class="!mt-10">
-              <base-button class="w-full" :loading>
-                <span>Submit document</span>
-              </base-button>
-            </div>
-          </div>
-        </form>
+        <document-form :form @submit="submit"></document-form>
       </template>
     </div>
   </Container>
@@ -67,42 +39,22 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
-import { useDocumentStore, type Category, type DocumentForm } from '@/stores/docs';
-import { computed, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { useDocumentStore, type DocumentForm as DocumentFormType } from '@/stores/docs';
+import { ref, watch } from 'vue';
 import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
-import FormInput from '@/components/form/input.vue';
-import FormLabel from '@/components/form/label.vue';
-import FormText from '@/components/form/text.vue';
-import FormSelect from '@/components/form/select.vue';
-import FormCheckbox from '@/components/form/checkbox.vue';
-import DocumentInput from '@/components/form/document.vue';
-import { useRouter } from 'vue-router';
-
+import DocumentForm, { type DocumentFormPayload } from '@/components/docs/form.vue'
 
 const auth = useAuthStore()
 
 const store = useDocumentStore()
 const file = ref<File>()
-const loading = computed(() => store.loadingSingle)
-const errors = computed(() => store.errors)
+
 const router = useRouter()
 
-const tags = ref([
-  { label: "Finance", value: "finance" },
-  { label: "Meeting", value: "meeting" },
-  { label: "2025", value: "2025" },
-])
 
-
-const categories = ref<{ label: string, value: Category }[]>([
-  { label: "General", value: "general" },
-  { label: "Financial", value: "financial" },
-  { label: "Minutes", value: "minutes" },
-  { label: "Contracts", value: "contracts" },
-])
-
-const newForm: DocumentForm = {
+const newForm: DocumentFormType = {
   name: "",
   details: "",
   is_draft: false,
@@ -118,24 +70,15 @@ watch([form, file], () => {
   store.resetErrors()
 })
 
-const handleDraftStatus = () => {
-  if (form.value.is_draft) {
-    form.value.is_public = false
-  }
-}
 
-const submit = async () => {
-
-  const success = await store.createDocument(file.value, form.value)
+const submit = async ({ data, file }: DocumentFormPayload) => {
+  const success = await store.createDocument(file, data)
   if (!success) {
     return;
   }
 
   form.value = newForm
   router.push('/')
-
-
-
 
 }
 </script>
