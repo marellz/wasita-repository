@@ -3,6 +3,7 @@ import { defineStore, acceptHMRUpdate } from "pinia"
 import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
+import { useAuthStore } from "./auth"
 
 export type Category = "financial" | "minutes" | "contracts" | "general"
 
@@ -43,6 +44,8 @@ export interface Document {
   original_name: string | null
 }
 
+export type GetDocumentsCriteria = "public" | "mine" | "drafts" | "sent"
+
 export const useDocumentStore = defineStore(
   "documents",
   () => {
@@ -52,14 +55,45 @@ export const useDocumentStore = defineStore(
     const loadingSingle = ref(false)
     const toasts = useToastsStore()
     const documents = ref<Document[]>([])
+    const auth = useAuthStore()
 
-    const getDocuments = async () => {
+    const getDocuments = async (criteria: GetDocumentsCriteria = "public") => {
       loadingAll.value = true
       error.value = null
+      documents.value = []
+
+      const query = supabase.from("documents").select(`*, remarks(count)`)
+
+      switch (criteria) {
+        case "mine":
+          if (!auth.user) {
+            return null
+          }
+          query.eq("user_id", auth.user.id)
+
+          break
+        case "drafts":
+          if (auth.user) {
+            query.eq("user_id", auth.user.id).eq("is_draft", true)
+          }
+          break
+        case "sent":
+          if (auth.user) {
+            query.eq("is_public", false)
+          }
+          break
+        case "public":
+          query.eq("is_draft", false)
+          break
+
+        default:
+          break
+      }
+
+      console.log(query)
+
       try {
-        const { data, error } = await supabase
-          .from("documents")
-          .select(`*, remarks(count)`)
+        const { data, error } = await query
         if (error) {
           handleDocumentError(error)
         }
