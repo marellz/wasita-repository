@@ -40,8 +40,8 @@
           <div class="space-y-4">
             <form-input label="Document name" v-model="form.name" :error="errors.name" required />
             <form-text rows="5" label="Document details" v-model="form.details" :error="errors.details" required />
-            <form-checkbox label="Save as draft" v-model="form.is_draft"></form-checkbox>
-            <form-checkbox label="Public document" v-model="form.is_public"></form-checkbox>
+            <form-checkbox label="Save as draft" v-model="form.is_draft" @change="handleDraftStatus"></form-checkbox>
+            <form-checkbox label="Public document" v-model="form.is_public" :disabled="form.is_draft"></form-checkbox>
             <form-select label="Category" v-model="form.category">
               <option v-for="item in categories" :value="item.value" :key="item.value">
                 {{ item.label }}
@@ -119,20 +119,23 @@ watch([form, file], () => {
   store.resetErrors()
 })
 
+const handleDraftStatus = () => {
+  if (form.value.is_draft) {
+    form.value.is_public = false
+  }
+}
+
 const submit = async () => {
 
-  const path = await store.uploadFile(file.value)
-  if (!path) {
+  const success = await store.createDocument(file.value, form.value)
+  if (!success) {
     return;
   }
 
-  form.value.url = path;
-  const success = await store.createDocument(form.value)
+  form.value = newForm
+  router.push('/')
 
-  if (success) {
-    form.value = newForm
-    router.push('/')
-  }
+
 
 
 }

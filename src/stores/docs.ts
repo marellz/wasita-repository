@@ -1,9 +1,10 @@
-import { ref } from 'vue'
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { useToastsStore } from './toasts'
-import supabase from '@/services/supabase'
+import { ref } from "vue"
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { useToastsStore } from "./toasts"
+import generateSlug from "@/utils/generateSlug"
+import supabase from "@/services/supabase"
 
-export type Category = 'financial' | 'minutes' | 'contracts' | 'general'
+export type Category = "financial" | "minutes" | "contracts" | "general"
 
 export interface DocumentForm {
   name: string
@@ -15,6 +16,11 @@ export interface DocumentForm {
   category: Category
 }
 
+export interface FileDetails {
+  file_size: number
+  file_type: string
+}
+
 export interface DocumentFormErrors {
   [key: string]: string
 }
@@ -23,19 +29,22 @@ export interface Document {
   category: string | null
   created_at: string
   details: string | null
+  file_size: number | null
+  file_type: string | null
   id: number
   is_draft: boolean
   is_public: boolean
-  last_accessed_at?: string | null
+  last_accessed_at: string | null
   name: string
   tags: string[]
-  updated_at?: string
+  updated_at: string
   url: string
-  user_id?: string
+  user_id: string
+  original_name: string | null
 }
 
 export const useDocumentStore = defineStore(
-  'documents',
+  "documents",
   () => {
     const errors = ref<DocumentFormErrors>({})
     const error = ref<any>()
@@ -47,7 +56,9 @@ export const useDocumentStore = defineStore(
       loading.value = true
       error.value = null
       try {
-        const { data, error } = await supabase.from('documents').select()
+        const { data, error } = await supabase
+          .from("documents")
+          .select(`*, remarks(count)`)
         if (error) {
           handleDocumentError(error)
         }
@@ -64,15 +75,16 @@ export const useDocumentStore = defineStore(
 
     const uploadFile = async (file: File | undefined) => {
       if (!file) {
-        errors.value.document = 'No file selected'
+        errors.value.document = "No file selected"
         return null
       }
 
       try {
+        const name = generateSlug(file.name)
         const { data, error } = await supabase.storage
-          .from('documents')
-          .upload(`public/${file.name}`, file, {
-            cacheControl: '3600',
+          .from("documents")
+          .upload(`public/${name}`, file, {
+            cacheControl: "3600",
             upsert: false,
           })
 
@@ -90,16 +102,48 @@ export const useDocumentStore = defineStore(
 
     const getDocumentPublicUrl = async (fileUrl: string) => {
       try {
-        const { data } = supabase.storage.from('documents').getPublicUrl(fileUrl)
+        const { data } = supabase.storage
+          .from("documents")
+          .getPublicUrl(fileUrl)
         return data.publicUrl
       } catch (error) {
         handleDocumentError(error)
       }
     }
 
-    const createDocument = async (form: DocumentForm) => {
+    const createDocument = async (
+      file: File | undefined,
+      form: DocumentForm,
+    ) => {
+      loading.value = true
       try {
-        const { data, error } = await supabase.from('documents').insert(form).select()
+        // verify file
+        if (!file) {
+          errors.value.document = "Document not added."
+          return false
+        }
+
+        // upload file first
+
+        const path = await uploadFile(file)
+
+        if (!path) {
+          return false
+        }
+
+        // create document
+        const payload = {
+          ...form,
+          url: path,
+          file_type: file.type,
+          file_size: file.size,
+          original_name: file.name,
+        }
+
+        const { data, error } = await supabase
+          .from("documents")
+          .insert(payload)
+          .select()
 
         if (error) {
           handleDocumentError(error)
@@ -110,6 +154,8 @@ export const useDocumentStore = defineStore(
         }
       } catch (error) {
         handleDocumentError(error)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -118,7 +164,10 @@ export const useDocumentStore = defineStore(
       error.value = null
 
       try {
-        const { error, data } = await supabase.from('documents').select().eq('id', id)
+        const { error, data } = await supabase
+          .from("documents")
+          .select()
+          .eq("id", id)
 
         if (error) {
           handleDocumentError(error)
@@ -150,13 +199,16 @@ export const useDocumentStore = defineStore(
         const success = await deleteFile(doc.url)
 
         if (!success) {
-          handleDocumentError({ error: ' Error deleting file from bucket' })
+          handleDocumentError({ error: " Error deleting file from bucket" })
         }
 
-        const { status } = await supabase.from('documents').delete().eq('id', doc.id)
+        const { status } = await supabase
+          .from("documents")
+          .delete()
+          .eq("id", doc.id)
 
         if (status !== 204) {
-          handleDocumentError(error)
+          handleDocumentError("Document not succcessfully deleted")
           return false
         }
 
@@ -174,7 +226,9 @@ export const useDocumentStore = defineStore(
       // delete file, return boolean
       try {
         console.log(path)
-        const { data, error } = await supabase.storage.from('documents').remove([path])
+        const { data, error } = await supabase.storage
+          .from("documents")
+          .remove([path])
 
         if (error) {
           handleDocumentError(error)
@@ -191,9 +245,9 @@ export const useDocumentStore = defineStore(
     }
 
     const handleDocumentError = (error: any) => {
-      if (typeof error === 'object' && error.message) {
+      if (typeof error === "object" && error.message) {
         errors.value.email = error.message
-        toasts.addError('Registration error', error.message)
+        toasts.addError("Registration error", error.message)
       }
       console.log(error)
     }
