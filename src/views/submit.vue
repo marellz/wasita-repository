@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <page-title>Make a submission</page-title>
+    <page-title class="mb-10">Make a submission</page-title>
     <layout-card>
       <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">

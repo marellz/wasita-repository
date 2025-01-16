@@ -1,8 +1,8 @@
 <template>
-  <div class="flex items-center space-x-3">
-    <ul class="border border-slate-400 p-2 rounded-lg flex">
+  <div class="flex flex-col md:flex-row items-center space-y-3 md:space-x-3">
+    <ul class="border border-slate-400 p-2 rounded-lg flex overflow-auto max-w-full">
       <li v-for="{ label, key } in tabs" :key="key">
-        <a :href="`#${key}`" class="text-slate-500 text-sm px-3 py-1.5 font-medium hover:bg-slate-100 rounded"
+        <a :href="`#${key}`" class="text-slate-500 text-sm px-3 py-1.5 font-medium hover:bg-slate-100 rounded whitespace-nowrap"
           :class="{ '!text-black': active === key }" @click.prevent="active = key">
           {{ label }}
         </a>

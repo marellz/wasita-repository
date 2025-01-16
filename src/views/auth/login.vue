@@ -5,7 +5,7 @@
       <div class="space-y-4">
         <form-input label="Email address" v-model="user.email" type="email" required></form-input>
         <form-input label="Password" v-model="user.password" type="password" required></form-input>
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col items-start md:flex-row md:items-center space-y-4 md:space-y-0 justify-between">
           <form-checkbox v-model="rememberMe" label="Remember me" />
           <router-link class="text-indigo-600 font-medium" to="/forgot-password">Forgot password? </router-link>
         </div>
