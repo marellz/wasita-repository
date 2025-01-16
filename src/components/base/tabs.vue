@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex items-center space-x-3">
     <ul class="border border-slate-400 p-2 rounded-lg flex">
       <li v-for="{ label, key } in tabs" :key="key">
         <a :href="`#${key}`" class="text-slate-500 text-sm px-3 py-1.5 font-medium hover:bg-slate-100 rounded"
@@ -8,7 +8,7 @@
         </a>
       </li>
     </ul>
-
+    <slot name="nav"></slot>
   </div>
   <div class="mt-10">
     <slot :name="active"></slot>

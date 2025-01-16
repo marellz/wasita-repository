@@ -1,17 +1,19 @@
 <template>
   <Container>
     <base-tabs :tabs @change="changeCriteria">
-      <template #mine>
+      <template #nav>
+        <div class="!ml-auto">
+          <router-link to="/submit">
+            <base-button variant="primary-outline">
+              <span>Create document</span>
+              <Plus />
+            </base-button>
+          </router-link>
+        </div>
+      </template>
+      <template v-for="(tab, index) in tabs" :key="index" #[tab.key]>
         <documents-table :items="documents" :loading="store.loadingAll" @update="openDocumentUpdateModal"
           @get-link="getDocumentLink" @open-document="openDocument" @delete="deleteDocument" />
-      </template>
-      <template #drafts>
-        <documents-table :items="documents" :loading="store.loadingAll" @update="openDocumentUpdateModal"
-          @get-link="getDocumentLink" />
-      </template>
-      <template #sent>
-        <documents-table :items="documents" :loading="store.loadingAll" @open-document="openDocument"
-          @delete="deleteDocument" />
       </template>
     </base-tabs>
   </Container>
@@ -20,12 +22,14 @@
 <script lang="ts" setup>
 import Container from '@/components/layout/container.vue';
 import BaseTabs from '@/components/base/tabs.vue';
+import BaseButton from '@/components/base/button.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useDocumentStore, type GetDocumentsCriteria } from '@/stores/docs';
 import DocumentsTable from '@/components/docs/table.vue';
 import DocumentUpdate from '@/components/home/document-update.vue';
 import { useClipboard } from '@vueuse/core';
 import { useToastsStore } from '@/stores/toasts';
+import { Plus } from 'lucide-vue-next';
 
 
 const store = useDocumentStore()
@@ -35,11 +39,15 @@ const tabs = ref([
     key: 'mine',
   },
   {
+    label: "Private",
+    key: 'private',
+  },
+  {
     label: "Draft",
     key: 'drafts',
   },
   {
-    label: "Sent to me",
+    label: "Shared with me",
     key: 'sent',
   },
 ])

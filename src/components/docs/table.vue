@@ -36,8 +36,10 @@
                 <p class="text-sm italic text-slate-500">
                   {{ row.original_name }}
                 </p>
-                <p v-if="row.details" class="!mt-2 p-2 bg-slate-50 text-xs rounded-lg line-clamp-2">{{
-                  row.details }}
+                <p v-if="row.details"
+                  class="!mt-2 p-2 bg-slate-50 text-xs leading-6 rounded-lg h-20 overflow-auto resize-y">
+                  {{
+                    row.details }}
                 </p>
               </div>
             </td>
@@ -54,7 +56,8 @@
                   @click="getLink(row.url)">
                   <Share2 />
                 </button>
-                <button type="button" class="p-2 hover:bg-slate-100 rounded-lg" @click="deleteDocument(row.id)">
+                <button type="button" class="p-2 hover:bg-slate-100 rounded-lg disabled:text-slate-200"
+                  @click="deleteDocument(row.id)" :disabled="auth.user?.id !== row.user_id">
                   <Trash2 />
                 </button>
               </div>
@@ -81,6 +84,9 @@ import DocumentStatusTag from '@/components/home/document-status-tag.vue';
 import type { Document } from '@/stores/docs';
 import { computed } from 'vue';
 import { useClipboard } from '@vueuse/core';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore()
 
 const { isSupported } = useClipboard()
 defineProps<{

@@ -59,7 +59,12 @@ export interface Document {
   collaborators: string[] | null
 }
 
-export type GetDocumentsCriteria = "public" | "mine" | "drafts" | "sent"
+export type GetDocumentsCriteria =
+  | "public"
+  | "private"
+  | "mine"
+  | "drafts"
+  | "sent"
 
 export const useDocumentStore = defineStore(
   "documents",
@@ -89,6 +94,17 @@ export const useDocumentStore = defineStore(
 
           break
 
+        // mine, not public, no collaborators
+        case "private":
+          if (!auth.user) {
+            return null
+          }
+
+          query
+            .eq("user_id", auth.user.id)
+            .eq("is_public", false)
+            .filter("collaborators", "eq", "{}")
+
         // belong to me but are in draft
         case "drafts":
           if (!auth.user) {
@@ -104,12 +120,14 @@ export const useDocumentStore = defineStore(
             return null
           }
 
-          query.eq("is_public", false)
+          query
+            .eq("is_public", false)
+            .filter("collaborators", "cs", `{${auth.user.id}}`)
           break
 
-        // not sure what these are, yet
+        // docs for everyone!
         case "public":
-          query.eq("is_draft", false)
+          query.eq("is_draft", false).eq("is_public", true)
           break
 
         default:
