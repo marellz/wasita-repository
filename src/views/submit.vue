@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <h1 class="text-4xl font-medium mb-10 font-funnel">Make a submission</h1>
+    <h1 class="text-4xl md:text-[60px] md:leading-[80px] font-medium font-funnel">Make a submission</h1>
     <div class="bg-white p-8 rounded-xl shadow-md">
       <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
