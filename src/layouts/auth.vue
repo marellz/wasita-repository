@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex flex-col bg-slate-100">
-    <header class="py-10">
+    <header class="py-10 bg-gradient-to-t to-slate-50 from-slate-200 ">
       <layout-container>
         <div class="flex justify-center">
           <router-link to="/">

@@ -6,10 +6,11 @@
       <router-link to="/">
         <img src="@/assets/images/logo.svg" class="h-10" alt="">
       </router-link>
-      <nav class="ml-10 flex flex-auto justify-between">
+      <nav class="ml-6 md:ml-10 flex flex-auto items-center justify-between">
         <ul class="flex items-center space-x-4 font-medium font-funnel">
           <li v-for="link in _links" :key="link.path">
-            <router-link :to="link.path" class="inline-flex items-center space-x-1 border-b-2 py-2 border-b-transparent"
+            <router-link :to="link.path"
+              class="inline-flex items-center space-x-1 border-b-2 py-1.5 border-b-transparent"
               :class="{ 'text-indigo-600': route.path === link.path }">
               <span>
                 {{ link.label }}
@@ -18,10 +19,15 @@
             </router-link>
           </li>
         </ul>
-        <ul v-if="!auth.isAuthenticated" class="flex space-x-4 ml-auto">
+        <ul v-if="!auth.isAuthenticated" class="flex space-x-4 items-center ml-auto">
           <li v-for="link in guestLinks" :key="link.path">
-            <router-link :to="link.path" class="font-funnel font-medium" :class="{ 'text-indigo-600': link.primary }">
-              {{ link.label }}
+            <router-link :to="link.path"
+              class="font-funnel font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-slate-200"
+              :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }">
+              <span class="hidden md:block">
+                {{ link.label }}
+              </span>
+              <component :is="link.icon" />
             </router-link>
           </li>
         </ul>
@@ -65,7 +71,7 @@
 </template>
 <script lang="ts" setup>
 import { useAuthStore } from '@/stores/auth';
-import { LogOut, User2 } from 'lucide-vue-next';
+import { LogIn, LogOut, User2, UserPlus2 } from 'lucide-vue-next';
 import { computed, type Component } from 'vue';
 import { useRoute } from 'vue-router';
 import { useWindowScroll } from '@vueuse/core'
@@ -99,8 +105,8 @@ const links: Link[] = [
 const _links = computed(() => links.filter(l => l.requiresAuth ? auth.isAuthenticated : true))
 
 const guestLinks: Link[] = [
-  { path: "/login", label: 'Login', primary: true },
-  { path: "/register", label: 'Register' },
+  { path: "/login", label: 'Login', primary: true, icon: LogIn },
+  { path: "/register", label: 'Register', icon: UserPlus2, },
 ]
 
 </script>
