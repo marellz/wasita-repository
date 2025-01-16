@@ -44,7 +44,7 @@
               </button>
               <button type="button"
                 class="border rounded-lg px-2 py-1 inline-flex items-center leading-normal space-x-2 text-sm"
-                :loading="loadingDocument === row.id" @click="openDocument(row.url, row.id)">
+                :loading="loadingDocument === row.id" @click="openDocument({ path: row.url, id: row.id })">
                 <span>View document</span>
                 <ExternalLink :size="20" :stroke-width="1.5" />
               </button>
@@ -86,7 +86,10 @@ const store = useDocumentStore()
 const document = ref()
 const loadingDocument = ref<number | null>()
 
-const openDocument = async (path: string, id: number) => {
+const openDocument = async ({ path, id }: { path: string, id: number }) => {
+
+  console.log('open');
+
   loadingDocument.value = id
   const fullPath = await store.getDocumentPublicUrl(path)
 

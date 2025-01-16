@@ -12,6 +12,7 @@ export type Database = {
       documents: {
         Row: {
           category: string | null
+          collaborators: string[] | null
           created_at: string
           details: string | null
           file_size: number | null
@@ -29,6 +30,7 @@ export type Database = {
         }
         Insert: {
           category?: string | null
+          collaborators?: string[] | null
           created_at?: string
           details?: string | null
           file_size?: number | null
@@ -46,6 +48,7 @@ export type Database = {
         }
         Update: {
           category?: string | null
+          collaborators?: string[] | null
           created_at?: string
           details?: string | null
           file_size?: number | null

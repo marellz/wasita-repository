@@ -16,6 +16,7 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
+  collaborators: string[]
 }
 
 export interface DocumentFormErrors {
@@ -55,6 +56,7 @@ export interface Document {
   url: string
   user_id: string
   original_name: string | null
+  collaborators: string[] | null
 }
 
 export type GetDocumentsCriteria = "public" | "mine" | "drafts" | "sent"

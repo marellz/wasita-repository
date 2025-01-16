@@ -61,7 +61,8 @@ const newForm: DocumentFormType = {
   url: '',
   is_public: true,
   category: 'general',
-  tags: []
+  tags: [],
+  collaborators: [],
 }
 
 const form = ref(newForm)
