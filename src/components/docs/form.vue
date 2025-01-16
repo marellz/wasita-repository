@@ -212,7 +212,7 @@ const handleCollaborationChange = async (v: boolean) => {
 }
 
 onMounted(async () => {
-  if (props.form?.collaborators.length) {
+  if (props.form?.collaborators?.length) {
     hasCollaborators.value = true
     await getUsers()
   }

@@ -16,7 +16,7 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
-  collaborators: string[]
+  collaborators: string[] | null
 }
 
 export interface DocumentFormErrors {
