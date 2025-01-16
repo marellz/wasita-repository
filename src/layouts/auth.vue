@@ -11,7 +11,7 @@
     </header>
     <main class="flex-auto py-4">
       <layout-container>
-        <div class="flex items-center justify-center p-4">
+        <div class="flex items-center justify-center">
           <layout-card class="w-full max-w-md">
             <slot />
           </layout-card>
