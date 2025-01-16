@@ -177,7 +177,7 @@ export const useUserStore = defineStore(
         }
 
         if (data && user) {
-          await update(user.id, { ...user, avatar: null })
+          await update(user.id, { ...user, avatar: null, avatar_url: null })
           return true
         }
 
