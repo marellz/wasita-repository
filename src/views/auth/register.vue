@@ -32,10 +32,10 @@ const errors = computed(() => auth.errors)
 const loading = computed(() => auth.loading)
 
 const user = ref({
-  name: "Dave",
-  email: "dave@test.com",
-  password: "dave123@dave",
-  confirmPassword: "dave123@dave",
+  name: "", //Dave Njoroge
+  email: "", //dave@test.com
+  password: "", //dave123@dave
+  confirmPassword: "", //dave123@dave
 })
 
 const register = async () => {
