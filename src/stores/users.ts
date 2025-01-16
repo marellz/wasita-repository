@@ -37,7 +37,24 @@ export const useUserStore = defineStore(
         handleUserError(error)
       }
     }
-    const update = async () => {}
+    const update = async (id: string, payload: NewUser) => {
+      try {
+        const { status } = await supabase
+          .from("users")
+          .update(payload)
+          .eq("id", id)
+        if (status !== 204) {
+          handleUserError("User update unsuccessful")
+          return false
+        }
+
+        toasts.addSuccess("Update successful", "User updated successfully")
+
+        return true
+      } catch (error) {
+        handleUserError(error)
+      }
+    }
 
     const getUsers = async () => {
       loading.value = true

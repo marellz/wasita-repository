@@ -80,8 +80,9 @@ export const useAuthStore = defineStore(
 
         if (session) {
           handleSessionCreation(session.access_token, _user)
+          // todo: fix user id issue
           if (_user) {
-            userStore.create({
+            await userStore.update(_user.id, {
               id: _user.id,
               name: user.name,
               email: user.email,
