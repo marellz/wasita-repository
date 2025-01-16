@@ -1,6 +1,12 @@
-import { createRouter, createWebHistory } from "vue-router"
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordNameGeneric,
+} from "vue-router"
 import Home from "@/views/home.vue"
 import Login from "@/views/auth/login.vue"
+  import { useAuthStore } from "@/stores/auth"
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -58,6 +64,14 @@ const router = createRouter({
       component: () => import("@/views/about.vue"),
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+  const authRoutes: RouteRecordNameGeneric[] = ["home", "login", "register", "about"]
+  if (!authRoutes.includes(to.name) && !auth.isAuthenticated)
+    next({ name: "login" })
+  else next()
 })
 
 export default router
