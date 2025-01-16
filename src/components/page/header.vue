@@ -27,16 +27,25 @@
         </ul>
         <div v-else>
           <div class="hidden sm:flex items-center space-x-2 border border-slate-300 rounded-lg py-1 px-2">
-            <span class="p-1 bg-slate-200 rounded-full flex-none">
+            <img v-if="auth.avatar" class="h-12 w-12 rounded-full object-cover object-center " :src="auth.avatar" />
+            <span v-else class="h-12 w-12 inline-flex items-center justify-center bg-slate-200 rounded-full flex-none">
               <user2 :stroke-width="1" :size="28" />
             </span>
             <div>
               <p class="font-medium text-sm">
                 {{ auth.user?.name || auth.user?.email }}
               </p>
-              <a class="text-xs" href="#logout" @click.prevent="logout">
-                Logout
-              </a>
+              <div class="flex items-center space-x-2 mt-1">
+                <a class="text-xs hover:text-red-600" href="#logout" @click.prevent="logout">
+                  Logout
+                </a>
+                <span>
+                  &bull;
+                </span>
+                <router-link to="/profile" class="text-xs hover:text-indigo-600">
+                  Profile
+                </router-link>
+              </div>
 
             </div>
           </div>
@@ -76,7 +85,8 @@ interface Link {
 }
 
 const logout = async () => {
-  await auth.logout()
+  if (confirm('Are you sure you want to log out?'))
+    await auth.logout()
 }
 
 const route = useRoute()

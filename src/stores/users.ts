@@ -1,6 +1,8 @@
 import supabase from "@/services/supabase"
 import { defineStore, acceptHMRUpdate } from "pinia"
-import { useToastsStore } from "./toasts"
+import { useToastsStore } from "@/stores/toasts"
+import { useAuthStore } from "@/stores/auth"
+import generateSlug from "@/utils/generateSlug"
 import { ref } from "vue"
 
 export interface NewUser {
@@ -21,6 +23,7 @@ export const useUserStore = defineStore(
     const toasts = useToastsStore()
     const loading = ref(false)
     const error = ref<any>()
+    const auth = useAuthStore()
 
     const create = async (user: User) => {
       try {
@@ -50,9 +53,59 @@ export const useUserStore = defineStore(
 
         toasts.addSuccess("Update successful", "User updated successfully")
 
+        await refreshUser()
+
         return true
       } catch (error) {
         handleUserError(error)
+      }
+    }
+
+    const uploadAvatar = async (file: File | undefined) => {
+      if (!file) {
+        error.value = "No image selected"
+        return null
+      }
+
+      const user = auth.user
+
+      if (!user) {
+        error.value = "No user"
+        return
+      }
+
+      // if user already has avatar,
+      // delete it first
+      if (user.avatar) {
+        deleteAvatar(user.avatar)
+      }
+
+      loading.value = false
+
+      try {
+        const name = generateSlug(file.name)
+        const { data, error } = await supabase.storage
+          .from("avatars")
+          .upload(`public/${name}`, file, {
+            cacheControl: "3600",
+            upsert: false,
+          })
+
+        if (error) {
+          return null
+        }
+
+        if (data) {
+          // update user avatar
+
+          await update(user.id, { ...user, avatar: data.path })
+
+          return data.path
+        }
+      } catch (error) {
+        handleUserError(error)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -77,6 +130,7 @@ export const useUserStore = defineStore(
         loading.value = false
       }
     }
+
     const getUser = async (id: string) => {
       loading.value = true
       try {
@@ -105,6 +159,28 @@ export const useUserStore = defineStore(
       }
     }
 
+    const deleteAvatar = async (avatar: string) => {
+      const user = auth.user
+      try {
+        const { data, error } = await supabase.storage
+          .from("avatars")
+          .remove([avatar])
+
+        if (error) {
+          handleUserError(error)
+        }
+
+        if (data && user) {
+          await update(user.id, { ...user, avatar: null })
+          return true
+        }
+
+        return false
+      } catch (error) {
+        handleUserError(error)
+      }
+    }
+
     const handleUserError = (err: any) => {
       if (typeof err === "object" && err.message) {
         error.value = err.message
@@ -113,11 +189,25 @@ export const useUserStore = defineStore(
       console.log(err)
     }
 
+    const refreshUser = async () => {
+      if (!auth.user) {
+        return
+      }
+
+      const _updatedUser = await getUser(auth.user?.id)
+      if (_updatedUser) {
+        auth.updateUser(_updatedUser)
+      }
+    }
+
     return {
       create,
       update,
       getUsers,
       getUser,
+      uploadAvatar,
+      deleteAvatar,
+      refreshUser,
 
       //
       loading,
