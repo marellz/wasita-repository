@@ -1,6 +1,6 @@
 <template>
   <Container>
-    <h1 class="text-4xl md:text-[60px] md:leading-[80px] font-medium font-funnel">Make a submission</h1>
+    <page-title>Make a submission</page-title>
     <div class="bg-white p-8 rounded-xl shadow-md">
       <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
@@ -45,6 +45,7 @@ import { ref, watch } from 'vue';
 import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
 import DocumentForm, { type DocumentFormPayload } from '@/components/docs/form.vue'
+import PageTitle from '@/components/layout/title.vue';
 
 const auth = useAuthStore()
 

@@ -1,8 +1,7 @@
 <template>
   <Container>
-
     <div class="flex flex-wrap gap-4 md:flex-nowrap items-center justify-between">
-      <h1 class="text-4xl md:text-[60px] md:leading-[80px] font-medium font-funnel">My profile.</h1>
+      <page-title>My profile.</page-title>
       <base-button type="button" variant="primary-outline" :loading="userStore.loading"
         @click="userStore.refreshUser()">
         <span>Reload user</span>
@@ -49,6 +48,7 @@ import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
 import BaseLoader from '@/components/base/loader.vue';
 import FormInput from '@/components/form/input.vue';
+import PageTitle from '@/components/layout/title.vue';
 import { onMounted, ref, watch } from 'vue';
 import { useUserStore, type User } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';

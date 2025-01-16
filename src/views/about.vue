@@ -7,7 +7,7 @@
           :class="{ '': focusOnImage }">
       </button>
       <div class="p-6 md:p-10 lg:p-20">
-        <h1 class="text-4xl md:text-[60px] my-6 lg:my-10 font-funnel">About.</h1>
+        <page-title class="my-6 lg:my-10">About</page-title>
         <div class="space-y-6 md:text-xl leading-relaxed font-light">
           <p class="text-lg md:text-2xl leading-8 md:leading-10">This repository is the brainchild of our family’s
             collaborative
@@ -55,6 +55,7 @@
   </Container>
 </template>
 <script setup lang="ts">
+import PageTitle from '@/components/layout/title.vue';
 import Container from '@/components/layout/container.vue';
 import { ref } from 'vue';
 
