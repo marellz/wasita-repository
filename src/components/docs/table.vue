@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 md:p-8 rounded-xl overflow-auto">
+  <layout-card class="overflow-auto">
     <table class="w-full border-separate border-spacing-y-2">
       <thead>
         <tr>
@@ -75,10 +75,11 @@
         </template>
       </tbody>
     </table>
-  </div>
+  </layout-card>
 </template>
 <script lang="ts" setup>
 import { Edit2, ExternalLink, Share2, Trash2 } from 'lucide-vue-next';
+import LayoutCard from '@/components/layout/card.vue';
 import BaseLoader from '@/components/base/loader.vue';
 import DocumentStatusTag from '@/components/home/document-status-tag.vue';
 import type { Document } from '@/stores/docs';

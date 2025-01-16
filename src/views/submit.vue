@@ -1,7 +1,7 @@
 <template>
   <Container>
     <page-title>Make a submission</page-title>
-    <div class="bg-white p-8 rounded-xl shadow-md">
+    <layout-card>
       <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
         <div class="mt-20">
@@ -33,7 +33,7 @@
       <template v-else>
         <document-form :form @submit="submit"></document-form>
       </template>
-    </div>
+    </layout-card>
   </Container>
 </template>
 
@@ -46,6 +46,7 @@ import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
 import DocumentForm, { type DocumentFormPayload } from '@/components/docs/form.vue'
 import PageTitle from '@/components/layout/title.vue';
+import LayoutCard from '@/components/layout/card.vue';
 
 const auth = useAuthStore()
 

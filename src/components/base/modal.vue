@@ -1,7 +1,7 @@
 <template>
   <div class="fixed bg-black/10 inset-0 z-10 flex justify-center items-start p-4 backdrop-blur-sm overflow-auto"
     :class="{ 'hidden opacity-0': !show }">
-    <div ref="modal" class="bg-white p-8 rounded-xl w-full shadow-lg" :class="width">
+    <layout-card ref="modal" class="w-full" :class="width">
       <div class="flex items-center">
         <slot name="header">
           <div>
@@ -15,10 +15,11 @@
       <div class="py-5">
         <slot></slot>
       </div>
-    </div>
+    </layout-card>
   </div>
 </template>
 <script lang="ts" setup>
+import LayoutCard from '@/components/layout/card.vue';
 import { onClickOutside } from "@vueuse/core";
 import { X } from "lucide-vue-next";
 import { ref, watch } from "vue"

@@ -7,7 +7,7 @@
         <span>Reload user</span>
       </base-button>
     </div>
-    <div class="mt-10 p-4 md:p-9 rounded-xl bg-white">
+    <layout-card class="mt-10">
       <div v-if="userStore.loading" class="py-5 text-center">
         <base-loader></base-loader>
       </div>
@@ -40,7 +40,7 @@
           </base-button>
         </div>
       </form>
-    </div>
+    </layout-card>
   </Container>
 </template>
 <script lang="ts" setup>
@@ -49,6 +49,7 @@ import BaseButton from '@/components/base/button.vue';
 import BaseLoader from '@/components/base/loader.vue';
 import FormInput from '@/components/form/input.vue';
 import PageTitle from '@/components/layout/title.vue';
+import LayoutCard from '@/components/layout/card.vue';
 import { onMounted, ref, watch } from 'vue';
 import { useUserStore, type User } from '@/stores/users';
 import { useAuthStore } from '@/stores/auth';
