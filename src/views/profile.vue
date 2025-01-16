@@ -15,18 +15,18 @@
       <form @submit.prevent="update" v-else-if="form">
         <div class="space-y-4">
           <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 items-center md:space-x-4">
-            <img v-if="form.avatar" :src="auth.avatar" class="h-40 w-40 rounded-full object-cover" alt="avatar">
+            <img v-if="form.avatar_url" :src="form.avatar_url" class="h-40 w-40 rounded-full object-cover" alt="avatar">
             <div class="flex items-center justify-center md:justify-start flex-wrap gap-4">
               <div>
                 <input type="file" class="h-0 w-0 absolute -z-10" id="avatar" @change="uploadAvatar" />
                 <label for="avatar">
                   <span type="button" class="rounded border p-1 inline-flex items-center space-x-2 font-medium">
                     <Edit :size="20" :stroke-width="1.5" />
-                    <span>{{ form.avatar ? `Edit` : 'Upload' }} avatar</span>
+                    <span>{{ form.avatar_url ? `Edit` : 'Upload' }} avatar</span>
                   </span>
                 </label>
               </div>
-              <button v-if="form.avatar" type="button"
+              <button v-if="form.avatar_url" type="button"
                 class="rounded border p-1 inline-flex items-center space-x-2 font-medium" @click="deleteAvatar">
                 <Trash2 :size="20" :stroke-width="1.5" />
                 <span>Delete avatar</span>

@@ -33,7 +33,8 @@
         </ul>
         <div v-else>
           <div class="hidden sm:flex items-center space-x-2 border border-slate-300 rounded-lg py-1 px-2">
-            <img v-if="auth.avatar" class="h-12 w-12 rounded-full object-cover object-center " :src="auth.avatar" />
+            <img v-if="auth.user?.avatar_url" :src="auth.user.avatar_url"
+              class="h-12 w-12 rounded-full object-cover object-center" />
             <span v-else class="h-12 w-12 inline-flex items-center justify-center bg-slate-200 rounded-full flex-none">
               <user2 :stroke-width="1" :size="28" />
             </span>

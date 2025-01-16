@@ -11,6 +11,7 @@ export interface NewUser {
   email: string
   phone?: string | null
   avatar?: string | null
+  avatar_url?: string | null
 }
 
 export interface User extends NewUser {
@@ -83,13 +84,10 @@ export const useUserStore = defineStore(
       loading.value = false
 
       try {
-        const name = generateSlug(file.name)
+        const name = generateSlug(file.name, true)
         const { data, error } = await supabase.storage
           .from("avatars")
-          .upload(`public/${name}`, file, {
-            cacheControl: "3600",
-            upsert: false,
-          })
+          .upload(`public/${name}`, file)
 
         if (error) {
           return null
@@ -98,7 +96,15 @@ export const useUserStore = defineStore(
         if (data) {
           // update user avatar
 
-          await update(user.id, { ...user, avatar: data.path })
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from("avatars").getPublicUrl(data.path)
+
+          await update(user.id, {
+            ...user,
+            avatar: data.path,
+            avatar_url: publicUrl,
+          })
 
           return data.path
         }

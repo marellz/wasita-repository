@@ -33,13 +33,6 @@ export const useAuthStore = defineStore(
     const loading = ref(false)
     const router = useRouter()
     const userStore = useUserStore()
-    const avatar = computed(() =>
-      user.value && user.value.avatar
-        ? import.meta.env.VITE_SUPABASE_S3_ENDPOINT +
-          "/object/public/avatars/" +
-          user.value.avatar
-        : "",
-    )
 
     const errors = ref<{
       email?: string | undefined
@@ -183,7 +176,6 @@ export const useAuthStore = defineStore(
     return {
       authUser,
       user,
-      avatar,
       getUser,
       updateUser,
       isAuthenticated,
