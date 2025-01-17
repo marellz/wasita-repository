@@ -14,10 +14,14 @@
       <form @submit.prevent="update" v-else-if="form">
         <div class="grid gap-10 sm:grid-cols-2 md:grid-cols-3 sm:items-center">
           <div class="flex flex-col space-y-4 items-center">
-            <img v-if="form.avatar_url" :src="form.avatar_url" class="h-40 w-40 rounded-full object-cover" alt="avatar">
+            <div v-if="userStore.uploading" class="h-40 w-40 rounded-full flex items-center justify-center">
+              <base-loader></base-loader>
+            </div>
+            <img v-else-if="form.avatar_url" :src="form.avatar_url" class="h-40 w-40 rounded-full object-cover"
+              alt="avatar">
             <label v-else for="avatar">
               <span class="h-40 w-40 rounded-full border bg-gray-100 flex items-center justify-center">
-                <Image :size="48" :stroke-width="1.5"/>
+                <Image :size="48" :stroke-width="1.5" />
               </span>
             </label>
             <div class="flex items-center justify-center md:justify-start flex-wrap gap-4">

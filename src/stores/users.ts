@@ -25,6 +25,7 @@ export const useUserStore = defineStore(
     const loading = ref(false)
     const error = ref<any>()
     const auth = useAuthStore()
+    const uploading = ref(false)
 
     const create = async (user: User) => {
       try {
@@ -68,6 +69,8 @@ export const useUserStore = defineStore(
         return null
       }
 
+      uploading.value = true
+
       const user = auth.user
 
       if (!user) {
@@ -81,7 +84,6 @@ export const useUserStore = defineStore(
         deleteAvatar(user.avatar)
       }
 
-      loading.value = false
 
       try {
         const name = generateSlug(file.name, true)
@@ -111,7 +113,7 @@ export const useUserStore = defineStore(
       } catch (error) {
         handleUserError(error)
       } finally {
-        loading.value = false
+        uploading.value = false
       }
     }
 
@@ -166,6 +168,7 @@ export const useUserStore = defineStore(
     }
 
     const deleteAvatar = async (avatar: string) => {
+      uploading.value = true
       const user = auth.user
       try {
         const { data, error } = await supabase.storage
@@ -184,6 +187,8 @@ export const useUserStore = defineStore(
         return false
       } catch (error) {
         handleUserError(error)
+      } finally {
+        uploading.value = false
       }
     }
 
@@ -216,6 +221,7 @@ export const useUserStore = defineStore(
       refreshUser,
 
       //
+      uploading,
       loading,
       error,
     }

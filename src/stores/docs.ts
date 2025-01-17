@@ -73,6 +73,7 @@ export const useDocumentStore = defineStore(
     const error = ref<any>()
     const loadingAll = ref(false)
     const loadingSingle = ref(false)
+    const uploading = ref(false)
     const toasts = useToastsStore()
     const documents = ref<Document[]>([])
     const auth = useAuthStore()
@@ -156,6 +157,8 @@ export const useDocumentStore = defineStore(
         return null
       }
 
+      uploading.value = true
+
       try {
         const name = generateSlug(file.name)
         const { data, error } = await supabase.storage
@@ -174,6 +177,8 @@ export const useDocumentStore = defineStore(
         }
       } catch (error) {
         handleDocumentError(error)
+      } finally {
+        uploading.value = false
       }
     }
 
@@ -421,6 +426,7 @@ export const useDocumentStore = defineStore(
       updateFile,
       uploadFile,
       deleteFile,
+      uploading,
       loadingAll,
       loadingSingle,
       error,

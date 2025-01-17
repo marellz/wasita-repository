@@ -1,10 +1,11 @@
 <template>
   <label class="block" :for="id">
-    <input class="h-0 w-0 absolute -z-10" @change="handleChange" type="file" :id :disabled :required ref="input">
+    <input class="h-0 w-0 absolute -z-10" @change="handleChange" type="file" :id :disabled="disabled || uploading"
+      :required ref="input">
 
     <div
       class="border-2 border-slate-400 p-4 rounded-xl border-dashed min-h-64 flex flex-wrap items-center justify-center md:space-x-10 space-y-4 md:space-y-0 transition-all ease-in-out duration-150 bg-transparent"
-      :class="{ 'border-red-400': error, '!border-indigo-600 !bg-indigo-50' : !!model }">
+      :class="{ 'border-red-400': error, '!border-indigo-600 !bg-indigo-50': !!model, 'grayscale': disabled || uploading }">
       <div>
         <img class="max-w-40" src="@/assets/images/undraw_add-files_d04y.svg" alt="">
       </div>
@@ -46,7 +47,8 @@
 import useCustomId from '@/composables/useCustomId';
 import { FileCheck, Trash } from 'lucide-vue-next';
 import FormError from '@/components/form/error.vue'
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useDocumentStore } from '@/stores/docs';
 
 defineProps<{
   disabled?: boolean;
@@ -54,6 +56,8 @@ defineProps<{
   error?: any
 }>()
 
+const store = useDocumentStore()
+const uploading = computed(() => store.uploading)
 const model = defineModel<File | undefined>();
 const id = ref();
 const input = ref()
