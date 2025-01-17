@@ -130,6 +130,7 @@ export const useAuthStore = defineStore(
 
       token.value = null
       user.value = null
+      authUser.value = null
 
       router.push("/")
     }
