@@ -1,12 +1,12 @@
 <template>
 
   <h1 class="text-2xl font-bold mb-6">Register</h1>
-  <form @submit.prevent="register">
+  <Form @submit.prevent="register">
     <div class="space-y-4">
-      <form-input label="Name" v-model="user.name" required></form-input>
-      <form-input label="Email" :error="errors.email" v-model="user.email" type="email" required></form-input>
-      <form-input label="Password" v-model="user.password" type="password" required></form-input>
-      <form-input label="Confirm password" v-model="user.confirmPassword" type="password" required></form-input>
+      <form-input name="name" label="Name" v-model="user.name" required></form-input>
+      <form-input name="email" label="Email" :error="errors.email" v-model="user.email" type="email" required></form-input>
+      <form-input name="password" label="Password" v-model="user.password" type="password" required></form-input>
+      <form-input name="passwordConfirmation" label="Confirm password" v-model="user.confirmPassword" type="password" required></form-input>
       <div>
         <base-button class="w-full" :loading>
           <span>Register</span>
@@ -18,9 +18,10 @@
         </p>
       </div>
     </div>
-  </form>
+  </Form>
 </template>
 <script lang="ts" setup>
+import { Form } from 'vee-validate';
 import FormInput from '@/components/form/input.vue';
 import BaseButton from '@/components/base/button.vue'
 import { computed, ref } from 'vue';
