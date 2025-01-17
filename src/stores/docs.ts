@@ -436,7 +436,7 @@ export const useDocumentStore = defineStore(
     }
   },
   {
-    persist: true,
+    persist: false,
   },
 )
 

@@ -115,7 +115,7 @@ export const useRemarkStore = defineStore(
     }
   },
   {
-    persist: true,
+    persist: false,
   },
 )
 

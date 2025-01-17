@@ -29,7 +29,9 @@ export const useAuthStore = defineStore(
     const authUser = ref<AuthUser | null>(null)
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
-    const isAuthenticated = computed(() => user.value !== null)
+    const isAuthenticated = computed(
+      () => user.value !== null || authUser.value !== null,
+    )
     const loading = ref(false)
     const router = useRouter()
     const userStore = useUserStore()
@@ -192,7 +194,10 @@ export const useAuthStore = defineStore(
     }
   },
   {
-    persist: true,
+    persist: {
+      storage: sessionStorage,
+      pick: ["authUser", "user"],
+    },
   },
 )
 

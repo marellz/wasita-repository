@@ -59,7 +59,7 @@ export const useToastsStore = defineStore(
     }
   },
   {
-    persist: true,
+    persist: false,
   },
 )
 
