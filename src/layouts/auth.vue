@@ -11,10 +11,10 @@
     </header>
     <main class="flex-auto py-4">
       <layout-container>
-        <div class="flex items-center justify-center p-4">
-          <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
+        <div class="flex items-center justify-center">
+          <layout-card class="w-full max-w-md">
             <slot />
-          </div>
+          </layout-card>
         </div>
       </layout-container>
     </main>
@@ -26,4 +26,5 @@
 import PageFooter from '@/components/page/footer.vue';
 import LayoutContainer from "@/components/layout/container.vue"
 import ToastWrapper from '@/components/toast/wrapper.vue';
+import LayoutCard from '@/components/layout/card.vue';
 </script>

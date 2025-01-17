@@ -57,10 +57,13 @@
             </div>
           </div>
           <div class="flex space-x-4 sm:hidden">
-            <button type="button" class="p-2 rounded-full focus:bg-slate-200">
-              <User2 :stroke-width="1.5" />
-            </button>
-            <button type="button" class="p-2 rounded-full focus:bg-slate-200">
+            <router-link to="/profile">
+              <button type="button" class="p-2 rounded-full focus:bg-slate-200">
+                <User2 :stroke-width="1.5" />
+              </button>
+            </router-link>
+
+            <button type="button" class="p-2 rounded-full focus:bg-slate-200" @click="logout">
               <LogOut :stroke-width="1.5" />
             </button>
 

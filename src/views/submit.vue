@@ -1,7 +1,7 @@
 <template>
   <Container>
-    <h1 class="text-4xl md:text-[60px] md:leading-[80px] font-medium font-funnel">Make a submission</h1>
-    <div class="bg-white p-8 rounded-xl shadow-md">
+    <page-title class="mb-10">Make a submission</page-title>
+    <layout-card>
       <div v-if="!auth.isAuthenticated">
         <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
         <div class="mt-20">
@@ -33,7 +33,7 @@
       <template v-else>
         <document-form :form @submit="submit"></document-form>
       </template>
-    </div>
+    </layout-card>
   </Container>
 </template>
 
@@ -45,6 +45,8 @@ import { ref, watch } from 'vue';
 import Container from '@/components/layout/container.vue';
 import BaseButton from '@/components/base/button.vue';
 import DocumentForm, { type DocumentFormPayload } from '@/components/docs/form.vue'
+import PageTitle from '@/components/layout/title.vue';
+import LayoutCard from '@/components/layout/card.vue';
 
 const auth = useAuthStore()
 
