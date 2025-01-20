@@ -8,7 +8,7 @@
         <img src="@/assets/images/logo.svg" class="h-10" alt="" />
       </router-link>
       <nav class="ml-6 md:ml-10 flex flex-auto items-center justify-between">
-        <ul class="flex items-center space-x-4 font-medium font-funnel">
+        <ul class="flex items-center space-x-4 font-medium font-secondary">
           <li v-for="link in _links" :key="link.path">
             <router-link
               :to="link.path"
@@ -29,7 +29,7 @@
           <li v-for="link in guestLinks" :key="link.path">
             <router-link
               :to="link.path"
-              class="font-funnel font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-slate-200"
+              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-slate-200"
               :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }"
             >
               <span class="hidden md:block">

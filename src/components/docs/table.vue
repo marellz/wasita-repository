@@ -4,10 +4,12 @@
       <thead>
         <tr>
           <th v-for="({ label, key }, i) in headers" :key>
-            <p class="text-sm text-slate-500 font-light text-left"
-              :class="{ '!text-center': i === headers.length - 1 }">
-              {{ label
-              }}</p>
+            <p
+              class="text-sm text-slate-500 font-light text-left"
+              :class="{ '!text-center': i === headers.length - 1 }"
+            >
+              {{ label }}
+            </p>
           </th>
         </tr>
       </thead>
@@ -27,37 +29,60 @@
               <div class="space-y-1">
                 <div class="flex space-x-2 items-center">
                   <p class="font-medium">{{ row.name }}</p>
-                  <span class="py-0.5 px-2 rounded-full border text-xs"> {{ row.category }}</span>
+                  <span class="py-0.5 px-2 rounded-full border text-xs">
+                    {{ row.category }}</span
+                  >
                   <div>
-                    <DocumentStatusTag v-if="row.is_draft">draft</DocumentStatusTag>
-                    <DocumentStatusTag status="success" v-else>published</DocumentStatusTag>
+                    <DocumentStatusTag v-if="row.is_draft"
+                      >draft</DocumentStatusTag
+                    >
+                    <DocumentStatusTag status="success" v-else
+                      >published</DocumentStatusTag
+                    >
                   </div>
                 </div>
                 <p class="text-sm italic text-slate-500">
                   {{ row.original_name }}
                 </p>
-                <p v-if="row.details"
-                  class="!mt-2 p-2 bg-slate-50 text-xs leading-6 rounded-lg h-20 overflow-auto resize-y">
-                  {{
-                    row.details }}
+                <p
+                  v-if="row.details"
+                  class="!mt-2 p-2 bg-slate-50 text-xs leading-6 rounded-lg h-20 overflow-auto resize-y"
+                >
+                  {{ row.details }}
                 </p>
               </div>
             </td>
 
             <td>
               <div class="flex space-x-3 items-center justify-center">
-                <button type="button" class="p-2 hover:bg-slate-100 rounded-lg" @click="update(row.id)">
+                <button
+                  type="button"
+                  class="p-2 hover:bg-slate-100 rounded-lg"
+                  @click="update(row.id)"
+                >
                   <Edit2 />
                 </button>
-                <button type="button" class="p-2 hover:bg-slate-100 rounded-lg" @click="openDocument(row.url)">
+                <button
+                  type="button"
+                  class="p-2 hover:bg-slate-100 rounded-lg"
+                  @click="openDocument(row.url)"
+                >
                   <ExternalLink />
                 </button>
-                <button v-if="isSupported" type="button" class="p-2 hover:bg-slate-100 rounded-lg"
-                  @click="getLink(row.url)">
+                <button
+                  v-if="isSupported"
+                  type="button"
+                  class="p-2 hover:bg-slate-100 rounded-lg"
+                  @click="getLink(row.url)"
+                >
                   <Share2 />
                 </button>
-                <button type="button" class="p-2 hover:bg-slate-100 rounded-lg disabled:text-slate-200"
-                  @click="deleteDocument(row.id)" :disabled="auth.user?.id !== row.user_id">
+                <button
+                  type="button"
+                  class="p-2 hover:bg-slate-100 rounded-lg disabled:text-slate-200"
+                  @click="deleteDocument(row.id)"
+                  :disabled="auth.user?.id !== row.user_id"
+                >
                   <Trash2 />
                 </button>
               </div>
@@ -67,9 +92,7 @@
         <template v-else>
           <tr>
             <td class="border-none" :colspan>
-              <p class="text-center font-funnel">
-                No Documents
-              </p>
+              <p class="text-center font-secondary">No Documents</p>
             </td>
           </tr>
         </template>
@@ -78,48 +101,43 @@
   </layout-card>
 </template>
 <script lang="ts" setup>
-import { Edit2, ExternalLink, Share2, Trash2 } from 'lucide-vue-next';
-import LayoutCard from '@/components/layout/card.vue';
-import BaseLoader from '@/components/base/loader.vue';
-import DocumentStatusTag from '@/components/home/document-status-tag.vue';
-import type { Document } from '@/stores/docs';
-import { computed } from 'vue';
-import { useClipboard } from '@vueuse/core';
-import { useAuthStore } from '@/stores/auth';
+import { Edit2, ExternalLink, Share2, Trash2 } from "lucide-vue-next"
+import LayoutCard from "@/components/layout/card.vue"
+import BaseLoader from "@/components/base/loader.vue"
+import DocumentStatusTag from "@/components/home/document-status-tag.vue"
+import type { Document } from "@/stores/docs"
+import { computed } from "vue"
+import { useClipboard } from "@vueuse/core"
+import { useAuthStore } from "@/stores/auth"
 
 const auth = useAuthStore()
 
 const { isSupported } = useClipboard()
 defineProps<{
-  items: Document[],
+  items: Document[]
   loading?: boolean
-
 }>()
 
-const emit = defineEmits(['update', 'open-document',
-  'get-link',
-  'delete'])
+const emit = defineEmits(["update", "open-document", "get-link", "delete"])
 
 const update = (id: number) => {
-  emit('update', id)
+  emit("update", id)
 }
 
 const openDocument = (url: string) => {
-  emit('open-document', url);
-
+  emit("open-document", url)
 }
 const getLink = (url: string) => {
-  emit('get-link', url);
+  emit("get-link", url)
 }
 const deleteDocument = (id: number) => {
-  emit('delete', id);
+  emit("delete", id)
 }
 
 type DocumentHeader = {
-  key: keyof Document,
-  label: string;
+  key: keyof Document
+  label: string
 }
-
 
 const headers: DocumentHeader[] = [
   { key: "name", label: "Document details" },
