@@ -30,7 +30,3 @@
 .documents-table td {
   @apply block md:table-cell md:first:w-24 md:border-y md:first:border-l md:last:border-r md:last:rounded-r-lg md:first:rounded-l-lg p-4 md:bg-white;
 }
-
-main {
-  @apply bg-slate-200;
-}

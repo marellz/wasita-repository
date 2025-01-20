@@ -1,19 +1,34 @@
 <template>
   <header
-    class="py-5 px-2 sticky top-0 after:block after:inset-0 after:absolute after:bg-gradient-to-t after:to-slate-50 from-slate-200 after:z-[-1]"
-    :class="{ 'backdrop-blur-md shadow': yScroll > 0 }"
+    class="fixed w-full h-full md:h-auto py-1 px-2 md:sticky top-0 bg-black text-white transform md:transform-none -translate-x-full transition duration-150 ease-in-out z-20"
+    :class="{ shadow: yScroll > 0, '!translate-x-0': show }"
   >
-    <Container class="flex items-center relative z-1">
-      <router-link to="/">
-        <img src="@/assets/images/logo.svg" class="h-10" alt="" />
-      </router-link>
-      <nav class="ml-6 md:ml-10 flex flex-auto items-center justify-between">
-        <ul class="flex items-center space-x-4 font-medium font-secondary">
+    <Container class="relative z-1 h-full">
+      <nav
+        class="flex flex-col h-full p-10 md:p-2 md:flex-row md:items-center md:justify-between"
+      >
+        <div
+          class="py-10 flex items-center justify-between space-x-4 md:hidden"
+        >
+          <p class="text-3xl font-secondary font-semibold text-slate-100/50">
+            Menu
+          </p>
+          <button
+            type="button"
+            class="p-1 rounded-xl hover:bg-slate-200/10"
+            @click="show = false"
+          >
+            <ChevronLeft />
+          </button>
+        </div>
+        <ul
+          class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 font-medium font-secondary text-2xl lowercase"
+        >
           <li v-for="link in _links" :key="link.path">
             <router-link
               :to="link.path"
-              class="inline-flex items-center space-x-1 border-b-2 py-1.5 border-b-transparent"
-              :class="{ 'text-indigo-600': route.path === link.path }"
+              class="inline-flex items-center space-x-1 border-b-2 py-1.5 border-b-transparent opacity-35"
+              :class="{ '!opacity-100': route.path === link.path }"
             >
               <span>
                 {{ link.label }}
@@ -39,70 +54,35 @@
             </router-link>
           </li>
         </ul>
-        <div v-else>
-          <div
-            class="hidden sm:flex items-center space-x-2 border border-slate-300 rounded-lg py-1 px-2"
-          >
-            <img
-              v-if="auth.user?.avatar_url"
-              :src="auth.user.avatar_url"
-              class="h-12 w-12 rounded-full object-cover object-center"
-            />
-            <span
-              v-else
-              class="h-12 w-12 inline-flex items-center justify-center bg-slate-200 rounded-full flex-none"
-            >
-              <user2 :stroke-width="1" :size="28" />
-            </span>
-            <div>
-              <p class="font-medium text-sm">
-                {{ auth.user?.name || auth.user?.email }}
-              </p>
-              <div class="flex items-center space-x-2 mt-1">
-                <a
-                  class="text-xs hover:text-red-600"
-                  href="#logout"
-                  @click.prevent="logout"
-                >
-                  Logout
-                </a>
-                <span> &bull; </span>
-                <router-link
-                  to="/profile"
-                  class="text-xs hover:text-indigo-600"
-                >
-                  Profile
-                </router-link>
-              </div>
-            </div>
-          </div>
-          <div class="flex space-x-4 sm:hidden">
-            <router-link to="/profile">
-              <button type="button" class="p-2 rounded-full focus:bg-slate-200">
-                <User2 :stroke-width="1.5" />
-              </button>
-            </router-link>
-
-            <button
-              type="button"
-              class="p-2 rounded-full focus:bg-slate-200"
-              @click="logout"
-            >
-              <LogOut :stroke-width="1.5" />
-            </button>
-          </div>
-        </div>
+        <user-menu v-else />
       </nav>
     </Container>
   </header>
+  <div class="md:hidden py-2 sticky top-0 backdrop-blur-md">
+    <Container>
+      <div class="flex items-center justify-between">
+        <router-link to="/" class="font-bold font-secondary text-lg">
+          wasita-repository
+        </router-link>
+        <button
+          type="button"
+          class="rounded-xl p-2 bg-slate-200 text-slate-800 hover:bg-indigo-200 focus:bg-indigo-200 relative z-10"
+          @click="show = true"
+        >
+          <Menu />
+        </button>
+      </div>
+    </Container>
+  </div>
 </template>
 <script lang="ts" setup>
-import { useAuthStore } from "@/stores/auth"
-import { LogIn, LogOut, User2, UserPlus2 } from "lucide-vue-next"
-import { computed, type Component } from "vue"
+import { ChevronLeft, LogIn, Menu, UserPlus2 } from "lucide-vue-next"
+import { computed, ref, watch, type Component } from "vue"
 import { useRoute } from "vue-router"
 import { useWindowScroll } from "@vueuse/core"
-import Container from "../layout/container.vue"
+import { useAuthStore } from "@/stores/auth"
+import Container from "@/components/layout/container.vue"
+import UserMenu from "@/components/user/menu.vue"
 
 const { y: yScroll } = useWindowScroll()
 
@@ -117,13 +97,9 @@ interface Link {
   primary?: boolean
 }
 
-const logout = async () => {
-  if (confirm("Are you sure you want to log out?")) await auth.logout()
-}
-
 const route = useRoute()
-
 const links: Link[] = [
+  { path: "/", label: "Home", requiresAuth: true },
   { path: "/my-files", label: "My files", requiresAuth: true },
   { path: "/about", label: "About" },
 ]
@@ -133,7 +109,16 @@ const _links = computed(() =>
 )
 
 const guestLinks: Link[] = [
-  { path: "/login", label: "Login", primary: true, icon: LogIn },
+  { path: "/login", label: "Login", icon: LogIn },
   { path: "/register", label: "Register", icon: UserPlus2 },
 ]
+
+const show = ref(false)
+
+watch(
+  () => route.path,
+  () => {
+    show.value = false
+  },
+)
 </script>

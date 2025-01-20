@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 py-10"
+    class="bg-slate-100 rounded-xl p-5 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 py-10"
   >
     <img
       class="max-w-sm w-full"
@@ -8,10 +8,12 @@
       alt=""
     />
     <div class="space-y-4">
-      <h1 class="text-3xl font-medium leading-snug">
+      <h1
+        class="text-3xl md:text-3xl font-semibold font-secondary leading-tight"
+      >
         Your repository is ready, but it’s feeling a little empty.
       </h1>
-      <p>
+      <p class="font-light">
         Start uploading important documents to keep everything organized and
         accessible for your family. With everything in one place, you'll never
         have to dig through endless conversations again.
