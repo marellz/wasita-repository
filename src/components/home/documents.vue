@@ -7,7 +7,7 @@
   </base-alert>
   <template v-else-if="documents.length">
     <div class="flex justify-end" v-if="auth.isAuthenticated">
-      <router-link to="/submit">
+      <router-link to="/create">
         <base-button variant="primary-outline">
           <span>Create document</span>
           <Plus />

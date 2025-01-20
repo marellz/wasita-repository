@@ -5,8 +5,7 @@ import {
 } from "vue-router"
 import Home from "@/views/home.vue"
 import Login from "@/views/auth/login.vue"
-  import { useAuthStore } from "@/stores/auth"
-
+import { useAuthStore } from "@/stores/auth"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,12 +45,9 @@ const router = createRouter({
       component: () => import("@/views/profile.vue"),
     },
     {
-      path: "/submit",
-      name: "submit",
-      component: () => import("@/views/submit.vue"),
-      meta: {
-        layout: "form",
-      },
+      path: "/create",
+      name: "create",
+      component: () => import("@/views/create.vue"),
     },
     {
       path: "/my-files",
@@ -68,7 +64,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
-  const authRoutes: RouteRecordNameGeneric[] = ["home", "login", "register", "about"]
+  const authRoutes: RouteRecordNameGeneric[] = [
+    "home",
+    "login",
+    "register",
+    "about",
+  ]
   if (!authRoutes.includes(to.name) && !auth.isAuthenticated)
     next({ name: "login" })
   else next()

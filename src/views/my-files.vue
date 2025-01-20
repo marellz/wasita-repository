@@ -3,7 +3,7 @@
     <base-tabs :tabs @change="changeCriteria">
       <template #nav>
         <div class="!ml-auto">
-          <router-link to="/submit">
+          <router-link to="/create">
             <base-button variant="primary-outline">
               <span>Create document</span>
               <Plus />
@@ -12,47 +12,57 @@
         </div>
       </template>
       <template v-for="(tab, index) in tabs" :key="index" #[tab.key]>
-        <documents-table :items="documents" :loading="store.loadingAll" @update="openDocumentUpdateModal"
-          @get-link="getDocumentLink" @open-document="openDocument" @delete="deleteDocument" />
+        <documents-table
+          :items="documents"
+          :loading="store.loadingAll"
+          @update="openDocumentUpdateModal"
+          @get-link="getDocumentLink"
+          @open-document="openDocument"
+          @delete="deleteDocument"
+        />
       </template>
     </base-tabs>
   </Container>
-  <document-update :id="updateId" v-if="updateId" v-model="updateModalActive" @close="close"></document-update>
+  <document-update
+    :id="updateId"
+    v-if="updateId"
+    v-model="updateModalActive"
+    @close="close"
+  ></document-update>
 </template>
 <script lang="ts" setup>
-import Container from '@/components/layout/container.vue';
-import BaseTabs from '@/components/base/tabs.vue';
-import BaseButton from '@/components/base/button.vue';
-import { computed, onMounted, ref } from 'vue';
-import { useDocumentStore, type GetDocumentsCriteria } from '@/stores/docs';
-import DocumentsTable from '@/components/docs/table.vue';
-import DocumentUpdate from '@/components/home/document-update.vue';
-import { useClipboard } from '@vueuse/core';
-import { useToastsStore } from '@/stores/toasts';
-import { Plus } from 'lucide-vue-next';
-
+import Container from "@/components/layout/container.vue"
+import BaseTabs from "@/components/base/tabs.vue"
+import BaseButton from "@/components/base/button.vue"
+import { computed, onMounted, ref } from "vue"
+import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/docs"
+import DocumentsTable from "@/components/docs/table.vue"
+import DocumentUpdate from "@/components/home/document-update.vue"
+import { useClipboard } from "@vueuse/core"
+import { useToastsStore } from "@/stores/toasts"
+import { Plus } from "lucide-vue-next"
 
 const store = useDocumentStore()
 const tabs = ref([
   {
     label: "My docs",
-    key: 'mine',
+    key: "mine",
   },
   {
     label: "Private",
-    key: 'private',
+    key: "private",
   },
   {
     label: "Draft",
-    key: 'drafts',
+    key: "drafts",
   },
   {
     label: "Shared with me",
-    key: 'sent',
+    key: "sent",
   },
 ])
 
-const documents = computed(() => store.documents);
+const documents = computed(() => store.documents)
 const updateId = ref<number | null>()
 const updateModalActive = ref<boolean>(true)
 
@@ -63,7 +73,7 @@ const getDocuments = async (criteria: GetDocumentsCriteria) => {
 }
 
 const openDocument = async (url: string) => {
-  const link = await store.getDocumentPublicUrl(url);
+  const link = await store.getDocumentPublicUrl(url)
 
   if (link) {
     window.open(link)
@@ -76,7 +86,7 @@ const openDocumentUpdateModal = (id: number) => {
 }
 
 const getDocumentLink = async (url: string) => {
-  const link = await store.getDocumentPublicUrl(url);
+  const link = await store.getDocumentPublicUrl(url)
 
   if (link) {
     console.log(link)
@@ -84,7 +94,7 @@ const getDocumentLink = async (url: string) => {
   }
 
   if (copied) {
-    useToastsStore().addInfo('Copied!')
+    useToastsStore().addInfo("Copied!")
   }
 }
 
@@ -102,7 +112,7 @@ const deleteDocument = async (id: number) => {
   if (!success) {
     return
   }
-  const _i = documents.value.findIndex(d => d.id === id)
+  const _i = documents.value.findIndex((d) => d.id === id)
 
   if (_i !== -1) {
     documents.value.splice(_i, 1)
@@ -113,12 +123,11 @@ const changeCriteria = (tab: string) => {
   getDocuments(tab as GetDocumentsCriteria)
 }
 
-
 const close = async () => {
   const id = updateId.value
   if (id) {
     const _updated = await store.getDocument(id)
-    const _i = documents.value.findIndex(d => d.id === id)
+    const _i = documents.value.findIndex((d) => d.id === id)
 
     if (_updated && _i !== -1) {
       documents.value[_i] = _updated
@@ -130,7 +139,6 @@ const close = async () => {
 }
 
 onMounted(async () => {
-  await getDocuments('mine')
+  await getDocuments("mine")
 })
-
 </script>
