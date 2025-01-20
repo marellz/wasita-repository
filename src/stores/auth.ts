@@ -30,7 +30,7 @@ export const useAuthStore = defineStore(
     const user = ref<User | null>(null)
     const token = ref<string | null>(null)
     const isAuthenticated = computed(
-      () => user.value !== null || authUser.value !== null,
+      () => user.value !== null && authUser.value !== null,
     )
     const loading = ref(false)
     const router = useRouter()
