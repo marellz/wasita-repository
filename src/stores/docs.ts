@@ -57,6 +57,16 @@ export interface Document {
   user_id: string
   original_name: string | null
   collaborators: string[] | null
+  remarks: {
+    count: number
+  }[]
+  user: {
+    id: string
+    name: string | null
+    email: string
+    avatar?: string | null
+    avatar_url?: string | null
+  }
 }
 
 export type GetDocumentsCriteria =
@@ -83,7 +93,11 @@ export const useDocumentStore = defineStore(
       error.value = null
       documents.value = []
 
-      const query = supabase.from("documents").select(`*, remarks(count)`)
+      const query = supabase.from("documents").select(
+        `*,
+          user: users(id, email, name, avatar_url),
+          remarks(count)`,
+      )
 
       switch (criteria) {
         // belong to me, period
@@ -219,10 +233,10 @@ export const useDocumentStore = defineStore(
           original_name: file.name,
         }
 
-        const { data, error } = await supabase
-          .from("documents")
-          .insert(payload)
-          .select()
+        const { data, error } = await supabase.from("documents").insert(payload)
+          .select(`*,
+          user: users(id, email, name, avatar_url),
+          remarks(count)`)
 
         if (error) {
           handleDocumentError(error)
@@ -249,7 +263,11 @@ export const useDocumentStore = defineStore(
       try {
         const { error, data } = await supabase
           .from("documents")
-          .select()
+          .select(
+            `*,
+          user: users(id, email, name, avatar_url),
+          remarks(count)`,
+          )
           .eq("id", id)
 
         if (error) {
