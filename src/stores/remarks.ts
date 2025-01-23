@@ -11,6 +11,12 @@ export interface Remark {
   id: number
   is_flagged: boolean
   user_id: string
+  user: {
+    id: string
+    name?: string | null
+    email: string
+    avatar_url?: string | null
+  }
 }
 
 export const useRemarkStore = defineStore(
@@ -33,10 +39,9 @@ export const useRemarkStore = defineStore(
       }
 
       try {
-        const { data, error } = await supabase
-          .from("remarks")
-          .insert(form)
-          .select()
+        const { data, error } = await supabase.from("remarks").insert(form)
+          .select(`*,
+            user: users(id, email, name, avatar)`)
 
         if (error) {
           handleRemarksError(error)
@@ -74,7 +79,10 @@ export const useRemarkStore = defineStore(
       try {
         const { data, error } = await supabase
           .from("remarks")
-          .select()
+          .select(
+            `*,
+            user: users(id, email, name, avatar)`,
+          )
           .eq("document_id", doc)
 
         if (error) {

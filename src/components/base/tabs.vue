@@ -1,9 +1,17 @@
 <template>
-  <div class="flex flex-col md:flex-row md:items-center space-y-3 md:space-x-3">
-    <ul class="border border-slate-400 p-2 rounded-lg flex overflow-auto max-w-full">
+  <div
+    class="flex flex-col md:flex-row md:items-center space-y-3 md:space-x-3 md:space-y-0"
+  >
+    <ul
+      class="bg-slate-200 py-1.5 md:p-2 rounded-lg flex overflow-auto max-w-full space-x-2"
+    >
       <li v-for="{ label, key } in tabs" :key="key">
-        <a :href="`#${key}`" class="text-slate-500 text-sm px-3 py-1.5 font-medium hover:bg-slate-100 rounded whitespace-nowrap"
-          :class="{ '!text-black': active === key }" @click.prevent="active = key">
+        <a
+          :href="`#${key}`"
+          class="text-black/70 text-xs md:text-sm px-2 md:px-3 py-1.5 font-secondary font-medium hover:bg-slate-200 hover:text-black rounded-lg whitespace-nowrap"
+          :class="{ '!text-white bg-black hover:bg-black': active === key }"
+          @click.prevent="active = key"
+        >
           {{ label }}
         </a>
       </li>
@@ -15,24 +23,24 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from "vue"
 
 interface Tab {
-  key: string,
-  label: string;
+  key: string
+  label: string
 }
 
 const props = defineProps<{
-  tabs: Tab[],
+  tabs: Tab[]
   default?: string
 }>()
 
 const active = ref<string>(props.default ?? props.tabs[0].key)
 
-const emit = defineEmits(['change']);
+const emit = defineEmits(["change"])
 
 watch(active, (v) => {
-  emit('change', v)
+  emit("change", v)
 })
 
 onMounted(() => {

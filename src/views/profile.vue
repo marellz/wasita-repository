@@ -3,7 +3,7 @@
     <div
       class="flex flex-wrap gap-4 md:flex-nowrap items-center justify-between"
     >
-      <page-title>My profile.</page-title>
+      <page-title>User profile</page-title>
       <base-button
         type="button"
         variant="primary-outline"
