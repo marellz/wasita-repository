@@ -41,6 +41,8 @@ export const useAuthStore = defineStore(
       password?: string | undefined
     }>({})
 
+    const hasErrors = computed(() => Object.keys(errors.value).length > 0)
+
     const toasts = useToastsStore()
 
     const login = async (form: LoginForm) => {
@@ -142,7 +144,7 @@ export const useAuthStore = defineStore(
     const handleAuthError = (error: any) => {
       if (typeof error === "object" && error.message) {
         errors.value.email = error.message
-        toasts.addError("Registration error", error.message)
+        toasts.addError("Auth error", error.message)
       }
       console.log(error)
     }
@@ -183,6 +185,7 @@ export const useAuthStore = defineStore(
       updateUser,
       isAuthenticated,
       token,
+      hasErrors,
       errors,
       loading,
       login,

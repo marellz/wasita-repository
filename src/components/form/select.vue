@@ -5,45 +5,59 @@
       <span v-if="required">&ast;</span>
     </form-label>
     <div>
-      <select class="form-input bg-white" v-model="model" :id :disabled :required ref="input">
+      <select
+        class="form-input bg-white"
+        :class="{ 'is-invalid': error }"
+        v-model="model"
+        :id
+        :disabled
+        :required
+        ref="input"
+      >
         <option :value="null" :disabled="required">{{ placeholder }}</option>
         <slot></slot>
       </select>
     </div>
-    <form-error v-if="error">{{ error }}</form-error>
+    <form-error v-if="error" class="mt-1">{{ error }}</form-error>
   </div>
 </template>
 <script setup lang="ts">
-import FormLabel from '@/components/form/label.vue';
-import FormError from '@/components/form/error.vue';
-import useCustomId from '@/composables/useCustomId';
-import { onMounted, ref } from 'vue';
+import FormLabel from "@/components/form/label.vue"
+import FormError from "@/components/form/error.vue"
+import useCustomId from "@/composables/useCustomId"
+import { onMounted, ref } from "vue"
 
-withDefaults(defineProps<{
-  label?: string | undefined;
-  error?: string | undefined;
-  type?: string | undefined;
-  placeholder?: string;
-  disabled?: boolean
-  required?: boolean
-}>(), {
-  type: 'text',
-  placeholder: 'Select option',
-})
+withDefaults(
+  defineProps<{
+    label?: string | undefined
+    error?: string | undefined
+    type?: string | undefined
+    placeholder?: string
+    disabled?: boolean
+    required?: boolean
+  }>(),
+  {
+    type: "text",
+    placeholder: "Select option",
+  },
+)
 
 const id = ref()
 
-const model = defineModel<string | null | undefined>({ required: true, default: null });
+const model = defineModel<string | null | undefined>({
+  required: true,
+  default: null,
+})
 
-const input = ref<HTMLInputElement | null>(null);
+const input = ref<HTMLInputElement | null>(null)
 
 onMounted(() => {
-  if (input.value?.hasAttribute('autofocus')) {
-    input.value?.focus();
+  if (input.value?.hasAttribute("autofocus")) {
+    input.value?.focus()
   }
 
   id.value = useCustomId()
-});
+})
 
-defineExpose({ focus: () => input.value?.focus() });
+defineExpose({ focus: () => input.value?.focus() })
 </script>
