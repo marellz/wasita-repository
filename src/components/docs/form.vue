@@ -249,7 +249,9 @@ const schema = yup.object({
   file: yupFileSChema,
 })
 
-const { errors, defineField, resetForm, handleSubmit } = useForm({
+const { errors, defineField, resetForm, handleSubmit } = useForm<
+  DocumentForm & { file: File }
+>({
   validationSchema: schema,
 })
 
@@ -294,11 +296,15 @@ const displayedCollaborators = computed(() => {
     return []
   }
 
-  return users.value.filter((u) => collaborators?.includes(u.id))
+  return users.value.filter(
+    (u) => collaborators instanceof Array && collaborators.includes(u.id),
+  )
 })
 
 const removeSelectedCollaborator = (index: number) => {
-  collaborators?.splice(index, 1)
+  if (collaborators instanceof Array) {
+    collaborators.splice(index, 1)
+  }
 }
 
 const getUsers = async () => {
@@ -311,8 +317,7 @@ const getUsers = async () => {
 
 const submit = handleSubmit((values) => {
   const file = values.file
-  delete values.file
-  emit("submit", { data: values, file })
+  emit("submit", { data: { ...values, file: undefined }, file })
 })
 
 const tagsList = ref([
@@ -338,10 +343,20 @@ onMounted(async () => {
   if (props.form && props.form.id) {
     resetForm({ values: props.form })
   } else {
-    resetForm({ values: newForm })
+    resetForm({
+      values: {
+        name: "",
+        details: "",
+        is_draft: false,
+        is_public: false,
+        tags: [],
+        category: "general",
+        collaborators: [],
+      },
+    })
   }
 
-  if (collaborators.length) {
+  if (collaborators instanceof Array && collaborators.length) {
     hasCollaborators.value = true
     await getUsers()
   }

@@ -104,7 +104,7 @@ import FormInput from "@/components/form/input.vue"
 import PageTitle from "@/components/layout/title.vue"
 import LayoutCard from "@/components/layout/card.vue"
 import { onMounted, computed, watch } from "vue"
-import { useUserStore } from "@/stores/users"
+import { useUserStore, type NewUser } from "@/stores/users"
 import { useAuthStore } from "@/stores/auth"
 import { useRouter } from "vue-router"
 import { useToastsStore } from "@/stores/toasts"
@@ -113,21 +113,19 @@ import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
 
 const schema = yup.object({
-  name: yup.string().required("Your name is requiured"),
-  email: yup.string().email().required("Email is requiured"),
-  phone: yup.number().required("Phone number is requiured"),
-  avatar: yup.string().nullable(),
+  name: yup.string().required("Your name is required"),
+  email: yup.string().email().required("Email is required"),
+  phone: yup.number().required("Phone number is required"),
   avatar_url: yup.string().nullable(),
 })
 
-const { errors, defineField, resetForm, handleSubmit } = useForm({
+const { errors, defineField, resetForm, handleSubmit } = useForm<NewUser>({
   validationSchema: schema,
 })
 
 const [name] = defineField("name")
 const [email] = defineField("email")
 const [phone] = defineField("phone")
-const [avatar] = defineField("avatar")
 const [avatar_url] = defineField("avatar_url")
 
 const userStore = useUserStore()
@@ -147,11 +145,10 @@ watch(
 )
 
 const update = handleSubmit(async (values) => {
-  if (!auth.user) {
-    return
+  if (auth.user) {
+    const id = auth.user.id
+    await userStore.update(id, values)
   }
-
-  await userStore.update(auth.user?.id, values)
 })
 
 const uploadAvatar = async (event: Event) => {
@@ -164,7 +161,7 @@ const uploadAvatar = async (event: Event) => {
 }
 
 const deleteAvatar = async () => {
-  if (avatar) {
+  if (!auth.user?.avatar) {
     return
   }
 
@@ -178,7 +175,8 @@ onMounted(async () => {
     toasts.addError("Forbidden", "You need to be logged in to access that page")
     return
   }
-
-  resetForm({ values: auth.user })
+  if (auth.user) {
+    resetForm({ values: auth.user })
+  }
 })
 </script>
