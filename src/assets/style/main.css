@@ -24,9 +24,9 @@
 }
 
 .documents-table tr {
-  @apply border rounded-xl mb-6 bg-white md:table-row md:bg-transparent md:rounded-none md:mb-0;
+  @apply rounded-xl mb-6 bg-slate-100 md:table-row md:bg-transparent md:rounded-none md:mb-0;
 }
 
 .documents-table td {
-  @apply block md:table-cell md:first:w-24 md:border-y md:first:border-l md:last:border-r md:last:rounded-r-lg md:first:rounded-l-lg p-4 md:bg-white;
+  @apply block md:table-cell md:first:w-24 md:border-y md:first:border-l md:last:border-r md:last:rounded-r-lg md:first:rounded-l-lg p-4 md:bg-slate-50;
 }
