@@ -99,7 +99,7 @@ interface Link {
 
 const route = useRoute()
 const links: Link[] = [
-  { path: "/", label: "Home", requiresAuth: true },
+  { path: "/", label: "Home" },
   { path: "/my-files", label: "My files", requiresAuth: true },
   { path: "/about", label: "About" },
 ]
