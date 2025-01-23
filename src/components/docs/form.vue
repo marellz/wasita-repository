@@ -8,7 +8,7 @@
     {{ store.errors }}
   </base-alert>
 
-  <Form @submit="submit">
+  <Form @submit="submit()">
     <div class="space-y-4">
       <form-input
         label="Document name"
