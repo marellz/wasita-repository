@@ -37,18 +37,33 @@
           <form-label class="!mb-0">Document settings</form-label>
         </legend>
         <div class="space-y-4">
+          <div
+            class="flex py-1 px-2 bg-slate-50 rounded-lg space-x-2 text-slate-500"
+          >
+            <Info :size="20" class="flex-none mt-0.5" />
+            <p class="italic text-sm">
+              Documents cannot be draft and public at the same time. Documents
+              marked as draft remain in the custody of the owner and are not
+              displayed to everyone else.
+            </p>
+          </div>
           <form-checkbox
             label="Save as draft"
+            :value="true"
             v-model="is_draft"
-            @change="handleDraftStatus"
+            :disabled="is_public"
+            name="Is draft"
           ></form-checkbox>
           <form-checkbox
             label="Public document"
+            :value="true"
             v-model="is_public"
+            name="isPublic"
             :disabled="is_draft"
           ></form-checkbox>
           <form-checkbox
             label="Add collaborators"
+            :value="true"
             v-model="hasCollaborators"
             @change="handleCollaborationChange"
             :disabled="!!collaborators?.length"
@@ -186,7 +201,7 @@ import { computed, onMounted, ref } from "vue"
 import { useUserStore, type User } from "@/stores/users"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
-import { X } from "lucide-vue-next"
+import { X, Info } from "lucide-vue-next"
 import * as yup from "yup"
 
 export interface DocumentFormPayload {
@@ -203,21 +218,25 @@ const props = withDefaults(
 
 const isUpdate = computed(() => props.form?.id)
 
-const newForm = {
-  name: "",
-  details: "",
-  url: null,
-  is_draft: false,
-  is_public: false,
-  category: null,
-  tags: [],
-  collaborators: [],
-  file: null,
-}
+const isRequired = (required: boolean = false) =>
+  yup
+    .mixed()
+    .test("File", "File is required", (value) => {
+      if (!value && required) {
+        return false
+      }
 
-const yupFileSChema = isUpdate.value
-  ? yup.object(File).nullable()
-  : yup.object(File).required("File is required")
+      return true
+    })
+    .test("File size", "Files must be less than 20MB", (value) => {
+      if (value) {
+        return value instanceof File && value.size <= 1024 * 1024 * 20
+      }
+
+      return true
+    })
+
+const yupFileSChema = isRequired(!isUpdate.value)
 
 const schema = yup.object({
   name: yup.string().required("Document requires a name"),
@@ -237,7 +256,7 @@ const { errors, defineField, resetForm, handleSubmit } = useForm({
 const [name] = defineField("name")
 const [details] = defineField("details")
 const [is_draft] = defineField("is_draft")
-let [is_public] = defineField("is_public")
+const [is_public] = defineField("is_public")
 const [category] = defineField("category")
 const [collaborators] = defineField("collaborators")
 const [tags] = defineField("tags")
@@ -291,7 +310,9 @@ const getUsers = async () => {
 }
 
 const submit = handleSubmit((values) => {
-  emit("submit", { data: values, file: values.file })
+  const file = values.file
+  delete values.file
+  emit("submit", { data: values, file })
 })
 
 const tagsList = ref([
@@ -306,12 +327,6 @@ const categoriesList = ref<{ label: string; value: string }[]>([
   { label: "Minutes", value: "minutes" },
   { label: "Contracts", value: "contracts" },
 ])
-
-const handleDraftStatus = () => {
-  if (is_draft) {
-    is_public = false
-  }
-}
 
 const handleCollaborationChange = async (v: boolean) => {
   if (v) {
