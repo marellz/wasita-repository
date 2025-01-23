@@ -18,7 +18,7 @@
         ref="input"
       ></textarea>
     </div>
-    <form-error v-if="error">{{ error }}</form-error>
+    <form-error v-if="error" class="mt-1">{{ error }}</form-error>
   </div>
 </template>
 <script setup lang="ts">
