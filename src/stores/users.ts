@@ -43,6 +43,8 @@ export const useUserStore = defineStore(
       }
     }
     const update = async (id: string, payload: NewUser) => {
+      error.value = null
+      loading.value = true
       try {
         const { status } = await supabase
           .from("users")
@@ -60,6 +62,8 @@ export const useUserStore = defineStore(
         return true
       } catch (error) {
         handleUserError(error)
+      } finally {
+        loading.value = false
       }
     }
 
@@ -83,7 +87,6 @@ export const useUserStore = defineStore(
       if (user.avatar) {
         deleteAvatar(user.avatar)
       }
-
 
       try {
         const name = generateSlug(file.name, true)
