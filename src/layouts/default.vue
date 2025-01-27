@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen flex flex-col">
     <page-header></page-header>
-    <main class="flex-auto py-4 md:py-10">
+    <main class="flex-auto pb-20">
       <slot />
     </main>
     <page-footer></page-footer>
