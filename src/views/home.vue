@@ -6,8 +6,5 @@
   </LayoutContainer>
 </template>
 <script setup lang="ts">
-
-import LayoutContainer from '@/components/layout/container.vue';
-import DocumentsList from '@/components/home/documents.vue'
-
+import AllDocuments from "@/components/documents/_all.vue"
 </script>
