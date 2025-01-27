@@ -44,7 +44,7 @@
           <li v-for="link in guestLinks" :key="link.path">
             <router-link
               :to="link.path"
-              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-slate-200"
+              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-white/10"
               :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }"
             >
               <span class="hidden md:block">
