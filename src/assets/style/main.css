@@ -4,7 +4,7 @@
 
 @layer components {
   .form-input {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all;
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all disabled:bg-gray-200 disabled:text-gray-500;
 
     &.is-invalid {
       @apply focus:ring-red-400 border-red-400;
