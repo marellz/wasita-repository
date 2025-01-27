@@ -34,6 +34,7 @@
 import Container from "@/components/layout/container.vue"
 import BaseTabs from "@/components/base/tabs.vue"
 import BaseButton from "@/components/base/button.vue"
+import UserDocuments from "@/components/documents/_user.vue"
 import { computed, onMounted, ref } from "vue"
 import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/docs"
 import DocumentsTable from "@/components/docs/table.vue"

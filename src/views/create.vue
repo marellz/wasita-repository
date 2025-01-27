@@ -38,15 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { useRouter } from 'vue-router';
-import { useDocumentStore, type DocumentForm as DocumentFormType } from '@/stores/docs';
-import { ref, watch } from 'vue';
-import Container from '@/components/layout/container.vue';
-import BaseButton from '@/components/base/button.vue';
-import DocumentForm, { type DocumentFormPayload } from '@/components/docs/form.vue'
-import PageTitle from '@/components/layout/title.vue';
-import LayoutCard from '@/components/layout/card.vue';
+import DocumentForm, {
+  type DocumentFormPayload,
+} from "@/components/documents/form.vue"
 
 const auth = useAuthStore()
 

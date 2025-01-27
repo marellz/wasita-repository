@@ -66,7 +66,7 @@
             :value="true"
             v-model="hasCollaborators"
             @change="handleCollaborationChange"
-            :disabled="!!collaborators?.length"
+            :disabled="!collaborators"
           ></form-checkbox>
         </div>
       </fieldset>
@@ -75,7 +75,7 @@
           <form-label class="!mb-0">Collaborators</form-label>
         </legend>
         <div class="space-y-4">
-          <template v-if="collaborators?.length">
+          <template v-if="collaborators && collaborators.length">
             <p class="font-medium">Added collaborators</p>
             <div class="flex flex-wrap gap-3">
               <div
@@ -356,7 +356,7 @@ onMounted(async () => {
     })
   }
 
-  if (collaborators instanceof Array && collaborators.length) {
+  if (props.form?.collaborators && props.form.collaborators.length > 0) {
     hasCollaborators.value = true
     await getUsers()
   }
