@@ -40,6 +40,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/update-password",
+      name: "update-password",
+      component: () => import("@/views/auth/update-password.vue"),
+      meta: {
+        layout: "auth",
+      },
+    },
+    {
       path: "/profile",
       name: "profile",
       component: () => import("@/views/profile.vue"),
@@ -69,6 +77,8 @@ router.beforeEach((to, from, next) => {
     "login",
     "register",
     "about",
+    "forgot-password",
+    "update-password",
   ]
   if (!authRoutes.includes(to.name) && !auth.isAuthenticated)
     next({ name: "login" })

@@ -8,8 +8,8 @@ import { ref, computed, watch } from "vue"
 import { useRouter } from "vue-router"
 import supabase from "@/services/supabase"
 import { useToastsStore } from "@/stores/toasts"
-import api from "@/plugins/api"
 import { useUserStore, type User } from "@/stores/users"
+import api from "@/plugins/api"
 
 interface LoginForm {
   email: string
@@ -138,7 +138,79 @@ export const useAuthStore = defineStore(
     }
 
     const resetPassword = async (email: string) => {
-      console.log(email)
+      loading.value = true
+      errors.value = {}
+      try {
+        const url = import.meta.env.VITE_APP_URL
+        const { data, error } = await supabase.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo: `${url}/update-password`,
+          },
+        )
+
+        if (error) {
+          handleAuthError(error)
+          return false
+        } else if (data) {
+          return true
+        }
+      } catch (error) {
+        handleAuthError(error)
+      } finally {
+        loading.value = false
+      }
+    }
+
+    const updatePassword = async (new_password: string) => {
+      loading.value = true
+      errors.value = {}
+
+      try {
+        const { data, error } = await supabase.auth.updateUser({
+          password: new_password,
+        })
+
+        if (error) {
+          handleAuthError(error)
+          return
+        }
+
+        if (data) {
+          toasts.addSuccess(
+            "Password reset",
+            "Your password has been successfully updated!",
+          )
+          return true
+        }
+
+        return false
+      } catch (error) {
+        handleAuthError(error)
+        return false
+      } finally {
+        loading.value = false
+      }
+    }
+
+    const getSession = async () => {
+      console.log("gotten")
+      try {
+        const { data, error } = await supabase.auth.getSession()
+
+        if (error) {
+          handleAuthError(error)
+        }
+
+        if (data.session) {
+          return true
+        }
+
+        return false
+      } catch (error) {
+        handleAuthError(error)
+        return false
+      }
     }
 
     const handleAuthError = (error: any) => {
@@ -192,9 +264,13 @@ export const useAuthStore = defineStore(
       register,
       logout,
       resetPassword,
+      updatePassword,
 
       //
       updateAuthUser,
+
+      //
+      getSession,
     }
   },
   {
