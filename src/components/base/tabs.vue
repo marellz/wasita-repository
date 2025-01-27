@@ -3,12 +3,12 @@
     class="flex flex-col md:flex-row md:items-center space-y-3 md:space-x-3 md:space-y-0"
   >
     <ul
-      class="bg-slate-200 py-1.5 md:p-2 rounded-lg flex overflow-auto max-w-full space-x-2"
+      class="py-1.5 md:p-2 rounded-lg flex overflow-auto max-w-full space-x-2"
     >
       <li v-for="{ label, key } in tabs" :key="key">
         <a
           :href="`#${key}`"
-          class="text-black/70 text-xs md:text-sm px-2 md:px-3 py-1.5 font-secondary font-medium hover:bg-slate-200 hover:text-black rounded-lg whitespace-nowrap"
+          class="text-xs md:text-sm px-2 md:px-3 py-1.5 font-secondary font-medium text-white/25 hover:bg-slate-200/20 hover:text-white rounded-lg whitespace-nowrap"
           :class="{ '!text-white bg-black hover:bg-black': active === key }"
           @click.prevent="active = key"
         >
@@ -18,7 +18,7 @@
     </ul>
     <slot name="nav"></slot>
   </div>
-  <div class="mt-10">
+  <div class="mt-4">
     <slot :name="active"></slot>
   </div>
 </template>

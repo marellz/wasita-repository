@@ -7,12 +7,14 @@
           label="Email address"
           v-model="email"
           :error="errors.email"
+          autocomplete="email"
           type="email"
           required
         ></form-input>
         <form-input
           label="Password"
           v-model="password"
+          autocomplete="password"
           :error="errors.password"
           type="password"
           required

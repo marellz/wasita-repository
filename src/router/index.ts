@@ -16,6 +16,13 @@ const router = createRouter({
       component: Home,
     },
     {
+      path: "/about",
+      name: "about",
+      component: () => import("@/views/about.vue"),
+    },
+
+    // auth
+    {
       path: "/login",
       name: "login",
       component: Login,
@@ -44,21 +51,30 @@ const router = createRouter({
       name: "profile",
       component: () => import("@/views/profile.vue"),
     },
+
+    // documents
     {
       path: "/create",
       name: "create",
       component: () => import("@/views/create.vue"),
     },
     {
+      path: "/document/:id",
+      name: "view",
+      component: () => import("@/views/document/view.vue"),
+    },
+    {
+      path: "/edit/:id",
+      name: "edit",
+      component: () => import("@/views/document/edit.vue"),
+    },
+    {
       path: "/my-files",
       name: "my-files",
       component: () => import("@/views/my-files.vue"),
     },
-    {
-      path: "/about",
-      name: "about",
-      component: () => import("@/views/about.vue"),
-    },
+
+    // other
   ],
 })
 

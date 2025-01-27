@@ -1,5 +1,5 @@
 <template>
-  <footer class="py-2 bg-gray-100 font-secondary">
+  <footer class="py-2 font-secondary">
     <layout-container>
       <p class="text-center text-sm text-gray-500">
         Dev by

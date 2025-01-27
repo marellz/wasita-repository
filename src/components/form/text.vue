@@ -7,7 +7,7 @@
     <div>
       <textarea
         class="form-input"
-        :class="{ 'is-invalid': error }"
+        :class="[{ 'is-invalid': error }, inputClass]"
         v-model="model"
         :id
         :resize
@@ -37,6 +37,7 @@ withDefaults(
     required?: boolean
     disabled?: boolean
     rows?: number | string
+    inputClass?: string
   }>(),
   {
     type: "text",
