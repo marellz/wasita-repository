@@ -8,7 +8,7 @@
       <input
         :name
         class="form-input"
-        :class="{ 'is-invalid': error }"
+        :class="[{ 'is-invalid': error }, inputClass]"
         v-model="model"
         :type
         :id
@@ -39,6 +39,7 @@ withDefaults(
     required?: boolean
     autocomplete?: string
     novalidate?: boolean
+    inputClass?: string
   }>(),
   {
     type: "text",

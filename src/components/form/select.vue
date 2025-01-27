@@ -7,7 +7,7 @@
     <div>
       <select
         class="form-input bg-white"
-        :class="{ 'is-invalid': error }"
+        :class="[{ 'is-invalid': error }, inputClass]"
         v-model="model"
         :id
         :disabled
@@ -35,6 +35,7 @@ withDefaults(
     placeholder?: string
     disabled?: boolean
     required?: boolean
+    inputClass?: string
   }>(),
   {
     type: "text",
