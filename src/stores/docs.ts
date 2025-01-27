@@ -207,6 +207,16 @@ export const useDocumentStore = defineStore(
       }
     }
 
+    const openDocument = async (path: string) => {
+      // loadingDocument.value = id
+      const fullPath = await getDocumentPublicUrl(path)
+
+      if (fullPath) {
+        // loadingDocument.value = null
+        window.open(fullPath)
+      }
+    }
+
     const createDocument = async (file: File | null, form: DocumentForm) => {
       loadingSingle.value = true
       try {
@@ -423,9 +433,9 @@ export const useDocumentStore = defineStore(
     }
 
     const handleDocumentError = (error: any) => {
-      if (typeof error === "object" && error.message) {
+      if (typeof error === "object" || error.message) {
         errors.value.email = error.message
-        toasts.addError("Registration error", error.message)
+        toasts.addError("Document error", error.message)
       }
       console.log(error)
     }
@@ -441,6 +451,7 @@ export const useDocumentStore = defineStore(
       deleteDocument,
       createDocument,
       updateDocument,
+      openDocument,
       updateFile,
       uploadFile,
       deleteFile,
