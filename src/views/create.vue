@@ -1,15 +1,22 @@
 <template>
+  <Hero title="Add document"></Hero>
   <Container>
-    <page-title class="mb-10">Make a submission</page-title>
     <layout-card>
       <div v-if="!auth.isAuthenticated">
-        <img class="max-w-md w-full" src="@/assets/images/undraw_safe_0mei.svg" alt="">
+        <img
+          class="max-w-md w-full"
+          src="@/assets/images/undraw_safe_0mei.svg"
+          alt=""
+        />
         <div class="mt-20">
           <h1 class="text-3xl font-bold">You need to be logged in.</h1>
-          <p class="mt-2 max-w-xl">To make a document submission, you need to log in first. Logging in ensures your
-            submissions
-            are tied to your account for easy access.</p>
-          <div class="mt-6 flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3">
+          <p class="mt-2 max-w-xl">
+            To make a document submission, you need to log in first. Logging in
+            ensures your submissions are tied to your account for easy access.
+          </p>
+          <div
+            class="mt-6 flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-3"
+          >
             <RouterLink to="/login">
               <base-button>
                 <span>Login</span>
@@ -38,9 +45,20 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/auth"
+import { useRouter } from "vue-router"
+import {
+  useDocumentStore,
+  type DocumentForm as DocumentFormType,
+} from "@/stores/docs"
+import { ref, watch } from "vue"
+import Container from "@/components/layout/container.vue"
+import BaseButton from "@/components/base/button.vue"
 import DocumentForm, {
   type DocumentFormPayload,
 } from "@/components/documents/form.vue"
+import LayoutCard from "@/components/layout/card.vue"
+import Hero from "@/components/layout/hero.vue"
 
 const auth = useAuthStore()
 
@@ -49,14 +67,13 @@ const file = ref<File>()
 
 const router = useRouter()
 
-
 const newForm: DocumentFormType = {
   name: "",
   details: "",
   is_draft: false,
-  url: '',
+  url: "",
   is_public: true,
-  category: 'general',
+  category: "general",
   tags: [],
   collaborators: [],
 }
@@ -67,15 +84,13 @@ watch([form, file], () => {
   store.resetErrors()
 })
 
-
 const submit = async ({ data, file }: DocumentFormPayload) => {
   const success = await store.createDocument(file, data)
   if (!success) {
-    return;
+    return
   }
 
   form.value = newForm
-  router.push('/')
-
+  router.push("/")
 }
 </script>
