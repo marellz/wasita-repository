@@ -41,7 +41,7 @@ export const useRemarkStore = defineStore(
       try {
         const { data, error } = await supabase.from("remarks").insert(form)
           .select(`*,
-            user: users(id, email, name, avatar)`)
+            user: users(id, email, name, avatar_url)`)
 
         if (error) {
           handleRemarksError(error)
@@ -76,12 +76,14 @@ export const useRemarkStore = defineStore(
     }
 
     const getRemarks = async (doc: number) => {
+      loading.value = true
+      error.value = null
       try {
         const { data, error } = await supabase
           .from("remarks")
           .select(
             `*,
-            user: users(id, email, name, avatar)`,
+          user: users(id, email, name, avatar_url)`,
           )
           .eq("document_id", doc)
 
@@ -96,6 +98,8 @@ export const useRemarkStore = defineStore(
         return []
       } catch (error) {
         handleRemarksError(error)
+      } finally {
+        loading.value = false
       }
     }
 
