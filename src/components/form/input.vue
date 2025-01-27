@@ -15,6 +15,7 @@
         :placeholder
         :disabled
         :required
+        :autocomplete
         ref="input"
       />
     </div>
@@ -36,6 +37,7 @@ withDefaults(
     placeholder?: string | undefined
     disabled?: boolean
     required?: boolean
+    autocomplete?: string
     novalidate?: boolean
   }>(),
   {
