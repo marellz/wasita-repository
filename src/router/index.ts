@@ -75,6 +75,12 @@ const router = createRouter({
     },
 
     // other
+
+    {
+      path: "/styleguide",
+      name: "styleguide",
+      component: () => import("@/views/test/styleguide.vue"),
+    },
   ],
 })
 
@@ -85,6 +91,7 @@ router.beforeEach((to, from, next) => {
     "login",
     "register",
     "about",
+    "styleguide",
   ]
   if (!authRoutes.includes(to.name) && !auth.isAuthenticated)
     next({ name: "login" })
