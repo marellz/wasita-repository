@@ -9,7 +9,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import PageHeader from "@/components/page/header.vue"
-import PageFooter from "@/components/page/footer.vue"
+import PageHeader from "@/components/app/header.vue"
+import PageFooter from "@/components/app/footer.vue"
 import ToastWrapper from "@/components/toast/wrapper.vue"
 </script>
