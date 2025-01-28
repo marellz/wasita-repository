@@ -9,8 +9,8 @@
     <layout-card>
       <!--documents-->
       <div class="space-y-4">
-        <document-filters @submit="filterDocuments" />
-        <hr />
+        <!-- <document-filters @submit="filterDocuments" />
+        <hr /> -->
         <document-item
           v-for="document in documents"
           :key="document.id"
@@ -28,7 +28,7 @@
 import CustomLoader from "@/components/base/loader.vue"
 import BaseAlert from "@/components/base/alert.vue"
 import LayoutCard from "@/components/layout/card.vue"
-import DocumentFilters from "@/components/documents/filters.vue"
+// import DocumentFilters from "@/components/documents/filters.vue"
 import DocumentItem from "@/components/documents/_all-item.vue"
 import DocumentsEmpty from "@/components/documents/empty.vue"
 
@@ -45,7 +45,7 @@ const openingDocument = ref<number | null>()
 
 const onWindowFocus = useWindowFocus()
 
-const filterDocuments = () => {}
+// const filterDocuments = () => {}
 
 const openDocument = async (id: number, path: string) => {
   openingDocument.value = id
