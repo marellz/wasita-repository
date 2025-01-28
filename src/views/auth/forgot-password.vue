@@ -43,7 +43,7 @@ import BaseButton from "@/components/base/button.vue"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { MailCheck, SendHorizonal } from "lucide-vue-next"
 const auth = useAuthStore()
 
@@ -64,5 +64,9 @@ const resetPassword = handleSubmit(async (values) => {
   if (success) {
     sent.value = true
   }
+})
+
+onMounted(() => {
+  auth.resetErrors()
 })
 </script>

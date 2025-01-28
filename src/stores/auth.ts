@@ -246,6 +246,10 @@ export const useAuthStore = defineStore(
       router.push("/")
     }
 
+    const resetErrors = () => {
+      errors.value = {}
+    }
+
     watch(token, async (v) => {
       api.defaults.headers.common["Authorization"] = v ? `Bearer ${v}` : ""
     })
@@ -258,7 +262,6 @@ export const useAuthStore = defineStore(
       isAuthenticated,
       token,
       hasErrors,
-      errors,
       loading,
       login,
       register,
@@ -271,6 +274,10 @@ export const useAuthStore = defineStore(
 
       //
       getSession,
+
+      //
+      errors,
+      resetErrors,
     }
   },
   {

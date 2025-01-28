@@ -63,7 +63,7 @@ import FormInput from "@/components/form/input.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseAlert from "@/components/base/alert.vue"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
@@ -92,6 +92,10 @@ const login = handleSubmit(async (values) => {
     email: values.email,
     password: values.password,
   })
+})
+
+onMounted(() => {
+  auth.resetErrors()
 })
 </script>
 <style>

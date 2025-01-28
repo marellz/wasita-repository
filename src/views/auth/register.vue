@@ -73,7 +73,7 @@ import { Form, useForm } from "vee-validate"
 import FormInput from "@/components/form/input.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseAlert from "@/components/base/alert.vue"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 import { useAuthStore } from "@/stores/auth"
 
 import * as yup from "yup"
@@ -118,4 +118,8 @@ const handleInvalidSubmit = () => {
     return null
   }
 }
+
+onMounted(() => {
+  auth.resetErrors()
+})
 </script>
