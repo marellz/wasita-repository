@@ -6,21 +6,22 @@
           <span>Open</span>
           <ExternalLink :size="20" stroke-width="1.5" />
         </base-button>
-        <router-link :to="`/edit/${document.id}`">
-          <base-button variant="secondary">
-            <span>Edit</span>
-            <Edit :size="20" stroke-width="1.5" />
+        <template v-if="auth.user && auth.user.id === document.user_id">
+          <router-link :to="`/edit/${document.id}`">
+            <base-button variant="secondary">
+              <span>Edit</span>
+              <Edit :size="20" stroke-width="1.5" />
+            </base-button>
+          </router-link>
+          <base-button
+            variant="danger"
+            class="border-red-500"
+            @click="deleteDocument(document.id)"
+          >
+            <span>Delete</span>
+            <Trash2 :size="20" stroke-width="1.5" />
           </base-button>
-        </router-link>
-        <base-button
-          v-if="auth.user.id === document.user_id"
-          variant="danger"
-          class="border-red-500"
-          @click="deleteDocument(document.id)"
-        >
-          <span>Delete</span>
-          <Trash2 :size="20" stroke-width="1.5" />
-        </base-button>
+        </template>
       </div>
     </template>
   </LayoutHero>

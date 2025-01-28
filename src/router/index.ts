@@ -99,6 +99,7 @@ router.beforeEach((to, from, next) => {
     "login",
     "register",
     "about",
+    "view",
     "forgot-password",
     "update-password",
     "styleguide",
