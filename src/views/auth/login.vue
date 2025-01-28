@@ -1,6 +1,11 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Login</h1>
+    <div class="mb-8 text-center space-y-2">
+      <h1 class="auth-title">Welcome Back!</h1>
+      <p class="auth-subtitle">
+        Log in to access your account and manage your documents effortlessly.
+      </p>
+    </div>
     <Form @submit="login()">
       <div class="space-y-4">
         <form-input
@@ -61,6 +66,7 @@ import { ref } from "vue"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
+
 const auth = useAuthStore()
 
 // const user = ref({
@@ -87,3 +93,12 @@ const login = handleSubmit(async (values) => {
   })
 })
 </script>
+<style>
+.auth-title {
+  @apply text-3xl font-semibold font-secondary;
+}
+
+.auth-subtitle {
+  @apply text-slate-500 font-light;
+}
+</style>

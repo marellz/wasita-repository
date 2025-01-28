@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Forgot password</h1>
+    <div class="mb-8 text-center space-y-2">
+      <h1 class="auth-title">Forgot Your Password?</h1>
+      <p class="auth-subtitle">
+        No worries! Enter your email, and we’ll send you a link to reset it.
+        Update Password Page
+      </p>
+    </div>
     <Form @submit="resetPassword()">
       <div class="space-y-4">
         <form-input
