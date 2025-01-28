@@ -24,6 +24,9 @@
         <ul
           class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 font-medium font-secondary text-2xl lowercase"
         >
+          <li>
+            <app-logo fill="white" class="h-8" />
+          </li>
           <li v-for="link in _links" :key="link.path">
             <router-link
               :to="link.path"
@@ -81,6 +84,7 @@ import { computed, ref, watch, type Component } from "vue"
 import { useRoute } from "vue-router"
 import { useWindowScroll } from "@vueuse/core"
 import { useAuthStore } from "@/stores/auth"
+import AppLogo from "@/components/app/logo-short.vue"
 import Container from "@/components/layout/container.vue"
 import UserMenu from "@/components/user/menu.vue"
 

@@ -4,7 +4,7 @@
       <layout-container>
         <div class="flex">
           <router-link to="/">
-            <img src="@/assets/images/logo.svg" class="h-10" alt="" />
+            <app-logo class="h-16" />
           </router-link>
         </div>
       </layout-container>
@@ -23,6 +23,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import AppLogo from "@/components/app/logo.vue"
 import PageFooter from "@/components/app/footer.vue"
 import LayoutContainer from "@/components/layout/container.vue"
 import ToastWrapper from "@/components/toast/wrapper.vue"
