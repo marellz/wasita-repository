@@ -44,7 +44,7 @@
           <li v-for="link in guestLinks" :key="link.path">
             <router-link
               :to="link.path"
-              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-slate-200"
+              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-white/10"
               :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }"
             >
               <span class="hidden md:block">
@@ -58,7 +58,7 @@
       </nav>
     </Container>
   </header>
-  <div class="md:hidden py-2 sticky top-0 backdrop-blur-md">
+  <div class="md:hidden py-2 sticky top-0 backdrop-blur-md bg-black text-white">
     <Container>
       <div class="flex items-center justify-between">
         <router-link to="/" class="font-bold font-secondary text-lg">
@@ -66,7 +66,7 @@
         </router-link>
         <button
           type="button"
-          class="rounded-xl p-2 bg-slate-200 text-slate-800 hover:bg-indigo-200 focus:bg-indigo-200 relative z-10"
+          class="rounded-xl p-2 text-slate-white hover:bg-white/10 focus:bg-white-100 relative z-10"
           @click="show = true"
         >
           <Menu />

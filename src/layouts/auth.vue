@@ -1,18 +1,18 @@
 <template>
-  <div class="h-screen flex flex-col bg-slate-200">
-    <header class="py-10">
+  <div class="h-screen flex flex-col">
+    <header class="py-5 border-b">
       <layout-container>
-        <div class="flex justify-center">
+        <div class="flex">
           <router-link to="/">
             <img src="@/assets/images/logo.svg" class="h-10" alt="" />
           </router-link>
         </div>
       </layout-container>
     </header>
-    <main class="flex-auto py-4">
+    <main class="flex-auto pt-10">
       <layout-container>
         <div class="flex items-center justify-center">
-          <layout-card class="w-full max-w-md border border-slate-300">
+          <layout-card class="w-full max-w-md shadow-none">
             <slot />
           </layout-card>
         </div>
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import PageFooter from "@/components/page/footer.vue"
+import PageFooter from "@/components/app/footer.vue"
 import LayoutContainer from "@/components/layout/container.vue"
 import ToastWrapper from "@/components/toast/wrapper.vue"
 import LayoutCard from "@/components/layout/card.vue"

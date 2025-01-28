@@ -1,4 +1,5 @@
 <template>
+  <Hero title="About" />
   <Container>
     <div class="bg-white rounded-[60px] md:rounded-[100px] rounded-b-xl">
       <button type="button" @click="focusOnImage = !focusOnImage">
@@ -9,10 +10,12 @@
           :class="{ '': focusOnImage }"
         />
       </button>
-      <div class="p-6 md:p-10 lg:p-20">
-        <page-title class="my-6 lg:my-10">About</page-title>
-        <div class="space-y-6 md:text-xl leading-relaxed font-light">
-          <p class="text-lg md:text-2xl leading-7 md:leading-9">
+      <div class="p-6 md:p-10">
+        <!-- <page-title class="my-6 lg:my-10">About</page-title> -->
+        <div
+          class="space-y-8 text-lg md:text-2xl leading-7 md:leading-9 font-light"
+        >
+          <p class="">
             This repository is the brainchild of our family’s collaborative
             spirit, created and managed with care and precision. While I oversee
             its development and maintenance, the idea was sparked by heads in
@@ -47,8 +50,8 @@
   </Container>
 </template>
 <script setup lang="ts">
-import PageTitle from "@/components/layout/title.vue"
 import Container from "@/components/layout/container.vue"
+import Hero from "@/components/layout/hero.vue"
 import { ref } from "vue"
 
 const focusOnImage = ref(false)

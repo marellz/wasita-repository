@@ -1,19 +1,27 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Login</h1>
+    <div class="mb-8 text-center space-y-2">
+      <h1 class="auth-title">Welcome Back!</h1>
+      <p class="auth-subtitle">
+        Log in to access your account and manage your documents effortlessly.
+      </p>
+    </div>
     <Form @submit="login()">
       <div class="space-y-4">
         <form-input
           label="Email address"
           v-model="email"
           :error="errors.email"
+          autocomplete="email"
           type="email"
           required
         ></form-input>
         <form-input
           label="Password"
           v-model="password"
+          autocomplete="password"
           :error="errors.password"
+          allow-password-toggle
           type="password"
           required
         ></form-input>
@@ -55,10 +63,11 @@ import FormInput from "@/components/form/input.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseAlert from "@/components/base/alert.vue"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
+
 const auth = useAuthStore()
 
 // const user = ref({
@@ -84,4 +93,17 @@ const login = handleSubmit(async (values) => {
     password: values.password,
   })
 })
+
+onMounted(() => {
+  auth.resetErrors()
+})
 </script>
+<style>
+.auth-title {
+  @apply text-3xl font-semibold font-secondary;
+}
+
+.auth-subtitle {
+  @apply text-slate-500 font-light;
+}
+</style>

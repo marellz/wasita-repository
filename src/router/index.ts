@@ -16,6 +16,13 @@ const router = createRouter({
       component: Home,
     },
     {
+      path: "/about",
+      name: "about",
+      component: () => import("@/views/about.vue"),
+    },
+
+    // auth
+    {
       path: "/login",
       name: "login",
       component: Login,
@@ -52,20 +59,35 @@ const router = createRouter({
       name: "profile",
       component: () => import("@/views/profile.vue"),
     },
+
+    // documents
     {
       path: "/create",
       name: "create",
       component: () => import("@/views/create.vue"),
     },
     {
+      path: "/document/:id",
+      name: "view",
+      component: () => import("@/views/document/view.vue"),
+    },
+    {
+      path: "/edit/:id",
+      name: "edit",
+      component: () => import("@/views/document/edit.vue"),
+    },
+    {
       path: "/my-files",
       name: "my-files",
       component: () => import("@/views/my-files.vue"),
     },
+
+    // other
+
     {
-      path: "/about",
-      name: "about",
-      component: () => import("@/views/about.vue"),
+      path: "/styleguide",
+      name: "styleguide",
+      component: () => import("@/views/test/styleguide.vue"),
     },
   ],
 })
@@ -77,8 +99,10 @@ router.beforeEach((to, from, next) => {
     "login",
     "register",
     "about",
+    "view",
     "forgot-password",
     "update-password",
+    "styleguide",
   ]
   if (!authRoutes.includes(to.name) && !auth.isAuthenticated)
     next({ name: "login" })

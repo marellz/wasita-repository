@@ -1,19 +1,21 @@
 <template>
+  <Hero title="User profile">
+    <template #actions>
+      <div class="ml-auto">
+        <base-button
+          type="button"
+          variant="primary-outline"
+          :loading="userStore.loading"
+          disabled
+          @click="userStore.refreshUser()"
+        >
+          <span>Reload user</span>
+        </base-button>
+      </div>
+    </template>
+  </Hero>
   <Container>
-    <div
-      class="flex flex-wrap gap-4 md:flex-nowrap items-center justify-between"
-    >
-      <page-title>User profile</page-title>
-      <base-button
-        type="button"
-        variant="primary-outline"
-        :loading="userStore.loading"
-        @click="userStore.refreshUser()"
-      >
-        <span>Reload user</span>
-      </base-button>
-    </div>
-    <layout-card class="mt-10">
+    <layout-card>
       <div v-if="userStore.loading" class="py-5 text-center">
         <base-loader></base-loader>
       </div>
@@ -101,7 +103,6 @@ import Container from "@/components/layout/container.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseLoader from "@/components/base/loader.vue"
 import FormInput from "@/components/form/input.vue"
-import PageTitle from "@/components/layout/title.vue"
 import LayoutCard from "@/components/layout/card.vue"
 import { onMounted, computed, watch } from "vue"
 import { useUserStore, type NewUser } from "@/stores/users"
@@ -111,6 +112,7 @@ import { useToastsStore } from "@/stores/toasts"
 import { Edit, Trash2, Image } from "lucide-vue-next"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
+import Hero from "@/components/layout/hero.vue"
 
 const schema = yup.object({
   name: yup.string().required("Your name is required"),

@@ -1,5 +1,11 @@
 <template>
-  <h1 class="text-2xl font-bold mb-6">Register</h1>
+  <div class="mb-8 text-center space-y-2">
+    <h1 class="auth-title">Join Our Platform</h1>
+    <p class="auth-subtitle">
+      Create an account to start uploading, organizing, and sharing your
+      documents securely. Forgot Password Page
+    </p>
+  </div>
   <Form @submit="register()" @invalid-submit="handleInvalidSubmit">
     <div class="space-y-4">
       <form-input
@@ -24,6 +30,7 @@
         type="password"
         required
         :error="errors.password"
+        allow-password-toggle
       ></form-input>
 
       <form-input
@@ -66,7 +73,7 @@ import { Form, useForm } from "vee-validate"
 import FormInput from "@/components/form/input.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseAlert from "@/components/base/alert.vue"
-import { computed } from "vue"
+import { computed, onMounted } from "vue"
 import { useAuthStore } from "@/stores/auth"
 
 import * as yup from "yup"
@@ -111,4 +118,8 @@ const handleInvalidSubmit = () => {
     return null
   }
 }
+
+onMounted(() => {
+  auth.resetErrors()
+})
 </script>

@@ -1,8 +1,8 @@
-import { defineStore, acceptHMRUpdate } from 'pinia'
-import { v4 as uuidv4 } from 'uuid'
-import { ref } from 'vue'
+import { defineStore, acceptHMRUpdate } from "pinia"
+import { v4 as uuidv4 } from "uuid"
+import { ref } from "vue"
 
-export type ToastVariant = 'error' | 'info' | 'success'
+export type ToastVariant = "error" | "info" | "success"
 export interface Toast {
   id: string
   title: string
@@ -13,11 +13,11 @@ export interface Toast {
 }
 
 export const useToastsStore = defineStore(
-  'toasts',
+  "toasts",
   () => {
     const toasts = ref<Array<Toast>>([])
 
-    const add = (toast: Omit<Toast, 'id'>) => {
+    const add = (toast: Omit<Toast, "id">) => {
       const id = uuidv4()
       const duration = toast.duration ?? 2000
       toasts.value.push({ ...toast, id })
@@ -29,15 +29,15 @@ export const useToastsStore = defineStore(
     }
 
     const addError = (title: string, description?: string) => {
-      add({ title, description, variant: 'error' })
+      add({ title, description, variant: "error" })
     }
 
     const addSuccess = (title: string, description?: string) => {
-      add({ title, description, variant: 'success' })
+      add({ title, description, variant: "success" })
     }
 
     const addInfo = (title: string, description?: string) => {
-      add({ title, description, variant: 'info' })
+      add({ title, description, variant: "info" })
     }
 
     const remove = (id: string) => {

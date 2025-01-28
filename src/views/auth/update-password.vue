@@ -1,7 +1,12 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Update password</h1>
-
+    <div class="mb-8 text-center space-y-2">
+      <h1 class="auth-title">Reset Your Password</h1>
+      <p class="auth-subtitle">
+        Create a new password to regain access to your account. Make it strong
+        and memorable!
+      </p>
+    </div>
     <template v-if="params?.error">
       <base-alert variant="error" title="Invalid link">
         {{ params.error_description }}
@@ -10,6 +15,7 @@
         <router-link to="/forgot-password">
           <base-button>
             <span>Request another link</span>
+            <MoveRight />
           </base-button>
         </router-link>
       </div>
@@ -29,6 +35,7 @@
             v-model="password"
             type="password"
             :error="errors.password"
+            allow-password-toggle
             required
           ></form-input>
           <form-input
@@ -46,13 +53,17 @@
     </template>
 
     <template v-else>
-      <div class="space-y-4">
-        <p class="text-lg">
-          Seems like you're riding on an invalid session. Not to worry.
-        </p>
+      <div class="space-y-8">
+        <div class="flex items-start space-x-3">
+          <AlertCircle :size="32" />
+          <p class="text-lg">
+            Seems like you're riding on an invalid session. Not to worry.
+          </p>
+        </div>
         <router-link to="/forgot-password" class="inline-block">
           <base-button>
             <span>Request another link</span>
+            <MoveRight />
           </base-button>
         </router-link>
       </div>
@@ -69,6 +80,7 @@ import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
+import { AlertCircle, MoveRight } from "lucide-vue-next"
 
 const auth = useAuthStore()
 const router = useRouter()

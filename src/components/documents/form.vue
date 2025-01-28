@@ -61,34 +61,35 @@
             name="isPublic"
             :disabled="is_draft"
           ></form-checkbox>
-          <form-checkbox
-            label="Add collaborators"
-            :value="true"
-            v-model="hasCollaborators"
-            @change="handleCollaborationChange"
-            :disabled="!!collaborators?.length"
-          ></form-checkbox>
         </div>
       </fieldset>
-      <fieldset class="border rounded-xl p-4" v-if="hasCollaborators">
+      <fieldset class="border rounded-xl p-4">
         <legend class="px-4">
           <form-label class="!mb-0">Collaborators</form-label>
         </legend>
-        <div class="space-y-4">
-          <template v-if="collaborators?.length">
-            <p class="font-medium">Added collaborators</p>
-            <div class="flex flex-wrap gap-3">
+
+        <form-checkbox
+          label="Add collaborators"
+          :value="true"
+          v-model="hasCollaborators"
+          @change="handleCollaborationChange"
+          :disabled="!collaborators"
+        ></form-checkbox>
+
+        <div v-if="hasCollaborators" class="mt-4 space-y-4">
+          <template v-if="collaborators && collaborators.length">
+            <p class="text-sm font-medium font-secondary">
+              Added collaborators
+            </p>
+            <div class="flex flex-wrap gap-1 sm:gap-2 md:gap-3">
               <div
-                v-for="(item, index) in displayedCollaborators"
+                v-for="(user, index) in displayedCollaborators"
                 :key="index"
-                class="flex items-center space-x-4 border rounded-lg p-2"
+                class="flex items-center space-x-4 border border-indigo-600 text-indigo-600 rounded-xl py-0.5 px-2"
               >
                 <div class="flex-auto">
-                  <p class="font-medium">
-                    {{ item.name || "No name" }}
-                  </p>
-                  <p class="text-xs text-slate-600">
-                    {{ item.email }}
+                  <p class="font-medium text-sm font-secondary">
+                    {{ user.name }}
                   </p>
                 </div>
                 <div class="flex-none">
@@ -97,51 +98,29 @@
                     class="rounded-full p-1 hover:bg-red-100 hover:text-red-500"
                     @click="removeSelectedCollaborator(index)"
                   >
-                    <X />
+                    <X :size="20" />
                   </button>
                 </div>
               </div>
             </div>
           </template>
 
-          <p v-else class="text-slate-500">None selected</p>
+          <p v-else class="text-slate-500 text-sm font-medium font-secondary">
+            [No collaborators]
+          </p>
 
-          <form-input
-            v-model="userQuery"
-            placeholder="Search for users"
-          ></form-input>
-
-          <div v-if="userStore.loading" class="py-10 text-center">
-            <base-loader></base-loader>
-          </div>
-
-          <template v-else>
-            <hr />
-            <div class="py-4 pt-2 flex flex-wrap gap-3">
-              <form-checkbox
-                v-for="(item, index) in displayedUsers"
-                :key="index"
-                class="flex items-center space-x-4 border rounded-lg px-4 py-2 border-slate-200"
-                :class="{
-                  'bg-slate-200': item.email === auth.user?.email,
-                  '!border-indigo-600': collaborators?.includes(item.id),
-                }"
-                v-model="collaborators"
-                :value="item.id"
-                name="collaborators"
-                :disabled="item.email === auth.user?.email"
-              >
-                <div class="ml-4">
-                  <p class="font-medium">
-                    {{ item.name || `&ndash; &ndash;` }}
-                  </p>
-                  <p class="text-xs text-slate-600">
-                    {{ item.email }}
-                  </p>
-                </div>
-              </form-checkbox>
-            </div>
-          </template>
+          <form-dropdown
+            v-if="collaborators !== null"
+            :options="displayedUsers"
+            v-model="collaborators"
+            :loading="userStore.loading"
+            :placeholder="`Add collaborators ${collaborators.length ? '(' + collaborators.length + ')' : ''}`"
+            label-key="name"
+            value-key="id"
+            hide-input
+            @query="(v) => (userQuery = v)"
+          >
+          </form-dropdown>
         </div>
       </fieldset>
 
@@ -187,7 +166,6 @@
   </Form>
 </template>
 <script lang="ts" setup>
-import BaseLoader from "@/components/base/loader.vue"
 import BaseAlert from "@/components/base/alert.vue"
 import BaseButton from "@/components/base/button.vue"
 import FormInput from "@/components/form/input.vue"
@@ -195,6 +173,7 @@ import FormLabel from "@/components/form/label.vue"
 import FormText from "@/components/form/text.vue"
 import FormSelect from "@/components/form/select.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
+import FormDropdown from "@/components/form/dropdown.vue"
 import DocumentInput from "@/components/form/document.vue"
 import { type DocumentForm, useDocumentStore } from "@/stores/docs"
 import { computed, onMounted, ref } from "vue"
@@ -280,7 +259,8 @@ const displayedUsers = computed(() => {
   const r = users.value.filter((u) => {
     const v = userQuery.value.toLowerCase()
     return (
-      u.name?.toLowerCase().includes(v) || u.email.toLowerCase().includes(v)
+      u.id !== auth.user?.id &&
+      (u.name?.toLowerCase().includes(v) || u.email.toLowerCase().includes(v))
     )
   })
 
@@ -292,18 +272,20 @@ const displayedUsers = computed(() => {
 })
 
 const displayedCollaborators = computed(() => {
-  if (!collaborators) {
+  if (!collaborators.value) {
     return []
   }
 
   return users.value.filter(
-    (u) => collaborators instanceof Array && collaborators.includes(u.id),
+    (u) =>
+      collaborators.value instanceof Array &&
+      collaborators.value.includes(u.id),
   )
 })
 
 const removeSelectedCollaborator = (index: number) => {
-  if (collaborators instanceof Array) {
-    collaborators.splice(index, 1)
+  if (collaborators.value && collaborators.value instanceof Array) {
+    collaborators.value?.splice(index, 1)
   }
 }
 
@@ -336,6 +318,8 @@ const categoriesList = ref<{ label: string; value: string }[]>([
 const handleCollaborationChange = async (v: boolean) => {
   if (v) {
     await getUsers()
+  } else {
+    collaborators.value = []
   }
 }
 
@@ -356,7 +340,7 @@ onMounted(async () => {
     })
   }
 
-  if (collaborators instanceof Array && collaborators.length) {
+  if (props.form?.collaborators && props.form.collaborators.length > 0) {
     hasCollaborators.value = true
     await getUsers()
   }

@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-6">Forgot password</h1>
+    <div class="mb-8 text-center space-y-2">
+      <h1 class="auth-title">Forgot Your Password?</h1>
+      <p class="auth-subtitle">
+        No worries! Enter your email, and we’ll send you a link to reset it.
+        Update Password Page
+      </p>
+    </div>
     <Form @submit="resetPassword()">
       <div class="space-y-4">
         <form-input
@@ -37,7 +43,7 @@ import BaseButton from "@/components/base/button.vue"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
 import * as yup from "yup"
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { MailCheck, SendHorizonal } from "lucide-vue-next"
 const auth = useAuthStore()
 
@@ -58,5 +64,9 @@ const resetPassword = handleSubmit(async (values) => {
   if (success) {
     sent.value = true
   }
+})
+
+onMounted(() => {
+  auth.resetErrors()
 })
 </script>

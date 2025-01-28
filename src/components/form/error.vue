@@ -1,7 +1,6 @@
 <template>
-  <p class="text-xs font-medium text-red-500">
+  <p class="text-xs font-secondary text-red-500">
     <slot />
   </p>
 </template>
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
