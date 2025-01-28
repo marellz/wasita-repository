@@ -1,7 +1,9 @@
 <template>
-  <div class="border rounded-xl">
+  <div class="border flex flex-col-reverse sm:flex-col rounded-xl">
     <!-- header -->
-    <div class="px-4 py-2 border-b flex">
+    <div
+      class="px-4 py-2 border-t sm:border-t-0 sm:border-b flex flex-col space-y-4 sm:flex-row sm:space-y-0"
+    >
       <div class="flex space-x-2 items-center">
         <img
           class="h-9 w-9 rounded-full object-cover border-2"
@@ -33,7 +35,7 @@
       <div class="!ml-auto flex items-center space-x-2">
         <router-link :to="`/document/${document.id}`">
           <button type="button" class="action-btn">
-            <span>View</span>
+            <span class="hidden sm:inline">View</span>
             <Info :size="20" :stroke-width="1.5" />
           </button>
         </router-link>
@@ -43,35 +45,40 @@
           :loading="opening"
           @click="openDocument"
         >
-          <span>Open</span>
+          <span class="hidden sm:inline">Open</span>
           <ExternalLink :size="20" :stroke-width="1.5" />
         </button>
       </div>
     </div>
 
     <!-- body -->
-    <div class="p-4 space-y-2">
-      <div class="flex items-center space-x-3">
-        <h2 class="text-2xl font-secondary font-medium">
+    <div class="p-4 space-y-4 sm:space-y-2">
+      <div
+        class="flex flex-wrap items-start sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3"
+      >
+        <h2 class="text-xl sm:text-3xl font-secondary font-medium">
           {{ document.name }}
         </h2>
-        <span
-          class="text-sm py-0.5 px-2 bg-black text-white rounded-full font-secondary"
-        >
-          {{ document.category }}
-        </span>
-        <div
-          v-if="document.remarks[0].count"
-          title="`Comments`"
-          class="inline-flex items-center space-x-1"
-        >
-          <MessageCircle :size="20" />
-          <span class="text-sm font-medium">{{
-            document.remarks[0].count
-          }}</span>
+
+        <div class="flex items-start space-x-2 ml-auto">
+          <span
+            class="text-xs sm:text-sm py-0.5 px-2 bg-black text-white rounded-full font-secondary"
+          >
+            {{ document.category }}
+          </span>
+          <div
+            v-if="document.remarks[0].count"
+            title="`Comments`"
+            class="inline-flex items-center space-x-1"
+          >
+            <MessageCircle :size="20" />
+            <span class="text-xs sm:text-sm font-medium">{{
+              document.remarks[0].count
+            }}</span>
+          </div>
         </div>
       </div>
-      <p class="text-sm text-slate-700 line-clamp-2">
+      <p class="text-xs sm:text-sm text-slate-700 line-clamp-2">
         {{ document.details }}
       </p>
       <div v-if="document.tags.length">
@@ -79,7 +86,7 @@
           <span
             v-for="(tag, key) in document.tags"
             :key
-            class="text-sm bg-slate-100 px-2 py-0.5 rounded-full"
+            class="text-xs font-secondary sm:text-sm bg-slate-100 px-2 py-0.5 rounded-full"
           >
             {{ tag }}
           </span>
@@ -106,6 +113,6 @@ const openDocument = () => {
 </script>
 <style>
 .action-btn {
-  @apply rounded-lg bg-black/5 hover:bg-black hover:text-white px-4 py-2 inline-flex items-center leading-normal space-x-1.5 text-sm font-secondary font-medium;
+  @apply rounded-lg bg-black/5 hover:bg-black hover:text-white px-4 py-2 inline-flex items-center leading-normal md:space-x-1.5 text-sm font-secondary font-medium;
 }
 </style>

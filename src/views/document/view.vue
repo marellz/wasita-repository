@@ -36,8 +36,10 @@
       </div>
       <div v-else-if="document === null">
         <div>
-          <h1 class="text-3xl font-medium">Document not found.</h1>
-          <p class="text-lg text-gray-500">Non-existent.</p>
+          <h1 class="text-3xl font-medium font-secondary">
+            Document not found.
+          </h1>
+          <p class="text-lg text-gray-500 font-light">Non-existent.</p>
         </div>
       </div>
       <template v-else-if="document">
@@ -51,11 +53,11 @@
               <span>Back to documents</span>
             </router-link>
             <div class="flex space-x-4 items-center">
-              <h1 class="text-3xl font-medium font-secondary">
+              <h1 class="text-2xl sm:text-3xl font-medium font-secondary">
                 {{ document.name }}
               </h1>
               <span
-                class="text-sm py-0.5 px-2 bg-black text-white rounded-full font-secondary"
+                class="text-xs sm:text-sm py-0.5 px-2 bg-black text-white rounded-full font-secondary"
               >
                 {{ document.category }}
               </span>
@@ -78,7 +80,7 @@
             <span
               v-for="(tag, key) in document.tags"
               :key
-              class="text-sm bg-slate-100 px-2 py-0.5 rounded-full"
+              class="text-xs sm:text-sm font-secondary bg-slate-100 px-2 py-0.5 rounded-full"
             >
               {{ tag }}
             </span>

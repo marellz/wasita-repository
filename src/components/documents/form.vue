@@ -61,34 +61,35 @@
             name="isPublic"
             :disabled="is_draft"
           ></form-checkbox>
-          <form-checkbox
-            label="Add collaborators"
-            :value="true"
-            v-model="hasCollaborators"
-            @change="handleCollaborationChange"
-            :disabled="!collaborators"
-          ></form-checkbox>
         </div>
       </fieldset>
-      <fieldset class="border rounded-xl p-4" v-if="hasCollaborators">
+      <fieldset class="border rounded-xl p-4">
         <legend class="px-4">
           <form-label class="!mb-0">Collaborators</form-label>
         </legend>
-        <div class="space-y-4">
+
+        <form-checkbox
+          label="Add collaborators"
+          :value="true"
+          v-model="hasCollaborators"
+          @change="handleCollaborationChange"
+          :disabled="!collaborators"
+        ></form-checkbox>
+
+        <div v-if="hasCollaborators" class="mt-4 space-y-4">
           <template v-if="collaborators && collaborators.length">
-            <p class="font-medium">Added collaborators</p>
-            <div class="flex flex-wrap gap-3">
+            <p class="text-sm font-medium font-secondary">
+              Added collaborators
+            </p>
+            <div class="flex flex-wrap gap-1 sm:gap-2 md:gap-3">
               <div
-                v-for="(item, index) in displayedCollaborators"
+                v-for="(user, index) in displayedCollaborators"
                 :key="index"
-                class="flex items-center space-x-4 border rounded-lg p-2"
+                class="flex items-center space-x-4 border border-indigo-600 text-indigo-600 rounded-xl py-0.5 px-2"
               >
                 <div class="flex-auto">
-                  <p class="font-medium">
-                    {{ item.name || "No name" }}
-                  </p>
-                  <p class="text-xs text-slate-600">
-                    {{ item.email }}
+                  <p class="font-medium text-sm font-secondary">
+                    {{ user.name }}
                   </p>
                 </div>
                 <div class="flex-none">
@@ -97,7 +98,7 @@
                     class="rounded-full p-1 hover:bg-red-100 hover:text-red-500"
                     @click="removeSelectedCollaborator(index)"
                   >
-                    <X />
+                    <X :size="20" />
                   </button>
                 </div>
               </div>
