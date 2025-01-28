@@ -65,7 +65,7 @@
     <Container>
       <div class="flex items-center justify-between">
         <router-link to="/" class="font-bold font-secondary text-lg">
-          wasita-repository
+          <app-logo fill="white" class="h-8" />
         </router-link>
         <button
           type="button"
