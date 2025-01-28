@@ -1,16 +1,24 @@
 <template>
-  <transition-group tag="ul" name="toasts"
-    class="fixed z-20 h-1 bottom-0 left-0 w-full flex flex-col-reverse items-center space-y-4">
-    <toast-item :toast :key="toast.id" v-for="toast in toasts" @close="toastStore.remove(toast.id)" />
+  <transition-group
+    tag="ul"
+    name="toasts"
+    class="fixed z-20 h-1 bottom-0 left-0 w-full flex flex-col-reverse items-end space-y-4"
+  >
+    <toast-item
+      :toast
+      :key="toast.id"
+      v-for="toast in toasts"
+      @close="toastStore.remove(toast.id)"
+    />
   </transition-group>
 </template>
 <script lang="ts" setup>
-import ToastItem from '@/components/toast/item.vue';
-import { useToastsStore } from "@/stores/toasts";
-import { computed } from "vue";
+import ToastItem from "@/components/toast/item.vue"
+import { useToastsStore } from "@/stores/toasts"
+import { computed } from "vue"
 
-const toastStore = useToastsStore();
-const toasts = computed(() => toastStore.toasts);
+const toastStore = useToastsStore()
+const toasts = computed(() => toastStore.toasts)
 </script>
 <style>
 .toasts-enter-to,

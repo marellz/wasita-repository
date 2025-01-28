@@ -17,7 +17,7 @@
         <slot></slot>
       </div>
     </div>
-    <div class="pt-2">
+    <div class="pt-2" v-if="dismissible">
       <button
         type="button"
         @click="$emit('dismiss')"
@@ -46,6 +46,7 @@ type VariantIcons = {
 withDefaults(
   defineProps<{
     variant?: AlertVariants
+    dismissible?: boolean
     title?: string
   }>(),
   {
