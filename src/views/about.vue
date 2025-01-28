@@ -1,5 +1,5 @@
 <template>
-  <LayoutHero title="About"> </LayoutHero>
+  <Hero title="About" />
   <Container>
     <div class="bg-white rounded-[60px] md:rounded-[100px] rounded-b-xl">
       <button type="button" @click="focusOnImage = !focusOnImage">
@@ -51,7 +51,7 @@
 </template>
 <script setup lang="ts">
 import Container from "@/components/layout/container.vue"
-import LayoutHero from "@/components/layout/hero.vue"
+import Hero from "@/components/layout/hero.vue"
 import { ref } from "vue"
 
 const focusOnImage = ref(false)

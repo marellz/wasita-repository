@@ -1,7 +1,7 @@
 <template>
-  <LayoutHero title="Edit document">
+  <Hero title="Edit document">
     <template #actions>
-      <div v-if="document" class="flex space-x-2">
+      <div v-if="document" class="ml-auto">
         <router-link :to="`/document/${document.id}`">
           <base-button variant="secondary">
             <span>Cancel</span>
@@ -10,7 +10,7 @@
         </router-link>
       </div>
     </template>
-  </LayoutHero>
+  </Hero>
   <LayoutContainer>
     <LayoutCard>
       <div v-if="store.loadingSingle" class="text-center py-4">
@@ -26,7 +26,7 @@
 </template>
 <script lang="ts" setup>
 import LayoutContainer from "@/components/layout/container.vue"
-import LayoutHero from "@/components/layout/hero.vue"
+import Hero from "@/components/layout/hero.vue"
 import LayoutCard from "@/components/layout/card.vue"
 import BaseLoader from "@/components/base/loader.vue"
 import BaseButton from "@/components/base/button.vue"

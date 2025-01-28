@@ -1,12 +1,14 @@
 <template>
   <Hero title="Documents" subtitle="All documents">
     <template #actions>
-      <router-link to="/create" v-if="isAuthenticated">
-        <base-button variant="primary-outline">
-          <span>Create document</span>
-          <Plus />
-        </base-button>
-      </router-link>
+      <div class="ml-auto">
+        <router-link to="/create" v-if="isAuthenticated">
+          <base-button variant="primary-outline">
+            <span>Create document</span>
+            <Plus />
+          </base-button>
+        </router-link>
+      </div>
     </template>
   </Hero>
   <LayoutContainer>

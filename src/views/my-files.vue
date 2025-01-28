@@ -1,7 +1,7 @@
 <template>
   <Hero title="My files">
     <template #actions>
-      <div class="flex justify-end">
+      <div class="ml-auto">
         <router-link to="/create">
           <base-button variant="primary-outline">
             <span>Create document</span>

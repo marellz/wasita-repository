@@ -1,5 +1,5 @@
 <template>
-  <Hero title="Styleguide"> </Hero>
+  <Hero title="Styleguide" />
   <Container>
     <layout-card>
       <div class="space-y-10">

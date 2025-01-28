@@ -1,7 +1,7 @@
 <template>
-  <LayoutHero title="View document">
+  <Hero title="View document">
     <template #actions>
-      <div v-if="document" class="flex space-x-2">
+      <div v-if="document" class="ml-auto flex space-x-2">
         <base-button @click="openDocument(document.url, document.id)">
           <span>Open</span>
           <ExternalLink :size="20" stroke-width="1.5" />
@@ -24,7 +24,7 @@
         </template>
       </div>
     </template>
-  </LayoutHero>
+  </Hero>
   <LayoutContainer>
     <LayoutCard>
       <div v-if="loadingDocument" class="flex justify-center py-10">
@@ -150,7 +150,7 @@
 </template>
 <script lang="ts" setup>
 import LayoutContainer from "@/components/layout/container.vue"
-import LayoutHero from "@/components/layout/hero.vue"
+import Hero from "@/components/layout/hero.vue"
 import LayoutCard from "@/components/layout/card.vue"
 import BaseAlert from "@/components/base/alert.vue"
 import BaseButton from "@/components/base/button.vue"

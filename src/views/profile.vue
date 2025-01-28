@@ -1,15 +1,17 @@
 <template>
   <Hero title="User profile">
     <template #actions>
-      <base-button
-        type="button"
-        variant="primary-outline"
-        :loading="userStore.loading"
-        disabled
-        @click="userStore.refreshUser()"
-      >
-        <span>Reload user</span>
-      </base-button>
+      <div class="ml-auto">
+        <base-button
+          type="button"
+          variant="primary-outline"
+          :loading="userStore.loading"
+          disabled
+          @click="userStore.refreshUser()"
+        >
+          <span>Reload user</span>
+        </base-button>
+      </div>
     </template>
   </Hero>
   <Container>
