@@ -35,6 +35,7 @@
             v-model="password"
             type="password"
             :error="errors.password"
+            allow-password-toggle
             required
           ></form-input>
           <form-input

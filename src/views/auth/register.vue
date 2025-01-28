@@ -30,6 +30,7 @@
         type="password"
         required
         :error="errors.password"
+        allow-password-toggle
       ></form-input>
 
       <form-input

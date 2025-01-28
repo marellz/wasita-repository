@@ -21,6 +21,7 @@
           v-model="password"
           autocomplete="password"
           :error="errors.password"
+          allow-password-toggle
           type="password"
           required
         ></form-input>
