@@ -167,7 +167,7 @@ import { ChevronLeft, Edit, ExternalLink, Send, Trash2 } from "lucide-vue-next"
 import { useRoute } from "vue-router"
 import { useWindowFocus } from "@vueuse/core"
 
-const id = computed(() => Number(useRoute().params.id))
+const id = computed(() => useRoute().params.id)
 
 const store = useDocumentStore()
 const commentStore = useCommentStore()

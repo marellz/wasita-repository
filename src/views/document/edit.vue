@@ -42,7 +42,7 @@ import { useRoute } from "vue-router"
 import { Edit } from "lucide-vue-next"
 const store = useDocumentStore()
 
-const id = computed(() => Number(useRoute().params.id))
+const id = computed(() => useRoute().params.id)
 const document = ref<DocumentFormType | null>(null)
 const updateDocument = async ({ data, file }: DocumentFormPayload) => {
   // only update these fields
