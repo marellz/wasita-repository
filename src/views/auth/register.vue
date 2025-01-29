@@ -102,8 +102,6 @@ const [password] = defineField("password")
 const [confirmPassword] = defineField("password_confirmation")
 
 const register = handleSubmit(async (values) => {
-  console.log(values)
-
   await auth.register({
     name: values.name,
     email: values.email,

@@ -44,7 +44,11 @@ const store = useDocumentStore()
 
 const id = computed(() => useRoute().params.id)
 const document = ref<DocumentFormType | null>(null)
-const updateDocument = async ({ data, file }: DocumentFormPayload) => {
+const updateDocument = async ({
+  data,
+  file,
+  collaborators,
+}: DocumentFormPayload) => {
   // only update these fields
 
   const updated = await store.updateDocument(
@@ -57,9 +61,10 @@ const updateDocument = async ({ data, file }: DocumentFormPayload) => {
       is_public: data.is_public,
       tags: data.tags,
       category: data.category,
-      collaborators: data.collaborators,
+      // collaborators: data.collaborators,
     },
     file,
+    collaborators,
   )
 
   if (updated) {

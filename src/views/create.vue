@@ -75,7 +75,6 @@ const newForm: DocumentFormType = {
   is_public: true,
   category: "general",
   tags: [],
-  collaborators: [],
 }
 
 const form = ref(newForm)
@@ -84,8 +83,8 @@ watch([form, file], () => {
   store.resetErrors()
 })
 
-const submit = async ({ data, file }: DocumentFormPayload) => {
-  const success = await store.createDocument(file, data)
+const submit = async ({ data, file, collaborators }: DocumentFormPayload) => {
+  const success = await store.createDocument(file, data, collaborators)
   if (!success) {
     return
   }
