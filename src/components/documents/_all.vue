@@ -32,7 +32,7 @@ import LayoutCard from "@/components/layout/card.vue"
 import DocumentItem from "@/components/documents/_all-item.vue"
 import DocumentsEmpty from "@/components/documents/empty.vue"
 
-import { useDocumentStore } from "@/stores/docs"
+import { useDocumentStore } from "@/stores/documents"
 import { computed, ref, watch } from "vue"
 
 import { onMounted } from "vue"

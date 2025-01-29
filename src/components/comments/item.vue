@@ -37,11 +37,11 @@
 <script lang="ts" setup>
 import UserAvatar from "@/components/user/avatar.vue"
 import { useAuthStore } from "@/stores/auth"
-import type { Remark } from "@/stores/remarks"
+import type { Comment } from "@/stores/comments"
 import parseDate from "@/utils/parseDate"
 import { Trash2 } from "lucide-vue-next"
 defineProps<{
-  comment: Remark
+  comment: Comment
 }>()
 
 const auth = useAuthStore()

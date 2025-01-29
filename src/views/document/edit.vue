@@ -36,7 +36,7 @@ import DocumentForm, {
 import {
   useDocumentStore,
   type DocumentForm as DocumentFormType,
-} from "@/stores/docs"
+} from "@/stores/documents"
 import { computed, onMounted, ref } from "vue"
 import { useRoute } from "vue-router"
 import { Edit } from "lucide-vue-next"

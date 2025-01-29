@@ -45,16 +45,15 @@ export interface Document {
   url: string
   user_id: string
   original_name: string | null
-  remarks: {
+  comments: {
     count: number
   }[]
-  user: {
+  user?: {
     id: string
-    name: string | null
+    name?: string | null
     email: string
-    avatar?: string | null
     avatar_url?: string | null
-  }
+  } | null
 }
 
 export type GetDocumentsCriteria =
@@ -84,7 +83,7 @@ export const useDocumentStore = defineStore(
       const query = supabase.from("documents").select(
         `*,
           user: users(id, email, name, avatar_url),
-          remarks(count)`,
+          comments(count)`,
       )
 
       switch (criteria) {
@@ -138,7 +137,10 @@ export const useDocumentStore = defineStore(
       }
 
       try {
-        const { data, error } = await query.order("id", { ascending: false })
+        //todo add extra filtering
+        const { data, error } = await query.order("created_at", {
+          ascending: false,
+        })
         if (error) {
           handleDocumentError(error)
         }
@@ -234,7 +236,7 @@ export const useDocumentStore = defineStore(
         const { data, error } = await supabase.from("documents").insert(payload)
           .select(`*,
           user: users(id, email, name, avatar_url),
-          remarks(count)`)
+          comments(count)`)
 
         if (error) {
           handleDocumentError(error)
@@ -264,7 +266,7 @@ export const useDocumentStore = defineStore(
           .select(
             `*,
           user: users(id, email, name, avatar_url),
-          remarks(count)`,
+          comments(count)`,
           )
           .eq("id", id)
 

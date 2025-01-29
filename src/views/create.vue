@@ -50,7 +50,7 @@ import { useRouter } from "vue-router"
 import {
   useDocumentStore,
   type DocumentForm as DocumentFormType,
-} from "@/stores/docs"
+} from "@/stores/documents"
 import { ref, watch } from "vue"
 import Container from "@/components/layout/container.vue"
 import BaseButton from "@/components/base/button.vue"

@@ -9,6 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      comments: {
+        Row: {
+          content: string
+          created_at: string
+          document_id: string
+          id: number
+          is_flagged: boolean
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          document_id: string
+          id?: number
+          is_flagged?: boolean
+          user_id?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          document_id?: string
+          id?: number
+          is_flagged?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       document_collaborators: {
         Row: {
           created_at: string
@@ -105,43 +147,8 @@ export type Database = {
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
-        ]
-      }
-      remarks: {
-        Row: {
-          content: string
-          created_at: string
-          document_id: number
-          id: number
-          is_flagged: boolean
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          document_id: number
-          id?: number
-          is_flagged?: boolean
-          user_id?: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          document_id?: number
-          id?: number
-          is_flagged?: boolean
-          user_id?: string
-        }
-        Relationships: [
           {
-            foreignKeyName: "remarks_document_id_fkey"
-            columns: ["document_id"]
-            isOneToOne: false
-            referencedRelation: "documents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "remarks_user_id_fkey"
+            foreignKeyName: "documents_user_id_fkey1"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"

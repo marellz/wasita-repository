@@ -67,13 +67,13 @@
             {{ document.category }}
           </span>
           <div
-            v-if="document.remarks[0].count"
+            v-if="document.comments[0].count"
             title="`Comments`"
             class="inline-flex items-center space-x-1"
           >
             <MessageCircle :size="20" />
             <span class="text-xs sm:text-sm font-medium">{{
-              document.remarks[0].count
+              document.comments[0].count
             }}</span>
           </div>
         </div>
@@ -99,7 +99,7 @@
 import parseDate from "@/utils/parseDate"
 import { ExternalLink, Info, MessageCircle, User } from "lucide-vue-next"
 import { ref } from "vue"
-import type { Document } from "@/stores/docs"
+import type { Document } from "@/stores/documents"
 
 const props = defineProps<{
   document: Document

@@ -37,7 +37,7 @@ import UserDocuments from "@/components/documents/_user.vue"
 import { useClipboard } from "@vueuse/core"
 import { useToastsStore } from "@/stores/toasts"
 import { computed, onMounted, ref } from "vue"
-import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/docs"
+import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/documents"
 import { Plus } from "lucide-vue-next"
 
 const store = useDocumentStore()

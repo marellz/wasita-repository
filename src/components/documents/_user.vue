@@ -111,7 +111,7 @@ import {
 } from "lucide-vue-next"
 import { useClipboard } from "@vueuse/core"
 import { useAuthStore } from "@/stores/auth"
-import type { Document } from "@/stores/docs"
+import type { Document } from "@/stores/documents"
 import { computed } from "vue"
 
 const auth = useAuthStore()
