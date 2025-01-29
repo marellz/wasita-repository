@@ -2,7 +2,7 @@
   <div v-if="loading" class="py-4 text-center">
     <base-loader></base-loader>
   </div>
-  <div v-else ref="dropdown">
+  <div v-else ref="dropdown" class="relative">
     <div class="relative">
       <input
         type="text"
@@ -25,9 +25,9 @@
 
     <div
       v-show="active"
-      class="overflow-auto max-h-64 p-2 border rounded-xl mt-2"
+      class="overflow-auto max-h-56 p-2 border rounded-xl mt-2 absolute top-full w-full bg-white z-10"
     >
-      <ul class="space-y-1">
+      <ul v-if="options.length" class="space-y-1">
         <li v-for="(option, index) in options" :key="index">
           <div class="flex items-center" :class="{ 'space-x-2': !hideInput }">
             <input
@@ -65,6 +65,14 @@
           </div>
         </li>
       </ul>
+      <div v-else>
+        <div
+          class="text-slate-500 p-2 text-sm rounded-lg bg-slate-100 hover:bg-indigo-50"
+        >
+          <span class="font-medium text-slate-700">No options.</span>
+          <span> Weird parameters or there is an error somewhere... </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
