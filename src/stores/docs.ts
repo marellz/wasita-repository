@@ -8,7 +8,7 @@ import { useAuthStore } from "./auth"
 // export type Category = "financial" | "minutes" | "contracts" | "general"
 
 export interface DocumentForm {
-  id?: number
+  id?: string
   name: string
   details: string | null
   url: string
@@ -16,7 +16,6 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
-  collaborators: string[] | null
 }
 
 export interface DocumentFormErrors {
@@ -30,23 +29,13 @@ export interface FileDetails {
   url?: string
 }
 
-export interface DocumentUpdateForm {
-  id?: number
-  name?: string
-  details?: string | null
-  is_draft: boolean
-  is_public: boolean
-  tags?: string[]
-  category?: string | null
-}
-
 export interface Document {
   category: string | null
   created_at: string
   details: string | null
   file_size: number | null
   file_type: string | null
-  id: number
+  id: string
   is_draft: boolean
   is_public: boolean
   last_accessed_at: string | null
@@ -56,7 +45,6 @@ export interface Document {
   url: string
   user_id: string
   original_name: string | null
-  collaborators: string[] | null
   remarks: {
     count: number
   }[]
@@ -266,7 +254,7 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const getDocument = async (id: number) => {
+    const getDocument = async (id: string) => {
       loadingSingle.value = true
       error.value = null
 
@@ -297,7 +285,7 @@ export const useDocumentStore = defineStore(
     }
 
     const updateDocument = async (
-      id: number,
+      id: string,
       data: DocumentForm,
       file: File | null = null,
     ) => {
@@ -350,7 +338,7 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const deleteDocument = async (id: number) => {
+    const deleteDocument = async (id: string) => {
       loadingSingle.value = true
       error.value = null
       try {

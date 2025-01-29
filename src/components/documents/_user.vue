@@ -130,7 +130,7 @@ const openDocument = (url: string) => {
 const getLink = (url: string) => {
   emit("get-link", url)
 }
-const deleteDocument = (id: number) => {
+const deleteDocument = (id: string) => {
   emit("delete", id)
 }
 

@@ -89,7 +89,7 @@ const getDocumentLink = async (url: string) => {
   }
 }
 
-const deleteDocument = async (id: number) => {
+const deleteDocument = async (id: string) => {
   if (
     !confirm(
       "Are you sure you want to delete this document? This will delete the file and all comments under it",

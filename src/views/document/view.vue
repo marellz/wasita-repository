@@ -194,7 +194,7 @@ const createRemark = async () => {
   }
 }
 
-const deleteDocument = async (id: number) => {
+const deleteDocument = async (id: string) => {
   if (
     !confirm(
       "Are you sure you want to delete this document? This will delete the file and all comments under it",
@@ -219,7 +219,7 @@ const getDocument = async () => {
 }
 
 const openingDocument = ref<number | null>(null)
-const openDocument = async (url: string, id: number) => {
+const openDocument = async (url: string, id: string) => {
   openingDocument.value = id
   await store.openDocument(url)
 }

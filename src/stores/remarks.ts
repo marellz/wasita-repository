@@ -7,7 +7,7 @@ import supabase from "@/services/supabase"
 export interface Remark {
   content: string
   created_at: string
-  document_id: number
+  document_id: string
   id: number
   is_flagged: boolean
   user_id: string
@@ -27,14 +27,14 @@ export const useRemarkStore = defineStore(
     const error = ref<any>()
     const toasts = useToastsStore()
 
-    const create = async (doc: number, content: string) => {
+    const create = async (document_id: string, content: string) => {
       loading.value = true
       if (!auth.user) {
         return null
       }
 
       const form = {
-        document_id: doc,
+        document_id,
         content,
       }
 
@@ -75,7 +75,7 @@ export const useRemarkStore = defineStore(
       }
     }
 
-    const getRemarks = async (doc: number) => {
+    const getRemarks = async (document_id: string) => {
       loading.value = true
       error.value = null
       try {
@@ -85,7 +85,7 @@ export const useRemarkStore = defineStore(
             `*,
           user: users(id, email, name, avatar_url)`,
           )
-          .eq("document_id", doc)
+          .eq("document_id", document_id)
 
         if (error) {
           handleRemarksError(error)
