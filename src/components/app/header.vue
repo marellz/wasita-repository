@@ -42,15 +42,15 @@
         </ul>
         <ul
           v-if="!auth.isAuthenticated"
-          class="flex space-x-4 items-center ml-auto"
+          class="flex flex-col md:flex-row md:space-x-4 space-y-4 mt-4 md:mt-0 md:items-center md:ml-auto md:space-y-0"
         >
           <li v-for="link in guestLinks" :key="link.path">
             <router-link
               :to="link.path"
-              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-white/10"
+              class="font-secondary font-medium flex items-center p-2 rounded space-x-2 hover:bg-white/10"
               :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }"
             >
-              <span class="hidden md:block">
+              <span class="">
                 {{ link.label }}
               </span>
               <component :is="link.icon" />

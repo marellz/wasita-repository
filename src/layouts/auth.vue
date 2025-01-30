@@ -9,7 +9,7 @@
         </div>
       </layout-container>
     </header>
-    <main class="flex-auto pt-10">
+    <main class="flex-auto pt-10 pb-20">
       <layout-container>
         <div class="flex items-center justify-center">
           <layout-card class="w-full max-w-md shadow-none">
