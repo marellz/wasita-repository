@@ -1,5 +1,8 @@
 <template>
-  <layout-card v-if="store.loadingAll" class="flex justify-center !py-12">
+  <layout-card
+    v-if="store.loadingAll && store.pageNumber === 1"
+    class="flex justify-center !py-12"
+  >
     <custom-loader></custom-loader>
   </layout-card>
   <base-alert v-else-if="error" variant="error" title="Error loading documents">
@@ -17,6 +20,16 @@
           :document
           @open-document="openDocument"
         />
+        <div v-if="!store.limitReached" class="py-4 text-center">
+          <base-button
+            @click="store.nextPage()"
+            variant="secondary-outline"
+            :loading="store.loadingNextPage"
+            :disabled="store.limitReached"
+          >
+            <span>Load more</span>
+          </base-button>
+        </div>
       </div>
     </layout-card>
   </template>
@@ -27,6 +40,7 @@
 <script lang="ts" setup>
 import CustomLoader from "@/components/base/loader.vue"
 import BaseAlert from "@/components/base/alert.vue"
+import BaseButton from "@/components/base/button.vue"
 import LayoutCard from "@/components/layout/card.vue"
 // import DocumentFilters from "@/components/documents/filters.vue"
 import DocumentItem from "@/components/documents/_all-item.vue"
