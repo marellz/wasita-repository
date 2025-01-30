@@ -38,7 +38,11 @@ import UserDocuments from "@/components/documents/_user.vue"
 import { useClipboard } from "@vueuse/core"
 import { useToastsStore } from "@/stores/toasts"
 import { onMounted, ref } from "vue"
-import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/documents"
+import {
+  useDocumentStore,
+  type GetDocumentsCriteria,
+  type Document,
+} from "@/stores/documents"
 import { Plus } from "lucide-vue-next"
 
 type CriteriaTab = {
@@ -65,9 +69,7 @@ const tabs = ref<CriteriaTab[]>([
   },
 ])
 
-type UserDocument = Omit<Document, "comments", "user">
-
-const documents = ref<UserDocument[]>([])
+const documents = ref<Omit<Document, "comments">[]>([])
 
 const { copy, copied } = useClipboard()
 

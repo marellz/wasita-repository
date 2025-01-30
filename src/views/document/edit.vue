@@ -35,6 +35,7 @@ import DocumentForm, {
 } from "@/components/documents/form.vue"
 import {
   useDocumentStore,
+  type Collaborator,
   type DocumentForm as DocumentFormType,
 } from "@/stores/documents"
 import { computed, onMounted, ref } from "vue"
@@ -42,8 +43,10 @@ import { useRoute } from "vue-router"
 import { Edit } from "lucide-vue-next"
 const store = useDocumentStore()
 
-const id = computed(() => useRoute().params.id)
-const document = ref<DocumentFormType | null>(null)
+const id = computed(() => useRoute().params.id as string)
+const document = ref<
+  (DocumentFormType & { collaborators: Collaborator[] }) | null
+>(null)
 const updateDocument = async ({
   data,
   file,
@@ -61,14 +64,13 @@ const updateDocument = async ({
       is_public: data.is_public,
       tags: data.tags,
       category: data.category,
-      // collaborators: data.collaborators,
     },
     file,
     collaborators,
   )
 
   if (updated) {
-    document.value = { ...document.value, ...data }
+    document.value = { ...document.value, ...data, ...updated }
   }
 }
 

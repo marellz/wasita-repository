@@ -174,7 +174,11 @@ import FormSelect from "@/components/form/select.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import FormDropdown from "@/components/form/dropdown.vue"
 import DocumentInput from "@/components/form/document.vue"
-import { type DocumentForm, useDocumentStore } from "@/stores/documents"
+import {
+  type DocumentForm,
+  type Collaborator,
+  useDocumentStore,
+} from "@/stores/documents"
 import { computed, onMounted, ref } from "vue"
 import { useUserStore, type User } from "@/stores/users"
 import { useAuthStore } from "@/stores/auth"
@@ -190,13 +194,13 @@ export interface DocumentFormPayload {
 
 const props = withDefaults(
   defineProps<{
-    form?: DocumentForm
+    form?: DocumentForm & { collaborators: Collaborator[] }
   }>(),
   {},
 )
 
 const isUpdate = computed(() => props.form?.id)
-const collaborators = ref([])
+const collaborators = ref<string[]>([])
 
 const isRequired = (required: boolean = false) =>
   yup

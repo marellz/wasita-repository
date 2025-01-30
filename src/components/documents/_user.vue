@@ -118,7 +118,7 @@ const auth = useAuthStore()
 
 const { isSupported } = useClipboard()
 defineProps<{
-  items: Document[]
+  items: Omit<Document, "comments">[]
   loading?: boolean
 }>()
 

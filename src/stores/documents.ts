@@ -19,6 +19,14 @@ export interface DocumentForm {
   category: string | null
 }
 
+export interface Collaborator {
+  id: string
+  name: string | null
+  email: string
+  phone?: string | null
+  avatar_url: string | null
+}
+
 export interface DocumentFormErrors {
   [key: string]: string
 }
@@ -372,7 +380,7 @@ export const useDocumentStore = defineStore(
 
         toasts.addSuccess("Update successful", "Document updated successfully")
 
-        updateCollaborators(id, collaborators)
+        await updateCollaborators(id, collaborators)
 
         return { ...doc, ...payload }
       } catch (error) {
@@ -398,7 +406,7 @@ export const useDocumentStore = defineStore(
         handleDocumentError("Error removing collaborators ( 1 )")
       }
 
-      await insertCollaborators(documentId, collaborators)
+      return await insertCollaborators(documentId, collaborators)
     }
 
     const deleteDocument = async (id: string) => {

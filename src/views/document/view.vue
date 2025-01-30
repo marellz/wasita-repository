@@ -90,10 +90,10 @@
           <hr />
 
           <div class="flex space-x-2 items-center">
-            <user-avatar size="md" :avatar="document.user.avatar_url" />
+            <user-avatar size="md" :avatar="document.user?.avatar_url" />
             <div>
               <h1 class="font-medium font-secondary">
-                {{ document.user.name }}
+                {{ document.user?.name }}
               </h1>
               <!-- <p class="text-sm text-gray-600">{{ document.user.email }}</p> -->
               <p class="text-xs text-gray-600">Document author</p>
@@ -167,7 +167,7 @@ import { ChevronLeft, Edit, ExternalLink, Send, Trash2 } from "lucide-vue-next"
 import { useRoute } from "vue-router"
 import { useWindowFocus } from "@vueuse/core"
 
-const id = computed(() => useRoute().params.id)
+const id = computed(() => useRoute().params.id as string)
 
 const store = useDocumentStore()
 const commentStore = useCommentStore()
@@ -221,7 +221,7 @@ const getDocument = async () => {
   }
 }
 
-const openingDocument = ref<number | null>(null)
+const openingDocument = ref<string | null>(null)
 const openDocument = async (url: string, id: string) => {
   openingDocument.value = id
   await store.openDocument(url)
