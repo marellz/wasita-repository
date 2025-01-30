@@ -61,7 +61,9 @@
       </nav>
     </Container>
   </header>
-  <div class="md:hidden py-2 sticky top-0 backdrop-blur-md bg-black text-white">
+  <div
+    class="md:hidden py-2 sticky top-0 backdrop-blur-md bg-black text-white z-[2]"
+  >
     <Container>
       <div class="flex items-center justify-between">
         <router-link to="/" class="font-bold font-secondary text-lg">
