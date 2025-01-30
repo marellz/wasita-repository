@@ -6,7 +6,6 @@
           type="button"
           variant="primary-outline"
           :loading="userStore.loading"
-          disabled
           @click="userStore.refreshUser()"
         >
           <span>Reload user</span>

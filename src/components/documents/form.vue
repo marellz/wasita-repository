@@ -64,7 +64,7 @@
         </div>
       </fieldset>
 
-      <div class="grid md grid-cols-2 gap-10">
+      <div class="grid md:grid-cols-2 gap-10">
         <fieldset class="border rounded-xl p-4">
           <legend class="px-4">
             <form-label class="!mb-0">Collaborators</form-label>

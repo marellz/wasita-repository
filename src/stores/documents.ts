@@ -5,6 +5,7 @@ import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
 import { documentFilter } from "@/services/documentFilter"
+import type { User } from "@/stores/users"
 
 // export type Category = "financial" | "minutes" | "contracts" | "general"
 
@@ -59,12 +60,7 @@ export interface Document {
   comments: {
     count: number
   }[]
-  user: {
-    id: string
-    name?: string | null
-    email: string
-    avatar_url?: string | null
-  } | null
+  user: User | null
 }
 
 export type GetDocumentsCriteria =

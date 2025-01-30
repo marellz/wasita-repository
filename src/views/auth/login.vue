@@ -100,10 +100,10 @@ onMounted(() => {
 </script>
 <style>
 .auth-title {
-  @apply text-3xl font-semibold font-secondary;
+  @apply text-xl md:text-3xl font-semibold font-secondary;
 }
 
 .auth-subtitle {
-  @apply text-slate-500 font-light;
+  @apply text-sm md:text-base text-slate-500 font-light;
 }
 </style>

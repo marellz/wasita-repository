@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed w-full h-full md:h-auto py-1 px-2 md:sticky top-0 bg-black text-white transform md:transform-none -translate-x-full transition duration-150 ease-in-out z-20"
+    class="fixed w-full h-full md:h-auto md:py-1 md:px-2 md:sticky top-0 bg-black text-white transform md:transform-none -translate-x-full transition duration-150 ease-in-out z-20"
     :class="{ shadow: yScroll > 0, '!translate-x-0': show }"
   >
     <Container class="relative z-1 h-full">
@@ -18,7 +18,7 @@
             class="p-1 rounded-xl hover:bg-slate-200/10"
             @click="show = false"
           >
-            <ChevronLeft />
+            <ArrowLeftFromLine />
           </button>
         </div>
         <ul
@@ -42,15 +42,15 @@
         </ul>
         <ul
           v-if="!auth.isAuthenticated"
-          class="flex space-x-4 items-center ml-auto"
+          class="flex flex-col md:flex-row md:space-x-4 space-y-4 mt-4 md:mt-0 md:items-center md:ml-auto md:space-y-0"
         >
           <li v-for="link in guestLinks" :key="link.path">
             <router-link
               :to="link.path"
-              class="font-secondary font-medium flex items-center p-2 rounded md:space-x-2 hover:bg-white/10"
+              class="font-secondary font-medium flex items-center p-2 rounded space-x-2 hover:bg-white/10"
               :class="{ 'text-indigo-600 hover:!bg-indigo-100': link.primary }"
             >
-              <span class="hidden md:block">
+              <span class="">
                 {{ link.label }}
               </span>
               <component :is="link.icon" />
@@ -61,7 +61,9 @@
       </nav>
     </Container>
   </header>
-  <div class="md:hidden py-2 sticky top-0 backdrop-blur-md bg-black text-white">
+  <div
+    class="md:hidden py-2 sticky top-0 backdrop-blur-md bg-black text-white z-[2]"
+  >
     <Container>
       <div class="flex items-center justify-between">
         <router-link to="/" class="font-bold font-secondary text-lg">
@@ -79,7 +81,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ChevronLeft, LogIn, Menu, UserPlus2 } from "lucide-vue-next"
+import { ArrowLeftFromLine, LogIn, Menu, UserPlus2 } from "lucide-vue-next"
 import { computed, ref, watch, type Component } from "vue"
 import { useRoute } from "vue-router"
 import { useWindowScroll } from "@vueuse/core"
@@ -125,4 +127,13 @@ watch(
     show.value = false
   },
 )
+
+watch(show, (v) => {
+  const w = document.body.classList
+  if (v) {
+    w.add("overflow-hidden")
+  } else {
+    w.remove("overflow-hidden")
+  }
+})
 </script>

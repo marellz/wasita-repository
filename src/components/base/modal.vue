@@ -53,9 +53,9 @@ onClickOutside(modal, close)
 watch(show, (v) => {
   const w = document.body.classList
   if (v) {
-    w.add("overflow-hidden")
+    w.add("md:!overflow-hidden")
   } else {
-    w.remove("overflow-hidden")
+    w.remove("md:!overflow-hidden")
   }
 })
 </script>
