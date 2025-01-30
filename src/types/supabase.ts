@@ -149,6 +149,24 @@ export type Database = {
           },
         ]
       }
+      tags: {
+        Row: {
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar: string | null

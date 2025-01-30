@@ -7,7 +7,7 @@
       <div class="flex items-center">
         <slot name="header">
           <div>
-            <h1 class="text-2xl font-bold">{{ title }}</h1>
+            <h1 class="text-2xl font-semibold font-secondary">{{ title }}</h1>
           </div>
         </slot>
         <button
