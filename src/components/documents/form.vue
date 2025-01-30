@@ -194,7 +194,7 @@ export interface DocumentFormPayload {
 
 const props = withDefaults(
   defineProps<{
-    form?: DocumentForm & { collaborators: Collaborator[] }
+    form: DocumentForm & { collaborators?: Collaborator[] }
   }>(),
   {},
 )

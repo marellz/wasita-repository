@@ -5,7 +5,7 @@
       class="px-4 py-2 border-t sm:border-t-0 sm:border-b flex flex-col space-y-4 sm:flex-row sm:space-y-0"
     >
       <div class="flex space-x-2 items-center">
-        <UserAvatar :avatar="user?.avatar_url" />
+        <user-avatar :avatar="user?.avatar_url" />
         <div>
           <p class="font-medium font-secondary">
             {{ document.user?.name }}
@@ -85,6 +85,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import UserAvatar from "@/components/user/avatar.vue"
 import parseDate from "@/utils/parseDate"
 import { ExternalLink, Info, MessageCircle } from "lucide-vue-next"
 import { computed, ref } from "vue"

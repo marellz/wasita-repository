@@ -17,6 +17,8 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
+
+  //todo: add Collaborator types here
 }
 
 export interface Collaborator {
