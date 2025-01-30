@@ -47,7 +47,7 @@ const schema = yup.object({
     .notOneOf(
       tags.value.map((t) => t.name),
       "This tag has already been created",
-    ), // unique please!
+    ),
 })
 
 const { defineField, handleSubmit, errors, resetForm } = useForm({
