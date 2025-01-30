@@ -4,11 +4,12 @@ import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
+import { documentFilter } from "@/services/documentFilter"
 
 // export type Category = "financial" | "minutes" | "contracts" | "general"
 
 export interface DocumentForm {
-  id?: number
+  id?: string
   name: string
   details: string | null
   url: string
@@ -16,7 +17,16 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
-  collaborators: string[] | null
+
+  //todo: add Collaborator types here
+}
+
+export interface Collaborator {
+  id: string
+  name: string | null
+  email: string
+  phone?: string | null
+  avatar_url: string | null
 }
 
 export interface DocumentFormErrors {
@@ -30,23 +40,13 @@ export interface FileDetails {
   url?: string
 }
 
-export interface DocumentUpdateForm {
-  id?: number
-  name?: string
-  details?: string | null
-  is_draft: boolean
-  is_public: boolean
-  tags?: string[]
-  category?: string | null
-}
-
 export interface Document {
   category: string | null
   created_at: string
   details: string | null
   file_size: number | null
   file_type: string | null
-  id: number
+  id: string
   is_draft: boolean
   is_public: boolean
   last_accessed_at: string | null
@@ -56,25 +56,22 @@ export interface Document {
   url: string
   user_id: string
   original_name: string | null
-  collaborators: string[] | null
-  remarks: {
+  comments: {
     count: number
   }[]
   user: {
     id: string
-    name: string | null
+    name?: string | null
     email: string
-    avatar?: string | null
     avatar_url?: string | null
-  }
+  } | null
 }
 
 export type GetDocumentsCriteria =
-  | "public"
-  | "private"
   | "mine"
+  | "private"
   | "drafts"
-  | "sent"
+  | "sharedWithMe"
 
 export const useDocumentStore = defineStore(
   "documents",
@@ -88,69 +85,19 @@ export const useDocumentStore = defineStore(
     const documents = ref<Document[]>([])
     const auth = useAuthStore()
 
-    const getDocuments = async (criteria: GetDocumentsCriteria = "public") => {
+    const filters = documentFilter()
+
+    const getDocuments = async () => {
       loadingAll.value = true
-      error.value = null
       documents.value = []
 
-      const query = supabase.from("documents").select(
-        `*,
-          user: users(id, email, name, avatar_url),
-          remarks(count)`,
-      )
-
-      switch (criteria) {
-        // belong to me, period
-        case "mine":
-          if (!auth.user) {
-            return null
-          }
-          query.eq("user_id", auth.user.id)
-
-          break
-
-        // mine, not public, no collaborators
-        case "private":
-          if (!auth.user) {
-            return null
-          }
-
-          query
-            .eq("user_id", auth.user.id)
-            .eq("is_public", false)
-            .filter("collaborators", "eq", "{}")
-
-        // belong to me but are in draft
-        case "drafts":
-          if (!auth.user) {
-            return null
-          }
-
-          query.eq("user_id", auth.user.id).eq("is_draft", true)
-          break
-
-        // for which i am a collaborator
-        case "sent":
-          if (!auth.user) {
-            return null
-          }
-
-          query
-            .eq("is_public", false)
-            .filter("collaborators", "cs", `{${auth.user.id}}`)
-          break
-
-        // docs for everyone!
-        case "public":
-          query.eq("is_draft", false).eq("is_public", true)
-          break
-
-        default:
-          break
-      }
+      resetErrors()
 
       try {
-        const { data, error } = await query.order("id", { ascending: false })
+        //todo add extra filtering
+        const { data, error } = await filters.getPublicDocuments({
+          created_at: false,
+        })
         if (error) {
           handleDocumentError(error)
         }
@@ -158,6 +105,50 @@ export const useDocumentStore = defineStore(
         if (data) {
           documents.value = data
         }
+      } catch (error) {
+        handleDocumentError(error)
+      } finally {
+        loadingAll.value = false
+      }
+    }
+
+    const getUserDocuments = async (criteria: GetDocumentsCriteria) => {
+      loadingAll.value = true
+      documents.value = []
+
+      resetErrors()
+
+      let response
+
+      try {
+        switch (criteria) {
+          case "mine":
+            response = await filters.getMyDocuments()
+            break
+          case "private":
+            response = await filters.getMyPrivateDocuments()
+            break
+          case "drafts":
+            response = await filters.getMyDraftDocuments()
+            break
+          case "sharedWithMe":
+            response = await filters.getDocumentsSharedWithMe()
+            break
+          default:
+            response = await filters.getMyDocuments()
+            break
+        }
+
+        if (response.error) {
+          handleDocumentError(response.error)
+          return null
+        }
+
+        if (response.data) {
+          return response.data
+        }
+
+        return null
       } catch (error) {
         handleDocumentError(error)
       } finally {
@@ -217,7 +208,11 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const createDocument = async (file: File | null, form: DocumentForm) => {
+    const createDocument = async (
+      file: File | null,
+      form: DocumentForm,
+      collaborators: string[] = [],
+    ) => {
       loadingSingle.value = true
       try {
         // verify file
@@ -243,10 +238,10 @@ export const useDocumentStore = defineStore(
           original_name: file.name,
         }
 
-        const { data, error } = await supabase.from("documents").insert(payload)
-          .select(`*,
-          user: users(id, email, name, avatar_url),
-          remarks(count)`)
+        const { data, error } = await supabase
+          .from("documents")
+          .insert(payload)
+          .select()
 
         if (error) {
           handleDocumentError(error)
@@ -257,8 +252,15 @@ export const useDocumentStore = defineStore(
             "Document created!",
             "Your document has been successfully uploaded and will be displayed on the docs list if it is public",
           )
+
+          if (collaborators.length) {
+            insertCollaborators(data[0].id, collaborators)
+          }
+
           return data
         }
+
+        return null
       } catch (error) {
         handleDocumentError(error)
       } finally {
@@ -266,9 +268,43 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const getDocument = async (id: number) => {
+    const insertCollaborators = async (
+      documentId: string,
+      collaborators: string[] = [],
+    ) => {
+      // check if current user is present,
+      const user = auth.user
+      if (user && collaborators.includes(user.id)) {
+        // delete if so
+        collaborators.splice(
+          collaborators.findIndex((c) => c === user.id),
+          1,
+        )
+      }
+
+      const payload = Array.from(new Set(collaborators)).map((user_id) => ({
+        document_id: documentId,
+        user_id,
+      }))
+
+      // add new
+      try {
+        const { error } = await supabase
+          .from("document_collaborators")
+          .insert(payload)
+
+        if (error) {
+          handleDocumentError(error)
+        }
+      } catch (error) {
+        handleDocumentError(error)
+      }
+    }
+
+    const getDocument = async (id: string) => {
       loadingSingle.value = true
-      error.value = null
+
+      resetErrors()
 
       try {
         const { error, data } = await supabase
@@ -276,7 +312,10 @@ export const useDocumentStore = defineStore(
           .select(
             `*,
           user: users(id, email, name, avatar_url),
-          remarks(count)`,
+          collaborators: document_collaborators (
+            ...users (id, name, email, phone, avatar_url)
+          ),
+          comments(count)`,
           )
           .eq("id", id)
 
@@ -297,9 +336,10 @@ export const useDocumentStore = defineStore(
     }
 
     const updateDocument = async (
-      id: number,
+      id: string,
       data: DocumentForm,
       file: File | null = null,
+      collaborators: string[] = [],
     ) => {
       loadingSingle.value = true
       error.value = null
@@ -342,6 +382,8 @@ export const useDocumentStore = defineStore(
 
         toasts.addSuccess("Update successful", "Document updated successfully")
 
+        await updateCollaborators(id, collaborators)
+
         return { ...doc, ...payload }
       } catch (error) {
         handleDocumentError(error)
@@ -350,7 +392,26 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const deleteDocument = async (id: number) => {
+    const updateCollaborators = async (
+      documentId: string,
+      collaborators: string[] = [],
+    ) => {
+      // current list is the true list
+
+      // remove all existsing, add current
+      const { status } = await supabase
+        .from("document_collaborators")
+        .delete()
+        .eq("document_id", documentId)
+
+      if (status !== 204) {
+        handleDocumentError("Error removing collaborators ( 1 )")
+      }
+
+      return await insertCollaborators(documentId, collaborators)
+    }
+
+    const deleteDocument = async (id: string) => {
       loadingSingle.value = true
       error.value = null
       try {
@@ -392,7 +453,7 @@ export const useDocumentStore = defineStore(
         const { data, error } = await supabase.storage
           .from("documents")
           .update(url, file, {
-            cacheControl: "3600",
+            cacheControl: "3600", // todo: make sure you know wth this means.
             upsert: true,
           })
 
@@ -447,6 +508,7 @@ export const useDocumentStore = defineStore(
     return {
       documents,
       getDocument,
+      getUserDocuments,
       getDocuments,
       deleteDocument,
       createDocument,

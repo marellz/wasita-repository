@@ -5,21 +5,10 @@
       class="px-4 py-2 border-t sm:border-t-0 sm:border-b flex flex-col space-y-4 sm:flex-row sm:space-y-0"
     >
       <div class="flex space-x-2 items-center">
-        <img
-          class="h-9 w-9 rounded-full object-cover border-2"
-          v-if="document.user.avatar_url"
-          :src="document.user.avatar_url"
-          alt=""
-        />
-        <span
-          v-else
-          class="h-9 w-9 inline-flex items-center justify-center border-2 rounded-full bg-gray-200"
-        >
-          <User :size="20" />
-        </span>
+        <user-avatar :avatar="user?.avatar_url" />
         <div>
           <p class="font-medium font-secondary">
-            {{ document.user.name }}
+            {{ document.user?.name }}
           </p>
           <p class="text-xs text-slate-500">
             <template v-if="document.updated_at">
@@ -67,13 +56,13 @@
             {{ document.category }}
           </span>
           <div
-            v-if="document.remarks[0].count"
+            v-if="document.comments[0].count"
             title="`Comments`"
             class="inline-flex items-center space-x-1"
           >
             <MessageCircle :size="20" />
             <span class="text-xs sm:text-sm font-medium">{{
-              document.remarks[0].count
+              document.comments[0].count
             }}</span>
           </div>
         </div>
@@ -96,16 +85,18 @@
   </div>
 </template>
 <script lang="ts" setup>
+import UserAvatar from "@/components/user/avatar.vue"
 import parseDate from "@/utils/parseDate"
-import { ExternalLink, Info, MessageCircle, User } from "lucide-vue-next"
-import { ref } from "vue"
-import type { Document } from "@/stores/docs"
+import { ExternalLink, Info, MessageCircle } from "lucide-vue-next"
+import { computed, ref } from "vue"
+import type { Document } from "@/stores/documents"
 
 const props = defineProps<{
   document: Document
 }>()
 
 const opening = ref(false)
+const user = computed(() => props.document.user)
 const emit = defineEmits(["open-document"])
 const openDocument = () => {
   emit("open-document", props.document.id, props.document.url)

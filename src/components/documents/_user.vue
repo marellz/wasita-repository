@@ -111,14 +111,14 @@ import {
 } from "lucide-vue-next"
 import { useClipboard } from "@vueuse/core"
 import { useAuthStore } from "@/stores/auth"
-import type { Document } from "@/stores/docs"
+import type { Document } from "@/stores/documents"
 import { computed } from "vue"
 
 const auth = useAuthStore()
 
 const { isSupported } = useClipboard()
 defineProps<{
-  items: Document[]
+  items: Omit<Document, "comments">[]
   loading?: boolean
 }>()
 
@@ -130,7 +130,7 @@ const openDocument = (url: string) => {
 const getLink = (url: string) => {
   emit("get-link", url)
 }
-const deleteDocument = (id: number) => {
+const deleteDocument = (id: string) => {
   emit("delete", id)
 }
 

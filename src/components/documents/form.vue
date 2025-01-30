@@ -73,7 +73,6 @@
           :value="true"
           v-model="hasCollaborators"
           @change="handleCollaborationChange"
-          :disabled="!collaborators"
         ></form-checkbox>
 
         <div v-if="hasCollaborators" class="mt-4 space-y-4">
@@ -175,7 +174,11 @@ import FormSelect from "@/components/form/select.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import FormDropdown from "@/components/form/dropdown.vue"
 import DocumentInput from "@/components/form/document.vue"
-import { type DocumentForm, useDocumentStore } from "@/stores/docs"
+import {
+  type DocumentForm,
+  type Collaborator,
+  useDocumentStore,
+} from "@/stores/documents"
 import { computed, onMounted, ref } from "vue"
 import { useUserStore, type User } from "@/stores/users"
 import { useAuthStore } from "@/stores/auth"
@@ -184,18 +187,20 @@ import { X, Info } from "lucide-vue-next"
 import * as yup from "yup"
 
 export interface DocumentFormPayload {
-  data: DocumentForm
   file: File | null
+  data: DocumentForm
+  collaborators?: string[]
 }
 
 const props = withDefaults(
   defineProps<{
-    form?: DocumentForm
+    form: DocumentForm & { collaborators?: Collaborator[] }
   }>(),
   {},
 )
 
 const isUpdate = computed(() => props.form?.id)
+const collaborators = ref<string[]>([])
 
 const isRequired = (required: boolean = false) =>
   yup
@@ -224,7 +229,6 @@ const schema = yup.object({
   is_public: yup.boolean(),
   category: yup.string().required(),
   tags: yup.array().of(yup.string()),
-  collaborators: yup.array().of(yup.string()),
   file: yupFileSChema,
 })
 
@@ -239,7 +243,6 @@ const [details] = defineField("details")
 const [is_draft] = defineField("is_draft")
 const [is_public] = defineField("is_public")
 const [category] = defineField("category")
-const [collaborators] = defineField("collaborators")
 const [tags] = defineField("tags")
 const [file] = defineField("file")
 
@@ -284,9 +287,7 @@ const displayedCollaborators = computed(() => {
 })
 
 const removeSelectedCollaborator = (index: number) => {
-  if (collaborators.value && collaborators.value instanceof Array) {
-    collaborators.value?.splice(index, 1)
-  }
+  collaborators.value?.splice(index, 1)
 }
 
 const getUsers = async () => {
@@ -299,7 +300,12 @@ const getUsers = async () => {
 
 const submit = handleSubmit((values) => {
   const file = values.file
-  emit("submit", { data: { ...values, file: undefined }, file })
+  const data = { ...values, file: undefined, collaborators: undefined }
+  emit("submit", {
+    data,
+    file,
+    collaborators: collaborators.value,
+  })
 })
 
 const tagsList = ref([
@@ -335,13 +341,13 @@ onMounted(async () => {
         is_public: false,
         tags: [],
         category: "general",
-        collaborators: [],
       },
     })
   }
 
   if (props.form?.collaborators && props.form.collaborators.length > 0) {
     hasCollaborators.value = true
+    collaborators.value = props.form.collaborators.map((c) => c.id)
     await getUsers()
   }
 })

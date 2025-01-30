@@ -16,6 +16,7 @@
       <template v-for="(tab, index) in tabs" :key="index" #[tab.key]>
         <LayoutCard>
           <user-documents
+            :is-owner="tab.key !== 'sharedWithMe'"
             :items="documents"
             :loading="store.loadingAll"
             @get-link="getDocumentLink"
@@ -36,12 +37,20 @@ import Hero from "@/components/layout/hero.vue"
 import UserDocuments from "@/components/documents/_user.vue"
 import { useClipboard } from "@vueuse/core"
 import { useToastsStore } from "@/stores/toasts"
-import { computed, onMounted, ref } from "vue"
-import { useDocumentStore, type GetDocumentsCriteria } from "@/stores/docs"
+import { onMounted, ref } from "vue"
+import {
+  useDocumentStore,
+  type GetDocumentsCriteria,
+  type Document,
+} from "@/stores/documents"
 import { Plus } from "lucide-vue-next"
 
+type CriteriaTab = {
+  key: GetDocumentsCriteria
+  label: string
+}
 const store = useDocumentStore()
-const tabs = ref([
+const tabs = ref<CriteriaTab[]>([
   {
     label: "My docs",
     key: "mine",
@@ -56,16 +65,20 @@ const tabs = ref([
   },
   {
     label: "Shared with me",
-    key: "sent",
+    key: "sharedWithMe",
   },
 ])
 
-const documents = computed(() => store.documents)
+const documents = ref<Omit<Document, "comments">[]>([])
 
 const { copy, copied } = useClipboard()
 
 const getDocuments = async (criteria: GetDocumentsCriteria) => {
-  await store.getDocuments(criteria)
+  documents.value = []
+  const _docs = await store.getUserDocuments(criteria)
+  if (_docs) {
+    documents.value = _docs
+  }
 }
 
 const openDocument = async (url: string) => {
@@ -89,7 +102,7 @@ const getDocumentLink = async (url: string) => {
   }
 }
 
-const deleteDocument = async (id: number) => {
+const deleteDocument = async (id: string) => {
   if (
     !confirm(
       "Are you sure you want to delete this document? This will delete the file and all comments under it",

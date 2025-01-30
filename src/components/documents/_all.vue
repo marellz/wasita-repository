@@ -32,7 +32,7 @@ import LayoutCard from "@/components/layout/card.vue"
 import DocumentItem from "@/components/documents/_all-item.vue"
 import DocumentsEmpty from "@/components/documents/empty.vue"
 
-import { useDocumentStore } from "@/stores/docs"
+import { useDocumentStore } from "@/stores/documents"
 import { computed, ref, watch } from "vue"
 
 import { onMounted } from "vue"
@@ -41,13 +41,13 @@ import { useWindowFocus } from "@vueuse/core"
 const documents = computed(() => store.documents)
 const error = computed(() => store.error)
 const store = useDocumentStore()
-const openingDocument = ref<number | null>()
+const openingDocument = ref<string | null>()
 
 const onWindowFocus = useWindowFocus()
 
 // const filterDocuments = () => {}
 
-const openDocument = async (id: number, path: string) => {
+const openDocument = async (id: string, path: string) => {
   openingDocument.value = id
   await store.openDocument(path)
 }

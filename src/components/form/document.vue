@@ -70,7 +70,7 @@ import useCustomId from "@/composables/useCustomId"
 import { FileCheck, Trash } from "lucide-vue-next"
 import FormError from "@/components/form/error.vue"
 import { computed, onMounted, ref } from "vue"
-import { useDocumentStore } from "@/stores/docs"
+import { useDocumentStore } from "@/stores/documents"
 
 defineProps<{
   disabled?: boolean

@@ -90,10 +90,10 @@
           <hr />
 
           <div class="flex space-x-2 items-center">
-            <user-avatar size="md" :avatar="document.user.avatar_url" />
+            <user-avatar size="md" :avatar="document.user?.avatar_url" />
             <div>
               <h1 class="font-medium font-secondary">
-                {{ document.user.name }}
+                {{ document.user?.name }}
               </h1>
               <!-- <p class="text-sm text-gray-600">{{ document.user.email }}</p> -->
               <p class="text-xs text-gray-600">Document author</p>
@@ -102,14 +102,14 @@
           <div>
             <div class="p-4 border rounded-xl space-y-2">
               <p class="font-medium font-secondary">Leave a comment</p>
-              <form @submit.prevent="createRemark">
+              <form @submit.prevent="createComment">
                 <div class="relative">
                   <form-text
                     placeholder="What are your thoughts on this document?"
                     input-class="border-none bg-slate-100 text-sm pr-20 min-h-16"
                     v-model="comment"
                     required
-                    :error="remarkStore.error?.comment"
+                    :error="commentStore.error?.comment"
                   ></form-text>
                   <div class="absolute right-4 top-2">
                     <base-button
@@ -124,14 +124,14 @@
               </form>
             </div>
             <div class="py-5">
-              <div v-if="remarkStore.loading" class="py-10 text-center">
+              <div v-if="commentStore.loading" class="py-10 text-center">
                 <base-loader></base-loader>
               </div>
-              <template v-else-if="remarks.length">
+              <template v-else-if="comments.length">
                 <h1 class="font-medium font-secondary">Comments</h1>
                 <div class="mt-3 space-y-2">
                   <comment-item
-                    v-for="comment in remarks"
+                    v-for="comment in comments"
                     :key="comment.id"
                     :comment
                     @delete-comment="deleteComment"
@@ -139,7 +139,7 @@
                 </div>
               </template>
               <p v-else class="text-slate-500 text-center">
-                No remarks. Be the first to leave one.
+                No comments. Be the first to leave one.
               </p>
             </div>
           </div>
@@ -161,40 +161,43 @@ import UserAvatar from "@/components/user/avatar.vue"
 import CommentItem from "@/components/comments/item.vue"
 import { useAuthStore } from "@/stores/auth"
 import { computed, onMounted, ref, watch } from "vue"
-import { useDocumentStore, type Document } from "@/stores/docs"
-import { useRemarkStore, type Remark } from "@/stores/remarks"
+import { useDocumentStore, type Document } from "@/stores/documents"
+import { useCommentStore, type Comment } from "@/stores/comments"
 import { ChevronLeft, Edit, ExternalLink, Send, Trash2 } from "lucide-vue-next"
 import { useRoute } from "vue-router"
 import { useWindowFocus } from "@vueuse/core"
 
-const id = computed(() => Number(useRoute().params.id))
+const id = computed(() => useRoute().params.id as string)
 
 const store = useDocumentStore()
-const remarkStore = useRemarkStore()
+const commentStore = useCommentStore()
 const auth = useAuthStore()
 
-const remarks = ref<Remark[]>([])
+const comments = ref<Comment[]>([])
 const document = ref<Document | null>(null)
 const comment = ref("")
 
 const loadingDocument = computed(() => store.loadingSingle)
-const loadingComments = computed(() => remarkStore.loading)
+const loadingComments = computed(() => commentStore.loading)
 
-const createRemark = async () => {
+const createComment = async () => {
   if (comment.value === "" || !document.value) {
     return
   }
 
-  const _newRemark = await remarkStore.create(document.value.id, comment.value)
+  const _newComment = await commentStore.create(
+    document.value.id,
+    comment.value,
+  )
 
-  if (_newRemark) {
-    remarks.value.push(_newRemark)
+  if (_newComment) {
+    comments.value.push(_newComment)
 
     comment.value = ""
   }
 }
 
-const deleteDocument = async (id: number) => {
+const deleteDocument = async (id: string) => {
   if (
     !confirm(
       "Are you sure you want to delete this document? This will delete the file and all comments under it",
@@ -218,8 +221,8 @@ const getDocument = async () => {
   }
 }
 
-const openingDocument = ref<number | null>(null)
-const openDocument = async (url: string, id: number) => {
+const openingDocument = ref<string | null>(null)
+const openDocument = async (url: string, id: string) => {
   openingDocument.value = id
   await store.openDocument(url)
 }
@@ -235,9 +238,9 @@ const getComments = async () => {
     return
   }
 
-  const _r = await remarkStore.getRemarks(document.value.id)
+  const _r = await commentStore.getComments(document.value.id)
   if (_r) {
-    remarks.value = _r
+    comments.value = _r
   }
 }
 
@@ -246,9 +249,9 @@ const deleteComment = async (id: number) => {
     return
   }
 
-  const success = await remarkStore.destroy(id)
+  const success = await commentStore.destroy(id)
   if (success) {
-    remarks.value = remarks.value.filter((r) => r.id !== id)
+    comments.value = comments.value.filter((r) => r.id !== id)
   }
 }
 

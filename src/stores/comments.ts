@@ -4,10 +4,10 @@ import { ref } from "vue"
 import { useToastsStore } from "./toasts"
 import supabase from "@/services/supabase"
 
-export interface Remark {
+export interface Comment {
   content: string
   created_at: string
-  document_id: number
+  document_id: string
   id: number
   is_flagged: boolean
   user_id: string
@@ -19,32 +19,32 @@ export interface Remark {
   }
 }
 
-export const useRemarkStore = defineStore(
-  "remarks",
+export const useCommentStore = defineStore(
+  "comments",
   () => {
     const auth = useAuthStore()
     const loading = ref(false)
     const error = ref<any>()
     const toasts = useToastsStore()
 
-    const create = async (doc: number, content: string) => {
+    const create = async (document_id: string, content: string) => {
       loading.value = true
       if (!auth.user) {
         return null
       }
 
       const form = {
-        document_id: doc,
+        document_id,
         content,
       }
 
       try {
-        const { data, error } = await supabase.from("remarks").insert(form)
+        const { data, error } = await supabase.from("comments").insert(form)
           .select(`*,
             user: users(id, email, name, avatar_url)`)
 
         if (error) {
-          handleRemarksError(error)
+          handleCommentsError(error)
           return null
         }
 
@@ -54,7 +54,7 @@ export const useRemarkStore = defineStore(
 
         return null
       } catch (error) {
-        handleRemarksError(error)
+        handleCommentsError(error)
       } finally {
         loading.value = false
       }
@@ -62,33 +62,33 @@ export const useRemarkStore = defineStore(
 
     const destroy = async (id: number) => {
       try {
-        const { status } = await supabase.from("remarks").delete().eq("id", id)
+        const { status } = await supabase.from("comments").delete().eq("id", id)
 
         if (status !== 204) {
-          handleRemarksError("Comment not successfully deleted")
+          handleCommentsError("Comment not successfully deleted")
           return false
         }
 
         return true
       } catch (error) {
-        handleRemarksError(error)
+        handleCommentsError(error)
       }
     }
 
-    const getRemarks = async (doc: number) => {
+    const getComments = async (document_id: string) => {
       loading.value = true
       error.value = null
       try {
         const { data, error } = await supabase
-          .from("remarks")
+          .from("comments")
           .select(
             `*,
           user: users(id, email, name, avatar_url)`,
           )
-          .eq("document_id", doc)
+          .eq("document_id", document_id)
 
         if (error) {
-          handleRemarksError(error)
+          handleCommentsError(error)
         }
 
         if (data) {
@@ -97,13 +97,13 @@ export const useRemarkStore = defineStore(
 
         return []
       } catch (error) {
-        handleRemarksError(error)
+        handleCommentsError(error)
       } finally {
         loading.value = false
       }
     }
 
-    const handleRemarksError = (err: any) => {
+    const handleCommentsError = (err: any) => {
       if (typeof err === "object" && err.message) {
         error.value = err.message
         toasts.addError("Registration error", err.message)
@@ -117,7 +117,7 @@ export const useRemarkStore = defineStore(
 
     return {
       create,
-      getRemarks,
+      getComments,
       loading,
       error,
       destroy,
@@ -132,5 +132,5 @@ export const useRemarkStore = defineStore(
 )
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useRemarkStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useCommentStore, import.meta.hot))
 }
