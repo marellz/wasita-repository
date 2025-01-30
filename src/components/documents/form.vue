@@ -47,20 +47,25 @@
               displayed to everyone else.
             </p>
           </div>
-          <form-checkbox
-            label="Save as draft"
-            :value="true"
-            v-model="is_draft"
-            :disabled="is_public"
-            name="Is draft"
-          ></form-checkbox>
-          <form-checkbox
-            label="Public document"
-            :value="true"
-            v-model="is_public"
-            name="isPublic"
-            :disabled="is_draft"
-          ></form-checkbox>
+
+          <div class="grid md:grid-cols-2 gap-4 md:gap-10">
+            <form-setting
+              label="Save as draft"
+              subtitle="Keep this document unpublished until it’s ready."
+              v-model="is_draft"
+              :disabled="is_public"
+              name="isDraft"
+            >
+            </form-setting>
+            <form-setting
+              label="Make Public"
+              subtitle="Allow others to view this document."
+              v-model="is_public"
+              name="isPublic"
+              :disabled="is_draft"
+            >
+            </form-setting>
+          </div>
         </div>
       </fieldset>
 
@@ -203,6 +208,7 @@ import FormLabel from "@/components/form/label.vue"
 import FormText from "@/components/form/text.vue"
 import FormPill from "@/components/form/pill.vue"
 import FormSelect from "@/components/form/select.vue"
+import FormSetting from "@/components/form/setting.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import FormDropdown from "@/components/form/dropdown.vue"
 import DocumentInput from "@/components/form/document.vue"
