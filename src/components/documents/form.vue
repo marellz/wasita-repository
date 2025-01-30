@@ -143,16 +143,30 @@
                 {{ item.label }}
               </option>
             </form-select>
-            <div>
-              <form-label>Tags</form-label>
-              <div class="flex gap-4">
-                <div v-for="(item, index) in tagsList" :key="index">
-                  <form-checkbox
-                    :value="item.value"
-                    :label="item.label"
+            <div class="space-y-4">
+              <div class="flex items-center space-x-2">
+                <form-label class="!mb-0">Tags</form-label>
+                <button
+                  type="button"
+                  class="py-1 px-2 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-600 rounded inline-flex space-x-2 text-sm font-medium font-secondary"
+                  @click="showTagsModal = true"
+                >
+                  <span>Edit</span>
+                  <Edit :size="20" />
+                </button>
+              </div>
+              <div v-if="tagsStore.loading" class="py-4 text-center">
+                <base-loader></base-loader>
+              </div>
+              <div v-else-if="tags" class="flex flex-wrap gap-3">
+                <template v-for="(item, index) in tagsList" :key="index">
+                  <form-pill
+                    :value="item.slug"
+                    name="tags"
+                    :label="item.name"
                     v-model="tags"
                   />
-                </div>
+                </template>
               </div>
             </div>
           </div>
@@ -167,13 +181,18 @@
       </div>
     </div>
   </Form>
+
+  <tags-form v-model:show="showTagsModal" />
 </template>
 <script lang="ts" setup>
 import BaseAlert from "@/components/base/alert.vue"
+import TagsForm from "@/components/documents/tags-form.vue"
 import BaseButton from "@/components/base/button.vue"
+import BaseLoader from "@/components/base/loader.vue"
 import FormInput from "@/components/form/input.vue"
 import FormLabel from "@/components/form/label.vue"
 import FormText from "@/components/form/text.vue"
+import FormPill from "@/components/form/pill.vue"
 import FormSelect from "@/components/form/select.vue"
 import FormCheckbox from "@/components/form/checkbox.vue"
 import FormDropdown from "@/components/form/dropdown.vue"
@@ -187,8 +206,9 @@ import { computed, onMounted, ref } from "vue"
 import { useUserStore, type User } from "@/stores/users"
 import { useAuthStore } from "@/stores/auth"
 import { Form, useForm } from "vee-validate"
-import { X, Info } from "lucide-vue-next"
+import { X, Info, Edit } from "lucide-vue-next"
 import * as yup from "yup"
+import { useTagStore } from "@/stores/tags"
 
 export interface DocumentFormPayload {
   file: File | null
@@ -255,6 +275,7 @@ const emit = defineEmits(["submit"])
 const store = useDocumentStore()
 const userStore = useUserStore()
 const auth = useAuthStore()
+const tagsStore = useTagStore()
 
 const loading = computed(() => store.loadingSingle)
 
@@ -311,12 +332,13 @@ const submit = handleSubmit((values) => {
     collaborators: collaborators.value,
   })
 })
-
-const tagsList = ref([
-  { label: "Finance", value: "finance" },
-  { label: "Meeting", value: "meeting" },
-  { label: "2025", value: "2025" },
-])
+const tagsList = computed(() => tagsStore.tags)
+const showTagsModal = ref(false)
+// ref([
+//   { label: "Finance", value: "finance" },
+//   { label: "Meeting", value: "meeting" },
+//   { label: "2025", value: "2025" },
+// ])
 
 const categoriesList = ref<{ label: string; value: string }[]>([
   { label: "General", value: "general" },
@@ -332,6 +354,8 @@ const handleCollaborationChange = async (v: boolean) => {
     collaborators.value = []
   }
 }
+
+onMounted(tagsStore.getTags)
 
 onMounted(async () => {
   if (props.form && props.form.id) {
