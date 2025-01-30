@@ -63,98 +63,102 @@
           ></form-checkbox>
         </div>
       </fieldset>
-      <fieldset class="border rounded-xl p-4">
-        <legend class="px-4">
-          <form-label class="!mb-0">Collaborators</form-label>
-        </legend>
 
-        <form-checkbox
-          label="Add collaborators"
-          :value="true"
-          v-model="hasCollaborators"
-          @change="handleCollaborationChange"
-        ></form-checkbox>
+      <div class="grid md grid-cols-2 gap-10">
+        <fieldset class="border rounded-xl p-4">
+          <legend class="px-4">
+            <form-label class="!mb-0">Collaborators</form-label>
+          </legend>
 
-        <div v-if="hasCollaborators" class="mt-4 space-y-4">
-          <template v-if="collaborators && collaborators.length">
-            <p class="text-sm font-medium font-secondary">
-              Added collaborators
-            </p>
-            <div class="flex flex-wrap gap-1 sm:gap-2 md:gap-3">
-              <div
-                v-for="(user, index) in displayedCollaborators"
-                :key="index"
-                class="flex items-center space-x-4 border border-indigo-600 text-indigo-600 rounded-xl py-0.5 px-2"
-              >
-                <div class="flex-auto">
-                  <p class="font-medium text-sm font-secondary">
-                    {{ user.name }}
-                  </p>
-                </div>
-                <div class="flex-none">
-                  <button
-                    type="button"
-                    class="rounded-full p-1 hover:bg-red-100 hover:text-red-500"
-                    @click="removeSelectedCollaborator(index)"
-                  >
-                    <X :size="20" />
-                  </button>
+          <form-checkbox
+            label="Add collaborators"
+            :value="true"
+            v-model="hasCollaborators"
+            @change="handleCollaborationChange"
+            :disabled="!collaborators"
+          ></form-checkbox>
+
+          <div v-if="hasCollaborators" class="mt-4 space-y-4">
+            <template v-if="collaborators && collaborators.length">
+              <p class="text-sm font-medium font-secondary">
+                Added collaborators
+              </p>
+              <div class="flex flex-wrap gap-1 sm:gap-2 md:gap-3">
+                <div
+                  v-for="(user, index) in displayedCollaborators"
+                  :key="index"
+                  class="flex items-center space-x-4 border border-indigo-600 text-indigo-600 rounded-xl py-0.5 px-2"
+                >
+                  <div class="flex-auto">
+                    <p class="font-medium text-sm font-secondary">
+                      {{ user.name }}
+                    </p>
+                  </div>
+                  <div class="flex-none">
+                    <button
+                      type="button"
+                      class="rounded-full p-1 hover:bg-red-100 hover:text-red-500"
+                      @click="removeSelectedCollaborator(index)"
+                    >
+                      <X :size="20" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
+            </template>
 
-          <p v-else class="text-slate-500 text-sm font-medium font-secondary">
-            [No collaborators]
-          </p>
+            <p v-else class="text-slate-500 text-sm font-medium font-secondary">
+              [No collaborators]
+            </p>
 
-          <form-dropdown
-            v-if="collaborators !== null"
-            :options="displayedUsers"
-            v-model="collaborators"
-            :loading="userStore.loading"
-            :placeholder="`Add collaborators ${collaborators.length ? '(' + collaborators.length + ')' : ''}`"
-            label-key="name"
-            value-key="id"
-            hide-input
-            @query="(v) => (userQuery = v)"
-          >
-          </form-dropdown>
-        </div>
-      </fieldset>
-
-      <fieldset class="border rounded-xl p-4">
-        <legend class="px-4">
-          <form-label class="!mb-0">Categorization</form-label>
-        </legend>
-        <div class="space-y-4">
-          <form-select
-            label="Category"
-            v-model="category"
-            :error="errors.category"
-          >
-            <option
-              v-for="item in categoriesList"
-              :value="item.value"
-              :key="item.value"
+            <form-dropdown
+              v-if="collaborators !== null"
+              :options="displayedUsers"
+              v-model="collaborators"
+              :loading="userStore.loading"
+              :placeholder="`Add collaborators ${collaborators.length ? '(' + collaborators.length + ')' : ''}`"
+              label-key="name"
+              value-key="id"
+              hide-input
+              @query="(v) => (userQuery = v)"
             >
-              {{ item.label }}
-            </option>
-          </form-select>
-          <div>
-            <form-label>Tags</form-label>
-            <div class="flex gap-4">
-              <div v-for="(item, index) in tagsList" :key="index">
-                <form-checkbox
-                  :value="item.value"
-                  :label="item.label"
-                  v-model="tags"
-                />
+            </form-dropdown>
+          </div>
+        </fieldset>
+        <fieldset class="border rounded-xl p-4">
+          <legend class="px-4">
+            <form-label class="!mb-0">Categorization</form-label>
+          </legend>
+          <div class="space-y-4">
+            <form-select
+              label="Category"
+              v-model="category"
+              :error="errors.category"
+            >
+              <option
+                v-for="item in categoriesList"
+                :value="item.value"
+                :key="item.value"
+              >
+                {{ item.label }}
+              </option>
+            </form-select>
+            <div>
+              <form-label>Tags</form-label>
+              <div class="flex gap-4">
+                <div v-for="(item, index) in tagsList" :key="index">
+                  <form-checkbox
+                    :value="item.value"
+                    :label="item.label"
+                    v-model="tags"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </fieldset>
+        </fieldset>
+      </div>
+
       <div class="!mt-10">
         <base-button class="w-full" :loading>
           <span v-if="isUpdate">Update document</span>

@@ -24,7 +24,7 @@
         <ul
           class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0 font-medium font-secondary text-2xl lowercase"
         >
-          <li>
+          <li class="hidden md:block">
             <app-logo fill="white" class="h-8" />
           </li>
           <li v-for="link in _links" :key="link.path">

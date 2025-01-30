@@ -37,15 +37,19 @@
                 >
                   {{ row.category }}</span
                 >
-                <div>
+                <div class="flex items-center space-x-2">
                   <p
+                    v-if="row.is_draft"
                     class="bg-slate-200 text-xs px-2 py-0.5 rounded-full font-medium font-secondary inline-flex space-x-1 items-center"
-                    :class="{ '!bg-green-100 text-green-500': !row.is_draft }"
                   >
-                    <span>
-                      {{ row.is_draft ? "draft" : "published" }}
-                    </span>
-                    <Check v-if="!row.is_draft" :size="12" />
+                    <span> draft </span>
+                  </p>
+                  <p
+                    v-if="row.is_public"
+                    class="bg-green-100 text-green-500 text-xs px-2 py-0.5 rounded-full font-medium font-secondary inline-flex space-x-1 items-center"
+                  >
+                    <span> public </span>
+                    <Check :size="12" />
                   </p>
                 </div>
               </div>

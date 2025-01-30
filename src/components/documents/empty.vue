@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-slate-100 rounded-xl p-5 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 py-10"
+    class="bg-white shadow-xl rounded-xl p-5 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 py-10"
   >
     <img
       class="max-w-sm w-full"
