@@ -88,11 +88,12 @@ export const useDocumentStore = defineStore(
     const filters = documentFilter()
 
     // pagination
+    // todo: check stash in 'pagination' branch
     const perPage = ref(10)
     const pageNumber = ref(1)
     const currentRange = ref({ from: 0, to: perPage.value - 1 })
     const limitReached = ref(true)
-    const totalDocuments = ref<number>(60)
+    const totalDocuments = ref<number>()
 
     const loadingNextPage = ref(false)
 
