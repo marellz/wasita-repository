@@ -130,17 +130,24 @@
             <form-label class="!mb-0">Categorization</form-label>
           </legend>
           <div class="space-y-4">
-            <form-select
-              label="Category"
-              v-model="category"
-              :error="errors.category"
-            >
+            <div class="flex items-center space-x-2">
+              <form-label class="!mb-0">Categories</form-label>
+              <button
+                type="button"
+                class="py-1 px-2 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-600 rounded inline-flex space-x-2 text-sm font-medium font-secondary"
+                @click="showCategoriesModal = true"
+              >
+                <span>Edit</span>
+                <Edit :size="20" />
+              </button>
+            </div>
+            <form-select v-model="category" :error="errors.category">
               <option
                 v-for="item in categoriesList"
-                :value="item.value"
-                :key="item.value"
+                :value="item.slug"
+                :key="item.id"
               >
-                {{ item.label }}
+                {{ item.name }}
               </option>
             </form-select>
             <div class="space-y-4">
@@ -159,7 +166,7 @@
                 <base-loader></base-loader>
               </div>
               <div v-else-if="tags" class="flex flex-wrap gap-3">
-                <template v-for="(item, index) in tagsList" :key="index">
+                <template v-for="item in tagsList" :key="item.id">
                   <form-pill
                     :value="item.slug"
                     name="tags"
@@ -183,10 +190,12 @@
   </Form>
 
   <tags-form v-model:show="showTagsModal" />
+  <category-form v-model:show="showCategoriesModal" />
 </template>
 <script lang="ts" setup>
 import BaseAlert from "@/components/base/alert.vue"
 import TagsForm from "@/components/documents/tags-form.vue"
+import CategoryForm from "@/components/documents/category-form.vue"
 import BaseButton from "@/components/base/button.vue"
 import BaseLoader from "@/components/base/loader.vue"
 import FormInput from "@/components/form/input.vue"
@@ -209,6 +218,8 @@ import { Form, useForm } from "vee-validate"
 import { X, Info, Edit } from "lucide-vue-next"
 import * as yup from "yup"
 import { useTagStore } from "@/stores/tags"
+import { useCategoryStore } from "@/stores/categories"
+import { watch } from "vue"
 
 export interface DocumentFormPayload {
   file: File | null
@@ -251,7 +262,7 @@ const schema = yup.object({
   details: yup.string().required("Document information is required"),
   is_draft: yup.boolean(),
   is_public: yup.boolean(),
-  category: yup.string().required(),
+  category: yup.string().required("Category is required"),
   tags: yup.array().of(yup.string()),
   file: yupFileSChema,
 })
@@ -276,6 +287,7 @@ const store = useDocumentStore()
 const userStore = useUserStore()
 const auth = useAuthStore()
 const tagsStore = useTagStore()
+const categoryStore = useCategoryStore()
 
 const loading = computed(() => store.loadingSingle)
 
@@ -334,18 +346,9 @@ const submit = handleSubmit((values) => {
 })
 const tagsList = computed(() => tagsStore.tags)
 const showTagsModal = ref(false)
-// ref([
-//   { label: "Finance", value: "finance" },
-//   { label: "Meeting", value: "meeting" },
-//   { label: "2025", value: "2025" },
-// ])
+const showCategoriesModal = ref(false)
 
-const categoriesList = ref<{ label: string; value: string }[]>([
-  { label: "General", value: "general" },
-  { label: "Financial", value: "financial" },
-  { label: "Minutes", value: "minutes" },
-  { label: "Contracts", value: "contracts" },
-])
+const categoriesList = computed(() => categoryStore.categories)
 
 const handleCollaborationChange = async (v: boolean) => {
   if (v) {
@@ -356,6 +359,17 @@ const handleCollaborationChange = async (v: boolean) => {
 }
 
 onMounted(tagsStore.getTags)
+onMounted(categoryStore.getCategories)
+
+watch(categoriesList, (v) => {
+  if (!category.value) {
+    resetForm({
+      values: {
+        category: v[0].id,
+      },
+    })
+  }
+})
 
 onMounted(async () => {
   if (props.form && props.form.id) {
@@ -368,7 +382,7 @@ onMounted(async () => {
         is_draft: false,
         is_public: false,
         tags: [],
-        category: "general",
+        category: null,
       },
     })
   }
