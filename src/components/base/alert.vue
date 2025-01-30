@@ -1,16 +1,22 @@
 <template>
-  <div class="rounded-xl px-4 flex items-start" :class="themes[variant].bg">
+  <div
+    class="rounded-xl px-4 flex items-start space-x-2"
+    :class="themes[variant].bg"
+  >
     <!-- <icon-component /> -->
-    <div class="p-4 pl-0 flex-none">
+    <div class="p-3 pl-0 flex-none">
       <span
-        class="p-2 rounded-full block"
+        class="p-1 rounded-full block"
         :class="[themes[variant].color, themes[variant].semiBg]"
       >
         <component :size="32" :stroke-width="1.5" :is="icons[variant]" />
       </span>
     </div>
-    <div class="flex-auto pt-3">
-      <h1 class="text-lg font-bold mb-1" :class="themes[variant].color">
+    <div class="flex-auto pt-2">
+      <h1
+        class="text-lg font-medium font-secondary leading-snug"
+        :class="themes[variant].color"
+      >
         {{ title }}
       </h1>
       <div class="text-sm">
@@ -62,12 +68,12 @@ const icons: VariantIcons = {
   info: Info,
   success: CircleCheck,
 }
-
+// todo: add status border
 const themes: VariantThemes = {
   error: {
-    bg: "bg-red-100",
+    bg: "bg-red-100/75",
     color: "text-red-500",
-    semiBg: "bg-red-500/25",
+    semiBg: "bg-red-500/15",
   },
   info: { bg: "bg-blue-100", color: "text-blue-500", semiBg: "bg-blue-500/25" },
   success: {
