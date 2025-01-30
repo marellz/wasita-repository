@@ -127,4 +127,13 @@ watch(
     show.value = false
   },
 )
+
+watch(show, (v) => {
+  const w = document.body.classList
+  if (v) {
+    w.add("overflow-hidden")
+  } else {
+    w.remove("overflow-hidden")
+  }
+})
 </script>
