@@ -1,6 +1,6 @@
 <template>
   <header
-    class="fixed w-full h-full md:h-auto py-1 px-2 md:sticky top-0 bg-black text-white transform md:transform-none -translate-x-full transition duration-150 ease-in-out z-20"
+    class="fixed w-full h-full md:h-auto md:py-1 md:px-2 md:sticky top-0 bg-black text-white transform md:transform-none -translate-x-full transition duration-150 ease-in-out z-20"
     :class="{ shadow: yScroll > 0, '!translate-x-0': show }"
   >
     <Container class="relative z-1 h-full">
@@ -18,7 +18,7 @@
             class="p-1 rounded-xl hover:bg-slate-200/10"
             @click="show = false"
           >
-            <ChevronLeft />
+            <ArrowLeftFromLine />
           </button>
         </div>
         <ul
@@ -81,7 +81,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ChevronLeft, LogIn, Menu, UserPlus2 } from "lucide-vue-next"
+import { ArrowLeftFromLine, LogIn, Menu, UserPlus2 } from "lucide-vue-next"
 import { computed, ref, watch, type Component } from "vue"
 import { useRoute } from "vue-router"
 import { useWindowScroll } from "@vueuse/core"
