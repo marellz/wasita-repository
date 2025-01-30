@@ -12,7 +12,10 @@ export const documentFilter = () => {
   const auth = useAuthStore()
   const user = computed(() => auth.user?.id ?? null)
 
-  const getPublicDocuments = async (order: Order = { created_at: false }) => {
+  const getPublicDocuments = async (
+    order: Order = { created_at: false },
+    range: { from: number; to: number } = { from: 0, to: 9 },
+  ) => {
     /**
      * public
      *
@@ -34,6 +37,7 @@ export const documentFilter = () => {
         comments(count)`,
       )
       .eq("is_public", true)
+      .range(range.from, range.to)
 
     const _key = Object.keys(order)[0]
     const _value = Object.values(order)[0]

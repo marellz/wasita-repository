@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
@@ -87,28 +87,89 @@ export const useDocumentStore = defineStore(
 
     const filters = documentFilter()
 
-    const getDocuments = async () => {
+    // pagination
+    const perPage = ref(10)
+    const pageNumber = ref(1)
+    const currentRange = ref({ from: 0, to: perPage.value - 1 })
+    const limitReached = ref(true)
+    const totalDocuments = ref<number>(60)
+
+    const loadingNextPage = ref(false)
+
+    const nextPage = async () => {
+      if (limitReached.value) {
+        return
+      }
+
+      loadingNextPage.value = true
+      const s = currentRange.value.to + 1
+      pageNumber.value++
+      currentRange.value = {
+        from: s,
+        to: s + (perPage.value - 1),
+      }
+
+      await getDocuments()
+    }
+
+    watch(documents, (n) => {
+      if (n.length === totalDocuments.value) {
+        limitReached.value = true
+      }
+    })
+
+    const getDocumentCount = async () => {
+      const { count, error } = await supabase
+        .from("documents")
+        .select("*", { count: "exact", head: true })
+        .eq("is_public", true)
+        .eq("is_draft", false)
+
+      if (error) {
+        handleDocumentError("Trouble getting document count")
+      }
+
+      if (count) {
+        totalDocuments.value = count
+
+        if (count > perPage.value) {
+          limitReached.value = false
+        }
+      }
+    }
+
+    const getDocuments = async (
+      range: { from: number; to: number } = currentRange.value,
+    ) => {
       loadingAll.value = true
-      documents.value = []
+      // documents.value = []
+
+      if (pageNumber.value === 1) {
+        getDocumentCount()
+      }
 
       resetErrors()
 
       try {
         //todo add extra filtering
-        const { data, error } = await filters.getPublicDocuments({
-          created_at: false,
-        })
+        const { data, error } = await filters.getPublicDocuments(
+          {
+            created_at: false,
+          },
+          range,
+        )
         if (error) {
           handleDocumentError(error)
         }
 
         if (data) {
-          documents.value = data
+          documents.value = [...documents.value, ...data]
         }
       } catch (error) {
         handleDocumentError(error)
       } finally {
         loadingAll.value = false
+        loadingNextPage.value = false
       }
     }
 
@@ -506,6 +567,7 @@ export const useDocumentStore = defineStore(
     }
 
     return {
+      //
       documents,
       getDocument,
       getUserDocuments,
@@ -524,6 +586,13 @@ export const useDocumentStore = defineStore(
       errors,
       resetErrors,
       getDocumentPublicUrl,
+
+      //
+      pageNumber,
+      currentRange,
+      nextPage,
+      limitReached,
+      loadingNextPage,
     }
   },
   {
