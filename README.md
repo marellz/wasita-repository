@@ -1,45 +1,22 @@
-# waweru-repository
+# Wasita repository
 
-This template should help get you started developing with Vue 3 in Vite.
+## **About this App**
 
-## Recommended IDE Setup
+This app is designed to streamline document collaboration and management within a trusted group. Whether you need to securely store, share, or retrieve important files, it ensures easy access while maintaining strict control over permissions.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### **Key Features:**
 
-## Type Support for `.vue` Imports in TS
+- ✅ **Seamless Document Management** – Upload, organize, and access important documents anytime.
+- ✅ **Collaborative Access** – Assign collaborators with controlled permissions for shared files.
+- ✅ **Secure & Reliable** – Built with robust authentication and Supabase-powered security.
+- ✅ **Efficient Pagination** – Fast and scalable document retrieval, even with large datasets.
+- ✅ **User-Friendly** – A simple, intuitive interface for smooth navigation and file handling.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### **Tech Stack:**
 
-## Customize configuration
+- 🟢 **Vue 3** – For a reactive, component-driven frontend.
+- 🟣 **TypeScript** – Ensuring type safety and maintainability.
+- 🟡 **Supabase** – A scalable, Postgres-backed backend with authentication and database management.
+- 🔵 **Tailwind CSS** – For a modern, flexible, and responsive UI.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+This project was born out of the need to **centralize and safeguard crucial files**, ensuring they don’t get lost in chats or emails. It’s built with performance, scalability, and ease of use in mind. 🚀
