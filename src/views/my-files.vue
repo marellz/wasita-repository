@@ -37,7 +37,7 @@ import Hero from "@/components/layout/hero.vue"
 import UserDocuments from "@/components/documents/_user.vue"
 import { useClipboard } from "@vueuse/core"
 import { useToastsStore } from "@/stores/toasts"
-import { onMounted, ref } from "vue"
+import { onMounted, onUnmounted, ref } from "vue"
 import {
   useDocumentStore,
   type GetDocumentsCriteria,
@@ -129,5 +129,10 @@ const changeCriteria = (tab: string) => {
 
 onMounted(async () => {
   await getDocuments("mine")
+})
+
+onUnmounted(() => {
+  store.resetDocuments()
+  store.resetParams()
 })
 </script>
