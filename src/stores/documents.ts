@@ -124,6 +124,7 @@ export const useDocumentStore = defineStore(
 
       if (error) {
         handleDocumentError("Trouble getting document count")
+        return null
       }
 
       if (count) {
@@ -133,6 +134,8 @@ export const useDocumentStore = defineStore(
           limitReached.value = false
         }
       }
+
+      return count
     }
 
     const getDocuments = async (
@@ -585,6 +588,7 @@ export const useDocumentStore = defineStore(
       getDocumentPublicUrl,
 
       //
+      getDocumentCount,
       pageNumber,
       currentRange,
       nextPage,

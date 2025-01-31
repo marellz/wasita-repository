@@ -1,3 +1,4 @@
+import usePagination from "@/composables/useFilters"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "@/stores/auth"
 import { computed } from "vue"
@@ -11,10 +12,11 @@ type Order = Record<filterKeys, boolean>
 export const documentFilter = () => {
   const auth = useAuthStore()
   const user = computed(() => auth.user?.id ?? null)
+  const { currentRange } = usePagination("documents")
 
   const getPublicDocuments = async (
     order: Order = { created_at: false },
-    range: { from: number; to: number } = { from: 0, to: 9 },
+    range: { from: number; to: number } = pagination.currentRange.value,
   ) => {
     /**
      * public

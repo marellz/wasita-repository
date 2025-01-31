@@ -22,10 +22,10 @@
         />
         <div v-if="!store.limitReached" class="py-4 text-center">
           <base-button
-            @click="store.nextPage()"
+            @click="onNextPage()"
             variant="secondary-outline"
             :loading="store.loadingNextPage"
-            :disabled="store.limitReached"
+            :disabled="limitReached"
           >
             <span>Load more</span>
           </base-button>
@@ -45,6 +45,7 @@ import LayoutCard from "@/components/layout/card.vue"
 // import DocumentFilters from "@/components/documents/filters.vue"
 import DocumentItem from "@/components/documents/_all-item.vue"
 import DocumentsEmpty from "@/components/documents/empty.vue"
+import usePagination from "@/composables/useFilters"
 
 import { useDocumentStore } from "@/stores/documents"
 import { computed, ref, watch } from "vue"
@@ -58,6 +59,11 @@ const store = useDocumentStore()
 const openingDocument = ref<string | null>()
 
 const onWindowFocus = useWindowFocus()
+
+const { limitReached, onNextPage } = usePagination({
+  getNextPage: store.getDocuments,
+  getTotal: store.getDocumentCount,
+})
 
 // const filterDocuments = () => {}
 
