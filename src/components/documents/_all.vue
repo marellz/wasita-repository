@@ -100,7 +100,7 @@ onMounted(async () => {
   store.resetFilters()
 })
 
-const hasFilters = computed(() => store.params.filters !== null)
+const hasFilters = computed(() => store.params.filters)
 
 onUnmounted(() => {
   store.resetDocuments()
