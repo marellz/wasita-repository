@@ -1,3 +1,4 @@
+import type { Filters } from "@/components/documents/filters.vue"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "@/stores/auth"
 import { computed } from "vue"
@@ -8,13 +9,14 @@ type Order = Record<filterKeys, boolean>
 
 // type Filters = Record<filterKeys, string | number>[]
 
-export const documentFilter = () => {
+export const documentService = () => {
   const auth = useAuthStore()
   const user = computed(() => auth.user?.id ?? null)
 
   const getPublicDocuments = async (
     order: Order = { created_at: false },
     range: { from: number; to: number } = { from: 0, to: 9 },
+    filters: Filters = { query: "", tags: [], categories: [] },
   ) => {
     /**
      * public
@@ -41,6 +43,23 @@ export const documentFilter = () => {
 
     const _key = Object.keys(order)[0]
     const _value = Object.values(order)[0]
+
+    // filters
+
+    if (filters.query) {
+      query.ilike("name", `%${filters.query}%`)
+      // todo: include for details and original_name
+    }
+
+    if (filters.categories.length) {
+      query.in("category", filters.categories)
+    }
+
+    if (filters.tags.length) {
+      query.contains("tags", filters.tags)
+    }
+
+    console.log(filters)
 
     return await query.order(_key, {
       ascending: _value,

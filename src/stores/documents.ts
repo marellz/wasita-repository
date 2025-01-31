@@ -4,7 +4,7 @@ import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
-import { documentFilter } from "@/services/documentFilter"
+import { documentService } from "@/services/documents"
 import type { User } from "@/stores/users"
 
 // export type Category = "financial" | "minutes" | "contracts" | "general"
@@ -81,7 +81,7 @@ export const useDocumentStore = defineStore(
     const documents = ref<Document[]>([])
     const auth = useAuthStore()
 
-    const filters = documentFilter()
+    const service = documentService()
 
     // pagination
     // todo: check stash in 'pagination' branch
@@ -149,7 +149,7 @@ export const useDocumentStore = defineStore(
 
       try {
         //todo add extra filtering
-        const { data, error } = await filters.getPublicDocuments(
+        const { data, error } = await service.getPublicDocuments(
           {
             created_at: false,
           },
@@ -181,19 +181,19 @@ export const useDocumentStore = defineStore(
       try {
         switch (criteria) {
           case "mine":
-            response = await filters.getMyDocuments()
+            response = await service.getMyDocuments()
             break
           case "private":
-            response = await filters.getMyPrivateDocuments()
+            response = await service.getMyPrivateDocuments()
             break
           case "drafts":
-            response = await filters.getMyDraftDocuments()
+            response = await service.getMyDraftDocuments()
             break
           case "sharedWithMe":
-            response = await filters.getDocumentsSharedWithMe()
+            response = await service.getDocumentsSharedWithMe()
             break
           default:
-            response = await filters.getMyDocuments()
+            response = await service.getMyDocuments()
             break
         }
 
