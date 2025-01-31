@@ -21,6 +21,7 @@
         <slot name="actions" />
       </div>
     </Container>
+    <slot />
   </div>
 </template>
 <script lang="ts" setup>

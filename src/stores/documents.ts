@@ -105,9 +105,15 @@ export const useDocumentStore = defineStore(
     // todo: check stash in 'pagination' branch
     const perPage = ref(10)
     const pageNumber = ref(1)
-    const currentRange = ref({ from: 0, to: perPage.value - 1 })
     const limitReached = ref(true)
     const totalDocuments = ref<number>()
+
+    const params = ref<DocumentParams>({
+      order: {
+        created_at: false,
+      },
+      range: { from: 0, to: perPage.value - 1 },
+    })
 
     const loadingNextPage = ref(false)
 
@@ -117,15 +123,19 @@ export const useDocumentStore = defineStore(
       }
 
       loadingNextPage.value = true
-      const s = currentRange.value.to + 1
+      const s = params.value.range.to + 1
       pageNumber.value++
-      currentRange.value = {
+      params.value.range = {
         from: s,
         to: s + (perPage.value - 1),
       }
 
       await getDocuments()
     }
+
+    /**
+     * WATCH documents. if length > total, announce limit
+     */
 
     watch(documents, (n) => {
       if (n.length === totalDocuments.value) {
@@ -153,11 +163,8 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const getDocuments = async (
-      range: { from: number; to: number } = currentRange.value,
-    ) => {
+    const getDocuments = async () => {
       loadingAll.value = true
-      // documents.value = []
 
       if (pageNumber.value === 1) {
         getDocumentCount()
@@ -167,11 +174,11 @@ export const useDocumentStore = defineStore(
 
       try {
         //todo add extra filtering
+        const { range, filters, order } = params.value
         const { data, error } = await service.getPublicDocuments(
-          {
-            created_at: false,
-          },
+          order,
           range,
+          filters,
         )
         if (error) {
           handleDocumentError(error)
@@ -581,8 +588,41 @@ export const useDocumentStore = defineStore(
       errors.value = {}
     }
 
+    const resetDocuments = () => {
+      documents.value = []
+    }
+
+    const resetFilters = () => {
+      delete params.value?.filters
+
+      // for reset and update filters, clear docs first.
+
+      resetDocuments()
+      getDocuments()
+    }
+
+    const updateFilters = (filters: Filters) => {
+      params.value = { ...params.value, filters }
+
+      resetDocuments()
+      getDocuments()
+    }
+
+    const resetParams = () => {
+      params.value = {
+        range: {
+          from: 0,
+          to: perPage.value - 1,
+        },
+        order: {
+          created_at: false,
+        },
+      }
+    }
+
     return {
       //
+      params,
       documents,
       getDocument,
       getUserDocuments,
@@ -604,10 +644,15 @@ export const useDocumentStore = defineStore(
 
       //
       pageNumber,
-      currentRange,
       nextPage,
       limitReached,
       loadingNextPage,
+
+      //
+      resetParams,
+      updateFilters,
+      resetFilters,
+      resetDocuments,
     }
   },
   {
