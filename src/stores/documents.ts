@@ -4,10 +4,9 @@ import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
-import { documentFilter } from "@/services/documentFilter"
+import { documentService } from "@/services/documents"
 import type { User } from "@/stores/users"
-
-// export type Category = "financial" | "minutes" | "contracts" | "general"
+import type { Filters } from "@/components/documents/filters.vue"
 
 export interface DocumentForm {
   id?: string
@@ -63,6 +62,25 @@ export interface Document {
   user: User | null
 }
 
+export type OrderByKeys =
+  | "created_at"
+  | "updated_at"
+  | "last_accessed_at"
+  | "file_size"
+  | "is_public"
+  | "name"
+
+export type Order = Partial<Record<OrderByKeys, boolean>>
+
+export interface DocumentParams {
+  range: {
+    from: number
+    to: number
+  }
+  filters?: Filters
+  order: Order
+}
+
 export type GetDocumentsCriteria =
   | "mine"
   | "private"
@@ -81,15 +99,21 @@ export const useDocumentStore = defineStore(
     const documents = ref<Document[]>([])
     const auth = useAuthStore()
 
-    const filters = documentFilter()
+    const service = documentService()
 
     // pagination
     // todo: check stash in 'pagination' branch
     const perPage = ref(10)
     const pageNumber = ref(1)
-    const currentRange = ref({ from: 0, to: perPage.value - 1 })
     const limitReached = ref(true)
     const totalDocuments = ref<number>()
+
+    const params = ref<DocumentParams>({
+      order: {
+        created_at: false,
+      },
+      range: { from: 0, to: perPage.value - 1 },
+    })
 
     const loadingNextPage = ref(false)
 
@@ -99,15 +123,19 @@ export const useDocumentStore = defineStore(
       }
 
       loadingNextPage.value = true
-      const s = currentRange.value.to + 1
+      const s = params.value.range.to + 1
       pageNumber.value++
-      currentRange.value = {
+      params.value.range = {
         from: s,
         to: s + (perPage.value - 1),
       }
 
       await getDocuments()
     }
+
+    /**
+     * WATCH documents. if length > total, announce limit
+     */
 
     watch(documents, (n) => {
       if (n.length === totalDocuments.value) {
@@ -135,11 +163,8 @@ export const useDocumentStore = defineStore(
       }
     }
 
-    const getDocuments = async (
-      range: { from: number; to: number } = currentRange.value,
-    ) => {
+    const getDocuments = async () => {
       loadingAll.value = true
-      // documents.value = []
 
       if (pageNumber.value === 1) {
         getDocumentCount()
@@ -149,11 +174,11 @@ export const useDocumentStore = defineStore(
 
       try {
         //todo add extra filtering
-        const { data, error } = await filters.getPublicDocuments(
-          {
-            created_at: false,
-          },
+        const { range, filters, order } = params.value
+        const { data, error } = await service.getPublicDocuments(
+          order,
           range,
+          filters,
         )
         if (error) {
           handleDocumentError(error)
@@ -181,19 +206,19 @@ export const useDocumentStore = defineStore(
       try {
         switch (criteria) {
           case "mine":
-            response = await filters.getMyDocuments()
+            response = await service.getMyDocuments()
             break
           case "private":
-            response = await filters.getMyPrivateDocuments()
+            response = await service.getMyPrivateDocuments()
             break
           case "drafts":
-            response = await filters.getMyDraftDocuments()
+            response = await service.getMyDraftDocuments()
             break
           case "sharedWithMe":
-            response = await filters.getDocumentsSharedWithMe()
+            response = await service.getDocumentsSharedWithMe()
             break
           default:
-            response = await filters.getMyDocuments()
+            response = await service.getMyDocuments()
             break
         }
 
@@ -563,8 +588,41 @@ export const useDocumentStore = defineStore(
       errors.value = {}
     }
 
+    const resetDocuments = () => {
+      documents.value = []
+    }
+
+    const resetFilters = () => {
+      delete params.value?.filters
+
+      // for reset and update filters, clear docs first.
+
+      resetDocuments()
+      getDocuments()
+    }
+
+    const updateFilters = (filters: Filters) => {
+      params.value = { ...params.value, filters }
+
+      resetDocuments()
+      getDocuments()
+    }
+
+    const resetParams = () => {
+      params.value = {
+        range: {
+          from: 0,
+          to: perPage.value - 1,
+        },
+        order: {
+          created_at: false,
+        },
+      }
+    }
+
     return {
       //
+      params,
       documents,
       getDocument,
       getUserDocuments,
@@ -586,10 +644,15 @@ export const useDocumentStore = defineStore(
 
       //
       pageNumber,
-      currentRange,
       nextPage,
       limitReached,
       loadingNextPage,
+
+      //
+      resetParams,
+      updateFilters,
+      resetFilters,
+      resetDocuments,
     }
   },
   {

@@ -10,7 +10,11 @@
         v-model="query"
         :disabled="loading"
         @focus="active = true"
-        class="form-input"
+        class="form-input pr-10 placeholder:text-sm"
+        :class="{
+          'border-indigo-600 bg-indigo-100 placeholder:text-indigo-500 placeholder:text-':
+            hasValues,
+        }"
       />
       <div class="absolute right-2 top-1/2 -translate-y-1/2">
         <button
@@ -79,7 +83,7 @@
 <script lang="ts" setup>
 import useCustomId from "@/composables/useCustomId"
 import BaseLoader from "@/components/base/loader.vue"
-import { onMounted, ref, watch } from "vue"
+import { computed, onMounted, ref, watch } from "vue"
 import { Check, ChevronDown } from "lucide-vue-next"
 import { onClickOutside } from "@vueuse/core"
 
@@ -106,6 +110,8 @@ const dropdown = ref()
 const active = ref(false)
 const emit = defineEmits(["query"])
 const model = defineModel<any[]>({ default: [] })
+
+const hasValues = computed(() => model.value.length > 0)
 
 watch(query, () => {
   emit("query", query.value)

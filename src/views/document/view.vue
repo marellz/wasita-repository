@@ -164,7 +164,7 @@ import { computed, onMounted, ref, watch } from "vue"
 import { useDocumentStore, type Document } from "@/stores/documents"
 import { useCommentStore, type Comment } from "@/stores/comments"
 import { ChevronLeft, Edit, ExternalLink, Send, Trash2 } from "lucide-vue-next"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { useWindowFocus } from "@vueuse/core"
 
 const id = computed(() => useRoute().params.id as string)
@@ -209,7 +209,7 @@ const deleteDocument = async (id: string) => {
   const success = await store.deleteDocument(id)
 
   if (success) {
-    history.back()
+    useRouter().push({ name: "my-files" })
   }
 }
 
