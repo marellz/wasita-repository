@@ -6,8 +6,7 @@ import supabase from "@/services/supabase"
 import { useAuthStore } from "./auth"
 import { documentService } from "@/services/documents"
 import type { User } from "@/stores/users"
-
-// export type Category = "financial" | "minutes" | "contracts" | "general"
+import type { Filters } from "@/components/documents/filters.vue"
 
 export interface DocumentForm {
   id?: string
@@ -61,6 +60,25 @@ export interface Document {
     count: number
   }[]
   user: User | null
+}
+
+export type OrderByKeys =
+  | "created_at"
+  | "updated_at"
+  | "last_accessed_at"
+  | "file_size"
+  | "is_public"
+  | "name"
+
+export type Order = Partial<Record<OrderByKeys, boolean>>
+
+export interface DocumentParams {
+  range: {
+    from: number
+    to: number
+  }
+  filters?: Filters
+  order: Order
 }
 
 export type GetDocumentsCriteria =

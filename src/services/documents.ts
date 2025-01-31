@@ -1,13 +1,8 @@
 import type { Filters } from "@/components/documents/filters.vue"
 import supabase from "@/services/supabase"
 import { useAuthStore } from "@/stores/auth"
+import type { Order } from "@/stores/documents"
 import { computed } from "vue"
-
-type filterKeys = "created_at"
-
-type Order = Record<filterKeys, boolean>
-
-// type Filters = Record<filterKeys, string | number>[]
 
 export const documentService = () => {
   const auth = useAuthStore()
@@ -58,8 +53,6 @@ export const documentService = () => {
     if (filters.tags.length) {
       query.contains("tags", filters.tags)
     }
-
-    console.log(filters)
 
     return await query.order(_key, {
       ascending: _value,
