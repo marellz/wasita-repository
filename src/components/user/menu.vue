@@ -8,17 +8,7 @@
       >
         <!-- layer 1 -->
         <div class="flex items-center space-x-2 h-12">
-          <img
-            v-if="auth.user?.avatar_url"
-            :src="auth.user.avatar_url"
-            class="h-12 w-12 rounded-full object-cover object-center"
-          />
-          <span
-            v-else
-            class="h-10 w-10 inline-flex items-center justify-center bg-slate-200/10 rounded-full flex-none"
-          >
-            <User2 :stroke-width="1" :size="28" />
-          </span>
+          <user-avatar size="sm" :avatar="auth.user?.avatar_url" />
           <div>
             <p class="font-medium text-xl font-secondary">
               {{ auth.user?.name || auth.user?.email }}
@@ -55,9 +45,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import UserAvatar from "@/components/user/avatar.vue"
 import { useAuthStore } from "@/stores/auth"
 import { onClickOutside } from "@vueuse/core"
-import { ChevronDown, User2 } from "lucide-vue-next"
+import { ChevronDown } from "lucide-vue-next"
 import { ref } from "vue"
 
 const auth = useAuthStore()
