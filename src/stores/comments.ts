@@ -108,7 +108,7 @@ export const useCommentStore = defineStore(
         error.value = err.message
         toasts.addError("Registration error", err.message)
       }
-      console.log(error)
+      console.error({ commentsError: error })
     }
 
     const resetError = () => {

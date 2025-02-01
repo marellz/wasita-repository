@@ -17,8 +17,6 @@ export interface DocumentForm {
   is_public: boolean
   tags: string[]
   category: string | null
-
-  //todo: add Collaborator types here
 }
 
 export interface Collaborator {
@@ -102,12 +100,12 @@ export const useDocumentStore = defineStore(
     const service = documentService()
 
     // pagination
-    // todo: check stash in 'pagination' branch
     const perPage = ref(10)
     const pageNumber = ref(1)
     const limitReached = ref(true)
     const totalDocuments = ref<number>()
 
+    // params for querying. pagination, order, range
     const params = ref<DocumentParams>({
       order: {
         created_at: false,
@@ -536,7 +534,6 @@ export const useDocumentStore = defineStore(
         const { data, error } = await supabase.storage
           .from("documents")
           .update(url, file, {
-            cacheControl: "3600", // todo: make sure you know wth this means.
             upsert: true,
           })
 
@@ -581,7 +578,7 @@ export const useDocumentStore = defineStore(
         errors.value.email = error.message
         toasts.addError("Document error", error.message)
       }
-      console.log(error)
+      console.error({ documentsError: error })
     }
 
     const resetErrors = () => {

@@ -93,7 +93,6 @@ const getDocumentLink = async (url: string) => {
   const link = await store.getDocumentPublicUrl(url)
 
   if (link) {
-    console.log(link)
     copy(link)
   }
 
