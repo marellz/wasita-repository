@@ -1,19 +1,24 @@
 <template>
   <div
-    class="bg-white shadow-xl rounded-xl p-5 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 py-10"
+    class="bg-white shadow-xl rounded-xl p-4 md:p-8 flex flex-col md:flex-row items-center lg:items-start justify-center gap-8 md:gap-12 py-10 md:py-14"
   >
     <img
-      class="max-w-sm w-full"
+      class="max-w-xs w-full"
       src="@/assets/images/undraw_server-push_1lbi.svg"
       alt=""
     />
     <div class="space-y-4">
-      <h1
-        class="text-3xl md:text-3xl font-semibold font-secondary leading-tight"
-      >
-        Your repository is ready, but it’s feeling a little empty.
-      </h1>
-      <p class="font-light">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold font-secondary leading-tight">
+          Your repository is ready
+        </h1>
+        <p
+          class="font-medium font-secondary text-sm sm:text-base mt-1 text-slate-600"
+        >
+          but it’s feeling a little empty.
+        </p>
+      </div>
+      <p class="font-light text-sm sm:text-base">
         Start uploading important documents to keep everything organized and
         accessible for your family. With everything in one place, you'll never
         have to dig through endless conversations again.
