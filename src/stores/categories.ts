@@ -107,15 +107,14 @@ export const useCategoryStore = defineStore(
       }
     }
 
-    const findCategory = async (name: string) => {
+    const findCategory = async (slug: string) => {
       error.value = null
       loading.value = true
       try {
         const { data, error } = await supabase
           .from("tags")
           .select()
-          // todo: to lower case
-          .eq("name", name)
+          .eq("slug", slug)
 
         if (error) {
           handleCategoryError(error.message)

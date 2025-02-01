@@ -65,14 +65,14 @@ export const useTagStore = defineStore(
       }
     }
 
-    const findTag = async (id: string) => {
+    const findTag = async (slug: string) => {
       loading.value = true
       error.value = null
       try {
         const { data, error } = await supabase
           .from("tags")
           .select()
-          .eq("id", id)
+          .eq("slug", slug)
 
         if (error) {
           handleTagError(error.message)
