@@ -131,6 +131,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  store.getDocumentTagsAndCategories()
   store.resetDocuments()
   store.resetParams()
 })

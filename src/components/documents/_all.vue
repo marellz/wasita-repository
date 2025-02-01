@@ -103,6 +103,7 @@ onMounted(async () => {
 const hasFilters = computed(() => store.params.filters)
 
 onUnmounted(() => {
+  store.getDocumentTagsAndCategories()
   store.resetDocuments()
   store.resetParams()
 })

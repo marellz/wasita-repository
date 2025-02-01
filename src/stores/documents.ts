@@ -1,4 +1,4 @@
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import { defineStore, acceptHMRUpdate } from "pinia"
 import { useToastsStore } from "./toasts"
 import generateSlug from "@/utils/generateSlug"
@@ -7,6 +7,8 @@ import { useAuthStore } from "./auth"
 import { documentService } from "@/services/documents"
 import type { User } from "@/stores/users"
 import type { Filters } from "@/components/documents/filters.vue"
+import { useTagStore } from "./tags"
+import { useCategoryStore } from "./categories"
 
 export interface DocumentForm {
   id?: string
@@ -54,7 +56,7 @@ export interface Document {
   url: string
   user_id: string
   original_name: string | null
-  comments: {
+  comments?: {
     count: number
   }[]
   user: User | null
@@ -94,10 +96,24 @@ export const useDocumentStore = defineStore(
     const loadingSingle = ref(false)
     const uploading = ref(false)
     const toasts = useToastsStore()
-    const documents = ref<Document[]>([])
+    const _documents = ref<Document[]>([])
+    const documents = computed(() =>
+      _documents.value.map((d) => ({
+        ...d,
+        category:
+          categoryStore.categories.find((c) => c.slug === d.category)?.name ??
+          d.category,
+        tags: d.tags.map(
+          (t) => tagStore.tags.find((tS) => tS.slug === t)?.name ?? t,
+        ),
+      })),
+    )
     const auth = useAuthStore()
 
     const service = documentService()
+
+    const tagStore = useTagStore()
+    const categoryStore = useCategoryStore()
 
     // pagination
     const perPage = ref(10)
@@ -171,7 +187,6 @@ export const useDocumentStore = defineStore(
       resetErrors()
 
       try {
-        //todo add extra filtering
         const { range, filters, order } = params.value
         const { data, error } = await service.getPublicDocuments(
           order,
@@ -183,7 +198,7 @@ export const useDocumentStore = defineStore(
         }
 
         if (data) {
-          documents.value = [...documents.value, ...data]
+          _documents.value = [..._documents.value, ...data]
         }
       } catch (error) {
         handleDocumentError(error)
@@ -195,7 +210,7 @@ export const useDocumentStore = defineStore(
 
     const getUserDocuments = async (criteria: GetDocumentsCriteria) => {
       loadingAll.value = true
-      documents.value = []
+      _documents.value = []
 
       resetErrors()
 
@@ -226,7 +241,7 @@ export const useDocumentStore = defineStore(
         }
 
         if (response.data) {
-          return response.data
+          return response.data.map((d) => updateDocumentTagsAndCategory(d))
         }
 
         return null
@@ -519,7 +534,7 @@ export const useDocumentStore = defineStore(
           return false
         }
 
-        documents.value = documents.value.filter((d) => d.id !== id)
+        _documents.value = documents.value.filter((d) => d.id !== id)
 
         return true
       } catch (error) {
@@ -586,7 +601,7 @@ export const useDocumentStore = defineStore(
     }
 
     const resetDocuments = () => {
-      documents.value = []
+      _documents.value = []
     }
 
     const resetFilters = () => {
@@ -615,6 +630,23 @@ export const useDocumentStore = defineStore(
           created_at: false,
         },
       }
+    }
+
+    const updateDocumentTagsAndCategory = (_doc: Document) => {
+      return {
+        ..._doc,
+        category:
+          categoryStore.categories.find((c) => c.slug === _doc.category)
+            ?.name ?? _doc.category,
+        tags: _doc.tags.map(
+          (_tag) => tagStore.tags.find((t) => t.slug === _tag)?.name ?? _tag,
+        ),
+      }
+    }
+
+    const getDocumentTagsAndCategories = async () => {
+      if (!tagStore.tags.length) await tagStore.getTags()
+      if (!categoryStore.categories.length) await categoryStore.getCategories()
     }
 
     return {
@@ -650,6 +682,10 @@ export const useDocumentStore = defineStore(
       updateFilters,
       resetFilters,
       resetDocuments,
+
+      //
+      getDocumentTagsAndCategories,
+      updateDocumentTagsAndCategory,
     }
   },
   {
