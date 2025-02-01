@@ -105,7 +105,7 @@ export const useTagStore = defineStore(
     }
   },
   {
-    persist: false,
+    persist: true,
   },
 )
 
