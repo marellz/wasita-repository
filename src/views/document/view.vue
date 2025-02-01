@@ -216,7 +216,7 @@ const deleteDocument = async (id: string) => {
 const getDocument = async () => {
   const doc = await store.getDocument(id.value)
   if (doc) {
-    document.value = doc
+    document.value = store.updateDocumentTagsAndCategory(doc)
     await getComments()
   }
 }
@@ -260,6 +260,7 @@ onMounted(async () => {
     history.back()
   }
 
+  await store.getDocumentTagsAndCategories()
   await getDocument()
 })
 </script>

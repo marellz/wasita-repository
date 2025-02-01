@@ -1,18 +1,15 @@
 <template>
   <div
-    class="rounded-xl px-4 flex items-start space-x-2"
+    class="rounded-xl px-4 flex items-start space-x-2 border border-slate-600/10"
     :class="themes[variant].bg"
   >
     <!-- <icon-component /> -->
-    <div class="p-3 pl-0 flex-none">
-      <span
-        class="p-1 rounded-full block"
-        :class="[themes[variant].color, themes[variant].semiBg]"
-      >
-        <component :size="32" :stroke-width="1.5" :is="icons[variant]" />
+    <div class="pt-1.5 pl-0 flex-none">
+      <span class="p-1 rounded-full block" :class="themes[variant].color">
+        <component :size="24" :stroke-width="1.5" :is="icons[variant]" />
       </span>
     </div>
-    <div class="flex-auto pt-2">
+    <div class="flex-auto pt-2 pb-2">
       <h1
         class="text-lg font-medium font-secondary leading-snug"
         :class="themes[variant].color"
@@ -38,12 +35,11 @@
 import { AlertCircle, CircleCheck, Info, X } from "lucide-vue-next"
 import type { Component } from "vue"
 
-type AlertVariants = "success" | "info" | "error"
+export type AlertVariants = "success" | "info" | "error"
 type VariantThemes = {
   [key in AlertVariants]: {
     bg: string
     color: string
-    semiBg: string
   }
 }
 type VariantIcons = {
@@ -68,18 +64,16 @@ const icons: VariantIcons = {
   info: Info,
   success: CircleCheck,
 }
-// todo: add status border
+
 const themes: VariantThemes = {
   error: {
-    bg: "bg-red-100/75",
+    bg: "bg-red-100/50",
     color: "text-red-500",
-    semiBg: "bg-red-500/15",
   },
-  info: { bg: "bg-blue-100", color: "text-blue-500", semiBg: "bg-blue-500/25" },
+  info: { bg: "bg-blue-100/50", color: "text-blue-500" },
   success: {
-    bg: "bg-green-100",
+    bg: "bg-green-100/50",
     color: "text-green-500",
-    semiBg: "bg-green-500/25",
   },
 }
 </script>

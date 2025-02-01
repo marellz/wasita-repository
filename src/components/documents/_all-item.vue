@@ -56,7 +56,7 @@
             {{ document.category }}
           </span>
           <div
-            v-if="document.comments[0].count"
+            v-if="document.comments?.length"
             title="`Comments`"
             class="inline-flex items-center space-x-1"
           >

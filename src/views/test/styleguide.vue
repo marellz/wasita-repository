@@ -79,6 +79,27 @@
           </div>
         </layout-card>
       </template>
+      <template #alerts>
+        <layout-card>
+          <div class="space-y-10">
+            <h1 class="font-medium font-secondary">Alerts</h1>
+            <div class="space-y-10">
+              <base-alert
+                v-for="(item, index) in alerts"
+                :key="index"
+                :variant="item.variant"
+                :title="item.label"
+              >
+                <p class="">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+                  Autem laborum inventore ipsum quo possimus repellat eos
+                  consequuntur?
+                </p>
+              </base-alert>
+            </div>
+          </div>
+        </layout-card>
+      </template>
     </base-tabs>
   </Container>
 </template>
@@ -88,6 +109,7 @@ import Container from "@/components/layout/container.vue"
 import LayoutCard from "@/components/layout/card.vue"
 import BaseButton, { type BtnVariants } from "@/components/base/button.vue"
 import BaseTabs from "@/components/base/tabs.vue"
+import BaseAlert, { type AlertVariants } from "@/components/base/alert.vue"
 import { ExternalLink } from "lucide-vue-next"
 import { useToastsStore } from "@/stores/toasts"
 
@@ -96,6 +118,7 @@ const toasts = useToastsStore()
 const tabs = [
   { key: "buttons", label: "Buttons" },
   { key: "toasts", label: "Toasts" },
+  { key: "alerts", label: "Alerts" },
 ]
 
 const buttons: { label: string; variant: BtnVariants }[] = [
@@ -123,5 +146,11 @@ const buttons: { label: string; variant: BtnVariants }[] = [
     label: "White",
     variant: "white-outline",
   },
+]
+
+const alerts: { variant: AlertVariants; label: string }[] = [
+  { variant: "success", label: "Success notice" },
+  { variant: "info", label: "Informational notice" },
+  { variant: "error", label: "Error notice" },
 ]
 </script>

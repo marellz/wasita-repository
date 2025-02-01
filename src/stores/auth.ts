@@ -84,7 +84,7 @@ export const useAuthStore = defineStore(
 
         if (session) {
           handleSessionCreation(session.access_token, _user)
-          // todo: fix user id issue
+
           if (_user) {
             await userStore.update(_user.id, {
               id: _user.id,
@@ -194,7 +194,6 @@ export const useAuthStore = defineStore(
     }
 
     const getSession = async () => {
-      console.log("gotten")
       try {
         const { data, error } = await supabase.auth.getSession()
 
@@ -218,7 +217,7 @@ export const useAuthStore = defineStore(
         errors.value.email = error.message
         toasts.addError("Auth error", error.message)
       }
-      console.log(error)
+      console.error({ authError: error })
     }
 
     const handleSessionCreation = async (

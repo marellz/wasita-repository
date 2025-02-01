@@ -39,10 +39,10 @@ import {
   type DocumentForm as DocumentFormType,
 } from "@/stores/documents"
 import { computed, onMounted, ref } from "vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { Edit } from "lucide-vue-next"
 const store = useDocumentStore()
-
+const router = useRouter()
 const id = computed(() => useRoute().params.id as string)
 const document = ref<
   (DocumentFormType & { collaborators: Collaborator[] }) | null
@@ -53,7 +53,6 @@ const updateDocument = async ({
   collaborators,
 }: DocumentFormPayload) => {
   // only update these fields
-
   const updated = await store.updateDocument(
     id.value,
     {
@@ -71,6 +70,8 @@ const updateDocument = async ({
 
   if (updated) {
     document.value = { ...document.value, ...data, ...updated }
+
+    router.push({ name: "my-files" })
   }
 }
 

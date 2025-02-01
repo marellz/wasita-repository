@@ -1,14 +1,14 @@
 <template>
   <img
     v-if="avatar"
-    class="object-center rounded-full border-2"
+    class="object-center object-cover rounded-full border-2"
     :class="sizes[size]"
     :src="avatar"
     alt=""
   />
   <span
     v-else
-    class="object-center rounded-full border-2 bg-slate-200 inline-flex items-center justify-center"
+    class="rounded-full border-2 border-white/10 bg-white/20 inline-flex items-center justify-center"
     :class="sizes[size]"
   >
     <User2 :size="30" :stroke-width="1" />

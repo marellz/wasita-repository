@@ -1,6 +1,6 @@
 <template>
   <div
-    class="py-4 md:py-10 bg-black text-white after:h-20 after:bg-black after:absolute after:block after:top-full after:w-full relative after:z-[-2]"
+    class="py-4 md:py-10 bg-black text-white after:h-20 after:bg-black after:absolute after:block after:top-full after:w-full relative after:z-[2]"
   >
     <Container>
       <div

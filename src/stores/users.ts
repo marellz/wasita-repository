@@ -200,7 +200,7 @@ export const useUserStore = defineStore(
         error.value = err.message
         toasts.addError("User error", err.message)
       }
-      console.log(err)
+      console.error({ userError: err })
     }
 
     const refreshUser = async () => {
