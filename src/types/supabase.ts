@@ -48,7 +48,7 @@ export type Database = {
           document_id: string
           id?: number
           is_flagged?: boolean
-          user_id?: string
+          user_id: string
         }
         Update: {
           content?: string
@@ -144,7 +144,7 @@ export type Database = {
           tags?: string[]
           updated_at?: string
           url: string
-          user_id?: string
+          user_id: string
         }
         Update: {
           category?: string | null
