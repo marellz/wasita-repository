@@ -321,7 +321,7 @@ export const useDocumentStore = defineStore(
 
         const path = await uploadFile(file)
 
-        if (!path) {
+        if (!path || !auth.user) {
           return false
         }
 
@@ -332,6 +332,7 @@ export const useDocumentStore = defineStore(
           file_type: file.type,
           file_size: file.size,
           original_name: file.name,
+          user_id: auth.user.id,
         }
 
         const { data, error } = await supabase
