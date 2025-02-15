@@ -36,6 +36,7 @@ export const useCommentStore = defineStore(
       const form = {
         document_id,
         content,
+        user_id: auth.user.id,
       }
 
       try {
