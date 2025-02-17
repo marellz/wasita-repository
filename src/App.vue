@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { RouterView, useRoute } from "vue-router"
 import { computed, type Component } from "vue"
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/vue"
 import DefaultLayout from "@/layouts/default.vue"
 import AuthLayout from "@/layouts/auth.vue"
 
